@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 55daccc09a3b69647bbab145b54a3ab3
   - enabled: 1
+    path: Assets/UltimateXR/Examples/FullScene/UltimateXR_URP.unity
+    guid: d026aa0551d251248a15d6e236c7803d
+  - enabled: 0
     path: Assets/Scenes/Simugias.unity
     guid: 54233b0dd5569084cb8547e6e6fef39a
   m_configObjects:

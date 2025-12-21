@@ -12,7 +12,7 @@ namespace UnityEngine.XR.Content.Interaction
     public class XRJoystick : XRBaseInteractable
     {
         const float k_MaxDeadZonePercent = 0.9f;
-
+        public bool allowForwardMovement = true;
         public enum JoystickType
         {
             BothCircle,
@@ -214,6 +214,12 @@ namespace UnityEngine.XR.Content.Interaction
 
             upDownAngle = Mathf.Abs(upDownAngle);
             leftRightAngle = Mathf.Abs(leftRightAngle);
+
+            if(!allowForwardMovement && signX > 0 )
+            {
+                leftRightAngle = 0f;
+                signX = 0f;
+            }
 
             var stickValue = new Vector2(leftRightAngle, upDownAngle) * (1.0f / m_MaxAngle);
 

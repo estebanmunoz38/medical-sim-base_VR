@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/UltimateXR/Examples/FullScene/UltimateXR_URP.unity
     guid: d026aa0551d251248a15d6e236c7803d
   - enabled: 0
-    path: Assets/Scenes/Simugias.unity
+    path: Assets/Scenes/Simugias_Legacy.unity
     guid: 54233b0dd5569084cb8547e6e6fef39a
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}

@@ -1,7 +1,7 @@
 # **Simugias VR – Endoscopic Medical Simulator**
 
 **Unity 2022 LTS • XR Interaction Toolkit • OpenXR • Meta Quest 2/3**
-Sprint de Cierre: **28 Nov → 5 Dic**
+
 
 ---
 
@@ -166,7 +166,7 @@ Los videos de pruebas y feedback se almacenan en:
 
 ## 📌 **Deadline**
 
-**Entrega final funcional del simulador: 5 de diciembre.**
+
 
 ---
 

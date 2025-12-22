@@ -1,6 +1,6 @@
 # **Simugias VR – Endoscopic Medical Simulator**
 
-**Unity 2022 LTS • XR Interaction Toolkit • OpenXR • Meta Quest 2/3**
+**Unity 6.0 (6000.0.50f1)  LTS • XR Interaction Toolkit • OpenXR • Meta Quest 2/3**
 
 
 ---

@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "name": "XRToolActions",
+    "maps": [
+        {
+            "name": "RightHand",
+            "id": "bafc3410-3e73-42ed-af79-844afe3b8d2f",
+            "actions": [
+                {
+                    "name": "Primary",
+                    "type": "Button",
+                    "id": "e8ecc03c-ecd8-4ab9-882a-f616f60debbf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Secondary",
+                    "type": "Button",
+                    "id": "7b20f373-e789-4382-b26a-50d983337991",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Scroll",
+                    "type": "Value",
+                    "id": "935b8bc6-f47b-4ff7-8638-39965f8a5e78",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "efa76f12-dcd8-4e13-b74c-a65e685bae0d",
+                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Primary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aac49a28-05d0-403a-8700-67b5311fd7ea",
+                    "path": "<XRController>{RightHand}/gripPressed ",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Secondary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "309ea184-92f4-4510-86b8-39a1b4c6649c",
+                    "path": "<XRController>{RightHand}/primary2DAxis/y ",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

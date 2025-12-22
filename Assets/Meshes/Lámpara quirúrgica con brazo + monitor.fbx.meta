@@ -1,9 +1,44 @@
 fileFormatVersion: 2
 guid: fca1037f293730646b935a1bbbbc3a9a
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color_
+    second: {fileID: 2100000, guid: f2f46579c20172b44b192ca77d75314e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Color_2
+    second: {fileID: 2100000, guid: 5e9053ca58731a44eb20e4d31f153c39, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: __Gray6_
+    second: {fileID: 2100000, guid: c2db01c6da69aa24aabbcb71eb1d5565, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_0
+    second: {fileID: 2100000, guid: cd796d42564531f40bb41f83b8ce0daf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_10
+    second: {fileID: 2100000, guid: fa2863c19caf9d243a8b72899baccba5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_12
+    second: {fileID: 2100000, guid: f3db06fbf502503419d8e8d19cf34a5c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: material_24
+    second: {fileID: 2100000, guid: 16b15bdd02d1ee744945201189015455, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -56,6 +91,9 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
     meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8

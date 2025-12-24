@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Kerrison : MonoBehaviour
 {
-    public UICount counter;
+    //public UICount counter;
     [SerializeField] Transform targetPosition;
     [SerializeField] bool isDetecting;
     [SerializeField] string targetTag;
@@ -28,7 +28,7 @@ public class Kerrison : MonoBehaviour
             heldObj.GetComponent<Rigidbody>().useGravity = true;
             hasOne = false;
             heldObj = null;
-            counter.Sum();
+            //counter.Sum();
         }
     }
 

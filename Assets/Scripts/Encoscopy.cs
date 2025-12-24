@@ -14,7 +14,6 @@ public class Encoscopy : MonoBehaviour
     private float _actualRotationY;
 
     public SplineAnimate splineAnimate;
-    public SplineExtrude splineExtrude;
 
     void Start()
     { Init(); }

@@ -8,10 +8,8 @@ public class Retractor : MonoBehaviour
 
     [Header("Checker SETUP")]
     [SerializeField]  Rigidbody rb;
-    [SerializeField]  Collider checkUp;
-    [SerializeField]  Collider checkDown;
-    [SerializeField]  string nameUp;
-    [SerializeField]  string nameDown;
+    [SerializeField]  Collider colCheck;
+    [SerializeField]  string colKeyName;
     [SerializeField]  bool isFreeze;
 
     [Header("Ghost OBJ")]
@@ -23,29 +21,23 @@ public class Retractor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name == nameUp)
+        if (other.gameObject.name == colKeyName)
         { checkUpActive = true; }
-
-        if (other.gameObject.name == nameDown)
-        { checkDownActive = true; }
 
         UpdateStatus();
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.name == nameUp)
+        if (other.gameObject.name == colKeyName)
         { checkUpActive = false; }
-
-        if (other.gameObject.name == nameDown)
-        { checkDownActive = false; }
 
         UpdateStatus();
     }
 
     private void UpdateStatus()
     {
-        bool _status = checkUpActive && checkDownActive;
+        bool _status = checkUpActive;
 
         if (_status != isFreeze)
         {

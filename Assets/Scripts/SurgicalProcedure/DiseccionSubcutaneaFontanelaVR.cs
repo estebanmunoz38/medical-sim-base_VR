@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
+public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
 {
     [Header("Input VR")]
     public MonoBehaviour inputSourceBehaviour;   // Debe implementar IToolInputSource
@@ -35,15 +36,15 @@ public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
     public Transform endBoneFontanela;
     public float finalRotationFontanela = -20f;
     public float boneSpeedFontanela = 4f;
-
+    
     public enum Paso { Subcutanea, Fontanela }
 
     private Paso pasoActual;
     private Transform[] pathPointsActual;
 
     private float t = 0f;        // [0..1]
-    private bool trabajando = false;
-    private bool terminado = false;
+    //private bool trabajando = false;
+    //private bool terminado = false;
 
     void Start()
     {
@@ -74,7 +75,7 @@ public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
 
     void Update()
     {
-        if (terminado) return;
+        if (terminado || !isEnabled) return;
 
         if (!trabajando)
             TrySnapStart();
@@ -92,7 +93,8 @@ public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
 
         if (dist <= snapStartDistance && input.PrimaryDown)
         {
-            trabajando = true;
+            //trabajando = true;
+            StartStep();
             t = 0f;
         }
     }
@@ -116,6 +118,7 @@ public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
         if (t >= 0.99f)
         {
             trabajando = false;
+            
             StartCoroutine(FinishCurrentStep());
         }
     }
@@ -154,7 +157,8 @@ public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
         }
 
         // Si no hay más pasos
-        terminado = true;
+        EndStep();
+        //terminado = true;
     }
 
     System.Collections.IEnumerator RotateBone(Transform bone, float finalRotX, float speed)
@@ -211,4 +215,5 @@ public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
 
         return Quaternion.LookRotation(dir, Vector3.up);
     }
+    
 }

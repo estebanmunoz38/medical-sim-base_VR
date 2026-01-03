@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CoagulacionOseaHemostasiaVR : SurgicalStep
+public class CoagulacionOseaHemostasiaVR : MonoBehaviour
 {
     [Header("Input VR")]
     public MonoBehaviour inputSourceBehaviour;
@@ -46,8 +46,8 @@ public class CoagulacionOseaHemostasiaVR : SurgicalStep
     private Transform[] pathPointsActual;
 
     private float t = 0f;
-    //private bool trabajando = false;
-    //private bool terminado = false;
+    private bool trabajando = false;
+    private bool terminado = false;
 
     void Start()
     {
@@ -71,7 +71,7 @@ public class CoagulacionOseaHemostasiaVR : SurgicalStep
 
     void Update()
     {
-        if (terminado || !isEnabled) return;
+        if (terminado) return;
 
         if (!trabajando)
             TrySnapStart();
@@ -86,8 +86,7 @@ public class CoagulacionOseaHemostasiaVR : SurgicalStep
 
         if (dist <= snapStartDistance && input.PrimaryDown)
         {
-            //trabajando = true;
-            StartStep();
+            trabajando = true;
             t = 0f;
             OnStepStartFX();
         }
@@ -142,8 +141,7 @@ public class CoagulacionOseaHemostasiaVR : SurgicalStep
             yield break;
         }
         
-        //terminado = true;
-        EndStep();
+        terminado = true;
     }
 
     bool SetPathForCurrentStep()

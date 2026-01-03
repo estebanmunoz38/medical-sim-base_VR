@@ -29,7 +29,7 @@ namespace Logic.SurgicalProcedure
     {
         [SerializeField] private SurgicalStep[] surgicalSteps;
 
-        private int currentStepIndex = 0;
+        [SerializeField] private int currentStepIndex = 0;
         
         public SurgicalStep CurrentStep { get; private set; }
         
@@ -49,7 +49,12 @@ namespace Logic.SurgicalProcedure
                 step.DisableStep();
             }
 
-            surgicalSteps[currentStepIndex].EnableStep();
+            //surgicalSteps[currentStepIndex].EnableStep();
+        }
+
+        private void Start()
+        {
+            StartProcedure();
         }
 
         private void OnDestroy()
@@ -75,6 +80,7 @@ namespace Logic.SurgicalProcedure
             currentStepIndex = 0;
             SetCurrentStep(surgicalSteps[currentStepIndex]);
             OnProcedureStarted?.Invoke();
+            Debug.Log("Starting Procedure");
         }
 
         public bool IsStepActive(SurgicalStepId stepId)
@@ -127,11 +133,8 @@ namespace Logic.SurgicalProcedure
             Debug.Log($"Step completed: {step.StepId.ToString() }");
 
             step.DisableStep();
-            currentStepIndex++;
-
             OnStepCompleted?.Invoke(step.StepId);
 
-            step.DisableStep();
             AdvanceToNextStep();
         }
 

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
+public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
 {
     [Header("Input VR")]
     public MonoBehaviour inputSourceBehaviour;   // Debe implementar IToolInputSource
@@ -43,8 +43,8 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     private Transform[] pathPointsActual;
 
     private float t = 0f;        // [0..1]
-    //private bool trabajando = false;
-    //private bool terminado = false;
+    private bool trabajando = false;
+    private bool terminado = false;
 
     void Start()
     {
@@ -75,7 +75,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
 
     void Update()
     {
-        if (terminado || !isEnabled) return;
+        if (terminado) return;
 
         if (!trabajando)
             TrySnapStart();
@@ -93,8 +93,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
 
         if (dist <= snapStartDistance && input.PrimaryDown)
         {
-            //trabajando = true;
-            StartStep();
+            trabajando = true;
             t = 0f;
         }
     }
@@ -157,8 +156,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         }
 
         // Si no hay más pasos
-        EndStep();
-        //terminado = true;
+        terminado = true;
     }
 
     System.Collections.IEnumerator RotateBone(Transform bone, float finalRotX, float speed)

@@ -26,13 +26,16 @@ public interface IToolInputSource
 // ======================================================================
 // XR INPUT SOURCE (Oculus / Quest / OpenXR / Unity Input System)
 // ======================================================================
-public class XRToolInputSource : MonoBehaviour, IToolInputSource
+public class ToolInputSource : MonoBehaviour, IToolInputSource
 {
 #if ENABLE_INPUT_SYSTEM
     [Header("Input Actions (XR)")]
-    public InputActionProperty primaryAction;
-    public InputActionProperty secondaryAction;
-    public InputActionProperty scrollAxisAction;
+    public InputActionReference primaryAction;
+    public InputActionReference secondaryAction;
+    public InputActionReference scrollAxisAction;
+    //public InputActionProperty primaryAction;
+    //public InputActionProperty secondaryAction;
+    //public InputActionProperty scrollAxisAction;
 
     [Header("Ray Origin (Controller tip)")]
     public Transform pointerOrigin;

@@ -31,20 +31,16 @@ public class SurgicalStep : MonoBehaviour
 
     public virtual void StartStep()
     {
-        trabajando = true;
-        terminado = false;
         OnStepStarted?.Invoke(this);
     }
 
     public virtual void EndStep()
     {
-        terminado = true;
         OnStepCompleted?.Invoke(this);
     }
 
     public virtual void FailStep(string reason)
     {
-        terminado = true;
         OnStepFailed?.Invoke(this, reason);
     }
     #endregion

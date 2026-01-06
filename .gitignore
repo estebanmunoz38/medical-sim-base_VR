@@ -96,4 +96,9 @@ InitTestScene*.unity*
 /[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
 
 # Auto-generated scenes by play mode tests
-/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+/[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*Assets/VRTemplateAssets/Videos/Práctica Cirugía Endoscópica Craneosinostosis.mp4
+Assets/VRTemplateAssets/Videos/*.mp4
+Assets/VRTemplateAssets/Videos/*.mp4
+Assets/VRTemplateAssets/Videos/*.mp4
+Assets/VRTemplateAssets/Videos/*.mp4
+Assets/VRTemplateAssets/Videos/*.mp4

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BisturiCutControl : MonoBehaviour
 {
@@ -17,8 +18,8 @@ public class BisturiCutControl : MonoBehaviour
 
     [Header("Control de las posiciones")]
     [Tooltip("Script, desde donde toma las posiciones de cada corte")]
-    public BoneCutPosition boneSuperior;
-    public BoneCutPosition boneInferior;
+    [SerializeField] BoneCutClip inferiorClips;
+    [SerializeField] BoneCutClip superiorClips;
 
     void Start()
     {
@@ -33,8 +34,7 @@ public class BisturiCutControl : MonoBehaviour
             initialCut.gameObject.SetActive(false);
             midCut.gameObject.SetActive(true);
             CheckAllCuts();
-            boneSuperior.FirstCut();
-            boneInferior.FirstCut();
+            ChangeAnimations("incision_1");
             Debug.Log("Corte inicial hecho");
         }
 
@@ -44,8 +44,7 @@ public class BisturiCutControl : MonoBehaviour
             midCut.gameObject.SetActive(false);
             finalCut.gameObject.SetActive(true);
             CheckAllCuts();
-            boneSuperior.SecondCut();
-            boneInferior.SecondCut();
+            ChangeAnimations("incision_2");
             Debug.Log("Corte medio hecho");
         }
 
@@ -54,8 +53,7 @@ public class BisturiCutControl : MonoBehaviour
             finalCutDone = true;
             finalCut.gameObject.SetActive(false);
             CheckAllCuts();
-            boneSuperior.FinalCut();
-            boneInferior.FinalCut();
+            ChangeAnimations("incision_3");
             Debug.Log("Corte final hecho");
         }
     }
@@ -64,6 +62,12 @@ public class BisturiCutControl : MonoBehaviour
     {
         if(initialCutDone && midCutDone && finalCutDone)
         { CompleteCuts(); }
+    }
+
+    private void ChangeAnimations(string _key)
+    {
+        superiorClips.ChangeClip(_key);
+        inferiorClips.ChangeClip(_key);
     }
     
     public void CompleteCuts()

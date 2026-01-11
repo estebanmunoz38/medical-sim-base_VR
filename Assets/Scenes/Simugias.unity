@@ -129,6 +129,8 @@ GameObject:
   m_Component:
   - component: {fileID: 15520078}
   - component: {fileID: 15520079}
+  - component: {fileID: 15520080}
+  - component: {fileID: 15520081}
   m_Layer: 0
   m_Name: Ap_Del_2
   m_TagString: Untagged
@@ -159,7 +161,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 15520077}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9610d0343367b1840b99f57c028dfe62, type: 3}
   m_Name: 
@@ -168,6 +170,41 @@ MonoBehaviour:
   firstCutPosition: {x: 0.000001015955, y: 1.055271, z: 0.99573}
   secondCutPosition: {x: 0.000001015955, y: 1.05546, z: 0.99634}
   thirdCutPosition: {x: 0.000001015955, y: 1.05614, z: 0.99693}
+--- !u!95 &15520080
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15520077}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c2fb39ee776a05440866c8476663872b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &15520081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15520077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34a96db20b4ba3488a3f53b6ecd929b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoneCutClip
+  cutAnimator: {fileID: 15520080}
 --- !u!1 &15718880
 GameObject:
   m_ObjectHideFlags: 0
@@ -11195,7 +11232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14693,8 +14730,8 @@ MonoBehaviour:
   initialCut: {fileID: 971727338}
   midCut: {fileID: 1872201069}
   finalCut: {fileID: 1473867267}
-  boneSuperior: {fileID: 15520079}
-  boneInferior: {fileID: 2032477600}
+  inferiorClips: {fileID: 2032477602}
+  superiorClips: {fileID: 2032477602}
 --- !u!1 &957770687
 GameObject:
   m_ObjectHideFlags: 0
@@ -15368,8 +15405,8 @@ MonoBehaviour:
   initialCut: {fileID: 971727338}
   midCut: {fileID: 1872201069}
   finalCut: {fileID: 1473867267}
-  boneSuperior: {fileID: 15520079}
-  boneInferior: {fileID: 2032477600}
+  inferiorClips: {fileID: 0}
+  superiorClips: {fileID: 0}
 --- !u!65 &1008777431
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30160,6 +30197,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2032477599}
   - component: {fileID: 2032477600}
+  - component: {fileID: 2032477601}
+  - component: {fileID: 2032477602}
   m_Layer: 0
   m_Name: Ap_tra_2
   m_TagString: Untagged
@@ -30190,7 +30229,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2032477598}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9610d0343367b1840b99f57c028dfe62, type: 3}
   m_Name: 
@@ -30199,6 +30238,41 @@ MonoBehaviour:
   firstCutPosition: {x: 0.00000001891293, y: 1.03619, z: 0.97207}
   secondCutPosition: {x: 0.00000001891293, y: 1.03581, z: 0.97154}
   thirdCutPosition: {x: 0.00000001891293, y: 1.03543, z: 0.97116}
+--- !u!95 &2032477601
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032477598}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5011226800b6e12458acba7f8ebcc901, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2032477602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032477598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34a96db20b4ba3488a3f53b6ecd929b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoneCutClip
+  cutAnimator: {fileID: 2032477601}
 --- !u!1 &2035304866
 GameObject:
   m_ObjectHideFlags: 0

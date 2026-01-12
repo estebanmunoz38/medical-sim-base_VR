@@ -166,10 +166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9610d0343367b1840b99f57c028dfe62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoneCutPosition
-  initialPosition: {x: 0.0000010159554, y: 1.0552709, z: 0.9951625}
-  firstCutPosition: {x: 0.000001015955, y: 1.055271, z: 0.99573}
-  secondCutPosition: {x: 0.000001015955, y: 1.05546, z: 0.99634}
-  thirdCutPosition: {x: 0.000001015955, y: 1.05614, z: 0.99693}
 --- !u!95 &15520080
 Animator:
   serializedVersion: 7
@@ -440,6 +436,8 @@ GameObject:
   - component: {fileID: 33103864}
   - component: {fileID: 33103866}
   - component: {fileID: 33103867}
+  - component: {fileID: 33103868}
+  - component: {fileID: 33103869}
   m_Layer: 0
   m_Name: Craneo_Pieza.12
   m_TagString: Removable
@@ -566,6 +564,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &33103868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33103862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &33103869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33103862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 33103866}
+  outlineEffct: {fileID: 33103868}
 --- !u!1 &34893967
 GameObject:
   m_ObjectHideFlags: 0
@@ -1309,6 +1340,8 @@ GameObject:
   - component: {fileID: 127345547}
   - component: {fileID: 127345549}
   - component: {fileID: 127345550}
+  - component: {fileID: 127345551}
+  - component: {fileID: 127345552}
   m_Layer: 0
   m_Name: Craneo_Pieza.4
   m_TagString: Removable
@@ -1435,6 +1468,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &127345551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127345544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &127345552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127345544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 127345549}
+  outlineEffct: {fileID: 127345551}
 --- !u!1 &128513415
 GameObject:
   m_ObjectHideFlags: 0
@@ -1736,6 +1802,8 @@ GameObject:
   - component: {fileID: 137322333}
   - component: {fileID: 137322335}
   - component: {fileID: 137322336}
+  - component: {fileID: 137322337}
+  - component: {fileID: 137322338}
   m_Layer: 0
   m_Name: Craneo_Pieza.5
   m_TagString: Removable
@@ -1862,6 +1930,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &137322337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137322331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &137322338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137322331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 137322335}
+  outlineEffct: {fileID: 137322337}
 --- !u!1 &137338898
 GameObject:
   m_ObjectHideFlags: 0
@@ -3738,6 +3839,8 @@ GameObject:
   - component: {fileID: 254458346}
   - component: {fileID: 254458348}
   - component: {fileID: 254458349}
+  - component: {fileID: 254458350}
+  - component: {fileID: 254458351}
   m_Layer: 0
   m_Name: Craneo_Pieza.13
   m_TagString: Removable
@@ -3864,6 +3967,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &254458350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254458344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &254458351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254458344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 254458348}
+  outlineEffct: {fileID: 254458350}
 --- !u!1 &257649804
 GameObject:
   m_ObjectHideFlags: 0
@@ -7055,6 +7191,8 @@ GameObject:
   - component: {fileID: 457685679}
   - component: {fileID: 457685681}
   - component: {fileID: 457685682}
+  - component: {fileID: 457685683}
+  - component: {fileID: 457685684}
   m_Layer: 0
   m_Name: Craneo_Pieza.16
   m_TagString: Removable
@@ -7181,6 +7319,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &457685683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457685677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &457685684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457685677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 457685681}
+  outlineEffct: {fileID: 457685683}
 --- !u!1 &457883420
 GameObject:
   m_ObjectHideFlags: 0
@@ -9495,13 +9666,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610888157}
   serializedVersion: 2
-  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
   m_LocalPosition: {x: -0, y: -0, z: -0.0001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1072513416}
-  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
 --- !u!1 &617709943
 GameObject:
   m_ObjectHideFlags: 0
@@ -10804,6 +10975,8 @@ GameObject:
   - component: {fileID: 698285222}
   - component: {fileID: 698285224}
   - component: {fileID: 698285225}
+  - component: {fileID: 698285226}
+  - component: {fileID: 698285227}
   m_Layer: 0
   m_Name: Craneo_Pieza.14
   m_TagString: Removable
@@ -10930,6 +11103,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &698285226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698285220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &698285227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698285220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 698285224}
+  outlineEffct: {fileID: 698285226}
 --- !u!1 &701445029
 GameObject:
   m_ObjectHideFlags: 0
@@ -10988,6 +11194,8 @@ GameObject:
   - component: {fileID: 708308187}
   - component: {fileID: 708308189}
   - component: {fileID: 708308190}
+  - component: {fileID: 708308191}
+  - component: {fileID: 708308192}
   m_Layer: 0
   m_Name: Craneo_Pieza.21
   m_TagString: Removable
@@ -11114,6 +11322,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &708308191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708308185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &708308192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708308185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 708308189}
+  outlineEffct: {fileID: 708308191}
 --- !u!1 &714778794
 GameObject:
   m_ObjectHideFlags: 0
@@ -11232,7 +11473,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -13845,6 +14086,8 @@ GameObject:
   - component: {fileID: 865828482}
   - component: {fileID: 865828484}
   - component: {fileID: 865828485}
+  - component: {fileID: 865828486}
+  - component: {fileID: 865828487}
   m_Layer: 0
   m_Name: Craneo_Pieza.3
   m_TagString: Removable
@@ -13971,6 +14214,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &865828486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865828479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &865828487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865828479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 865828484}
+  outlineEffct: {fileID: 865828486}
 --- !u!1 &873179097
 GameObject:
   m_ObjectHideFlags: 0
@@ -14745,6 +15021,8 @@ GameObject:
   - component: {fileID: 957770690}
   - component: {fileID: 957770692}
   - component: {fileID: 957770693}
+  - component: {fileID: 957770694}
+  - component: {fileID: 957770695}
   m_Layer: 0
   m_Name: Craneo_Pieza.10
   m_TagString: Removable
@@ -14871,6 +15149,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &957770694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957770687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &957770695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 957770687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 957770692}
+  outlineEffct: {fileID: 957770694}
 --- !u!1 &963766284
 GameObject:
   m_ObjectHideFlags: 0
@@ -15826,6 +16137,8 @@ GameObject:
   - component: {fileID: 1024248581}
   - component: {fileID: 1024248583}
   - component: {fileID: 1024248584}
+  - component: {fileID: 1024248585}
+  - component: {fileID: 1024248586}
   m_Layer: 0
   m_Name: Craneo_Pieza.9
   m_TagString: Removable
@@ -15952,6 +16265,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1024248585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024248578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1024248586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024248578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1024248583}
+  outlineEffct: {fileID: 1024248585}
 --- !u!1 &1027287949
 GameObject:
   m_ObjectHideFlags: 0
@@ -16944,6 +17290,8 @@ GameObject:
   - component: {fileID: 1077795172}
   - component: {fileID: 1077795174}
   - component: {fileID: 1077795175}
+  - component: {fileID: 1077795176}
+  - component: {fileID: 1077795177}
   m_Layer: 0
   m_Name: Craneo_Pieza.18
   m_TagString: Removable
@@ -17070,6 +17418,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1077795176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077795170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1077795177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077795170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1077795174}
+  outlineEffct: {fileID: 1077795176}
 --- !u!1 &1079623168
 GameObject:
   m_ObjectHideFlags: 0
@@ -21278,37 +21659,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1390846723}
   m_CullTransparentMesh: 1
---- !u!1 &1394382957
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1394382958}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1394382958
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1394382957}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.16324, y: -0.0000000018070897, z: -0.021700017}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 5490707251428373114}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1404123476
 GameObject:
   m_ObjectHideFlags: 0
@@ -22948,6 +23298,8 @@ GameObject:
   - component: {fileID: 1477491525}
   - component: {fileID: 1477491527}
   - component: {fileID: 1477491528}
+  - component: {fileID: 1477491529}
+  - component: {fileID: 1477491530}
   m_Layer: 0
   m_Name: Craneo_Pieza.19
   m_TagString: Removable
@@ -23074,6 +23426,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1477491529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477491523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1477491530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1477491523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1477491527}
+  outlineEffct: {fileID: 1477491529}
 --- !u!1 &1480369811
 GameObject:
   m_ObjectHideFlags: 0
@@ -23198,6 +23583,8 @@ GameObject:
   - component: {fileID: 1483256596}
   - component: {fileID: 1483256598}
   - component: {fileID: 1483256599}
+  - component: {fileID: 1483256600}
+  - component: {fileID: 1483256601}
   m_Layer: 0
   m_Name: Craneo_Pieza.6
   m_TagString: Removable
@@ -23324,6 +23711,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1483256600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483256593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1483256601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483256593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1483256598}
+  outlineEffct: {fileID: 1483256600}
 --- !u!1 &1496188643
 GameObject:
   m_ObjectHideFlags: 0
@@ -24020,6 +24440,8 @@ GameObject:
   - component: {fileID: 1553513638}
   - component: {fileID: 1553513640}
   - component: {fileID: 1553513641}
+  - component: {fileID: 1553513642}
+  - component: {fileID: 1553513643}
   m_Layer: 0
   m_Name: Craneo_Pieza.2
   m_TagString: Removable
@@ -24146,6 +24568,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1553513642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553513635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1553513643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553513635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1553513640}
+  outlineEffct: {fileID: 1553513642}
 --- !u!1 &1555208845
 GameObject:
   m_ObjectHideFlags: 0
@@ -25435,6 +25890,8 @@ GameObject:
   - component: {fileID: 1640886787}
   - component: {fileID: 1640886789}
   - component: {fileID: 1640886790}
+  - component: {fileID: 1640886791}
+  - component: {fileID: 1640886792}
   m_Layer: 0
   m_Name: Craneo_Pieza.17
   m_TagString: Removable
@@ -25561,6 +26018,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1640886791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640886785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1640886792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640886785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1640886789}
+  outlineEffct: {fileID: 1640886791}
 --- !u!1 &1643153287
 GameObject:
   m_ObjectHideFlags: 0
@@ -26201,6 +26691,8 @@ GameObject:
   - component: {fileID: 1725776122}
   - component: {fileID: 1725776124}
   - component: {fileID: 1725776125}
+  - component: {fileID: 1725776126}
+  - component: {fileID: 1725776127}
   m_Layer: 0
   m_Name: Craneo_Pieza.0
   m_TagString: Removable
@@ -26327,6 +26819,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1725776126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725776119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1725776127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725776119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1725776124}
+  outlineEffct: {fileID: 1725776126}
 --- !u!1001 &1731659956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26397,6 +26922,8 @@ GameObject:
   - component: {fileID: 1739840488}
   - component: {fileID: 1739840490}
   - component: {fileID: 1739840491}
+  - component: {fileID: 1739840492}
+  - component: {fileID: 1739840493}
   m_Layer: 0
   m_Name: Craneo_Pieza.11
   m_TagString: Removable
@@ -26523,6 +27050,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1739840492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739840485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1739840493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739840485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1739840490}
+  outlineEffct: {fileID: 1739840492}
 --- !u!1 &1754699343
 GameObject:
   m_ObjectHideFlags: 0
@@ -28183,6 +28743,8 @@ GameObject:
   - component: {fileID: 1946786759}
   - component: {fileID: 1946786761}
   - component: {fileID: 1946786762}
+  - component: {fileID: 1946786763}
+  - component: {fileID: 1946786764}
   m_Layer: 0
   m_Name: Craneo_Pieza.15
   m_TagString: Removable
@@ -28309,6 +28871,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1946786763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946786757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1946786764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946786757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1946786761}
+  outlineEffct: {fileID: 1946786763}
 --- !u!1 &1946881590
 GameObject:
   m_ObjectHideFlags: 0
@@ -28430,6 +29025,8 @@ GameObject:
   - component: {fileID: 1950574077}
   - component: {fileID: 1950574079}
   - component: {fileID: 1950574080}
+  - component: {fileID: 1950574081}
+  - component: {fileID: 1950574082}
   m_Layer: 0
   m_Name: Craneo_Pieza.7
   m_TagString: Removable
@@ -28556,6 +29153,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &1950574081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950574074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1950574082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950574074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 1950574079}
+  outlineEffct: {fileID: 1950574081}
 --- !u!1 &1952723635
 GameObject:
   m_ObjectHideFlags: 0
@@ -29020,13 +29650,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1971502680}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -1, w: 0.00000058114523}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -0.000099999874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2035304875}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 180}
 --- !u!1 &1972145503
 GameObject:
   m_ObjectHideFlags: 0
@@ -30234,10 +30864,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9610d0343367b1840b99f57c028dfe62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoneCutPosition
-  initialPosition: {x: 0.000000018912933, y: 1.0364852, z: 0.9719518}
-  firstCutPosition: {x: 0.00000001891293, y: 1.03619, z: 0.97207}
-  secondCutPosition: {x: 0.00000001891293, y: 1.03581, z: 0.97154}
-  thirdCutPosition: {x: 0.00000001891293, y: 1.03543, z: 0.97116}
 --- !u!95 &2032477601
 Animator:
   serializedVersion: 7
@@ -31615,6 +32241,8 @@ GameObject:
   - component: {fileID: 2114106209}
   - component: {fileID: 2114106211}
   - component: {fileID: 2114106212}
+  - component: {fileID: 2114106213}
+  - component: {fileID: 2114106214}
   m_Layer: 0
   m_Name: Craneo_Pieza.8
   m_TagString: Removable
@@ -31741,6 +32369,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &2114106213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114106206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &2114106214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114106206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 2114106211}
+  outlineEffct: {fileID: 2114106213}
 --- !u!1 &2115473508
 GameObject:
   m_ObjectHideFlags: 0
@@ -31831,6 +32492,8 @@ GameObject:
   - component: {fileID: 2137497188}
   - component: {fileID: 2137497190}
   - component: {fileID: 2137497191}
+  - component: {fileID: 2137497192}
+  - component: {fileID: 2137497193}
   m_Layer: 0
   m_Name: Craneo_Pieza.1
   m_TagString: Removable
@@ -31957,6 +32620,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &2137497192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137497186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &2137497193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137497186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 2137497190}
+  outlineEffct: {fileID: 2137497192}
 --- !u!1 &2140134476
 GameObject:
   m_ObjectHideFlags: 0
@@ -32046,6 +32742,8 @@ GameObject:
   - component: {fileID: 2142864686}
   - component: {fileID: 2142864688}
   - component: {fileID: 2142864689}
+  - component: {fileID: 2142864690}
+  - component: {fileID: 2142864691}
   m_Layer: 0
   m_Name: Craneo_Pieza.20
   m_TagString: Removable
@@ -32172,6 +32870,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &2142864690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142864683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.7264151, g: 0.62588143, b: 0.26383942, a: 1}
+  outlineWidth: 10
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &2142864691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142864683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6f19fb577217e4c85265c6623dd44b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkullPieces
+  keyTag: Anchor
+  col: {fileID: 2142864688}
+  outlineEffct: {fileID: 2142864690}
 --- !u!33 &152354394227103838
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -35262,7 +35993,7 @@ GameObject:
   - component: {fileID: 5490707251428373118}
   m_Layer: 0
   m_Name: Kerrison Rongeur
-  m_TagString: Untagged
+  m_TagString: Anchor
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35567,7 +36298,6 @@ Transform:
   - {fileID: 4328118533256325805}
   - {fileID: 328203632}
   - {fileID: 2075193685}
-  - {fileID: 1394382958}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!54 &5490707251428373115
@@ -35846,7 +36576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765062fa96b9e4d4ea230aafa06dc0d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Kerrison
-  targetPosition: {fileID: 1394382958}
+  targetPosition: {fileID: 2075193685}
   isDetecting: 0
   targetTag: Removable
   hasOne: 0

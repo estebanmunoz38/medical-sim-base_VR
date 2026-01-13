@@ -9,7 +9,9 @@ namespace Logic.SurgicalProcedure
     public enum SurgicalStepId
     {
         Idle,
+        Scapel,
         SubcutaneousDissection,
+        Drill,
         Hemostasis,
         BoneClosure,
         SkinPlasty,

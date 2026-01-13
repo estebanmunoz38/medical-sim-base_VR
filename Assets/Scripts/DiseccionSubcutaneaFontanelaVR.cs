@@ -1,217 +1,302 @@
-using System;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Splines;
 
-public class DiseccionSubcutaneaFontanelaVR : MonoBehaviour
+public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
 {
     [Header("Input VR")]
-    public MonoBehaviour inputSourceBehaviour;   // Debe implementar IToolInputSource
+    public MonoBehaviour inputSourceBehaviour;
     private IToolInputSource input;
 
-    [Header("Herramienta (modelo y punta)")]
-    public Transform toolModel;                  // Modelo de la herramienta en mano
-    public Transform toolTip;                    // Punta (o punto de contacto) de la herramienta
+    [Header("Splines")]
+    public SplineContainer subcutaneousSpline;
+    public SplineContainer fontanelleSpline;
 
-    [Header("Recorrido - Disección Subcutánea")]
-    public Transform[] subcutaneousPathPoints;
+    [Header("Config")]
+    public float maxDistanceToSpline = 0.015f;
+    public bool doSubcutaneousThenFontanelle = true;
+    public float penaltyThreshold = 0.7f;
 
-    [Header("Recorrido - Disección Fontanela")]
-    public Transform[] fontanellePathPoints;
-
-    [Header("Comportamiento")]
-    public bool hacerSubcutaneaYLuegoFontanela = true;  // Si false, usa 'empezarEn'
-    public Paso empezarEn = Paso.Subcutanea;
-
-    [Header("Movimiento")]
-    public float movementSpeed = 0.7f;
-    public float snapStartDistance = 0.08f;
-    public float smoothPosition = 12f;
-    public float smoothRotation = 12f;
-
-    [Header("Animación final (opcional) - Subcutánea")]
+    [Header("FEEDBACK")]
+    [Header("Bones Movement")]
     public Transform endBoneSubcutanea;
-    public float finalRotationSubcutanea = -20f;
-    public float boneSpeedSubcutanea = 4f;
-
-    [Header("Animación final (opcional) - Fontanela")]
     public Transform endBoneFontanela;
-    public float finalRotationFontanela = -20f;
-    public float boneSpeedFontanela = 4f;
+    public float finalRotation = -20f;
+    public float boneSpeed = 4f;
+    [Space]
+    [Header("Precision Halo")]
+    public Transform precisionHalo;
+    public Renderer haloRenderer;
+    public Color goodColor = new Color(0.3f, 1f, 0.8f);
+    public Color badColor = new Color(1f, 0.3f, 0.3f);
+    public float minHaloScale = 0.005f;
+    public float maxHaloScale = 0.02f;
+    public float haloSmooth = 10f;
+    [Space]
+    [Header("Fontanelle")]
+    [SerializeField] FontanellePainter painter;
+    [SerializeField] LayerMask fontanelleLayer;
+    [SerializeField] float paintRate = 1f;
+    [SerializeField] ParticleSystem tissueParticles;
+    [SerializeField] float maxEmissionRate = 30f;
+
     
-    public enum Paso { Subcutanea, Fontanela }
 
-    private Paso pasoActual;
-    private Transform[] pathPointsActual;
+    enum Paso { Subcutanea, Fontanela }
+    
+    #region PRIVATE FIELDS
+    [SerializeField] Paso pasoActual;
 
-    private float t = 0f;        // [0..1]
-    private bool trabajando = false;
-    private bool terminado = false;
+    SplineContainer currentSpline;
+    float validatedProgress;
+    float lastValidT = 0f;
+    private float currentDistance;
 
+    private float initialBoneAngle;
+    private float errorPenalty;
+
+    private float Speed
+    {
+        get
+        {
+            if (pasoActual == Paso.Subcutanea)
+            {
+                return 0.25f;
+            }
+            else
+            {
+                return 0.075f;
+            }
+        }
+    }
+    #endregion
+
+    #region Unity Methods
     void Start()
     {
         input = inputSourceBehaviour as IToolInputSource;
-
-        if (input == null)
+        if (input == null || toolTip == null)
         {
-            Debug.LogError("❌ DiseccionSubcutaneaFontanelaVR: inputSourceBehaviour NO implementa IToolInputSource.");
+            Debug.LogError("❌ Disección: Setup inválido.");
             enabled = false;
             return;
         }
 
-        if (toolModel == null || toolTip == null)
-        {
-            Debug.LogError("❌ DiseccionSubcutaneaFontanelaVR: toolModel o toolTip no asignados.");
-            enabled = false;
-            return;
-        }
-
-        // Selección inicial del paso
-        pasoActual = (hacerSubcutaneaYLuegoFontanela) ? Paso.Subcutanea : empezarEn;
-        if (!SetPathForCurrentStep())
-        {
-            enabled = false;
-            return;
-        }
+        errorPenalty = 0f;
+        pasoActual = Paso.Subcutanea;
+        SetCurrentSpline();
+        initialBoneAngle = endBoneSubcutanea.localEulerAngles.x;
     }
 
     void Update()
     {
-        if (terminado) return;
+        if (terminado)
+            return;
 
-        if (!trabajando)
-            TrySnapStart();
+        EvaluateToolOnSpline();
+    }
+    #endregion
+
+    // =========================================================
+    // CORE SIMULATOR LOGIC
+    // =========================================================
+    private void EvaluateToolOnSpline()
+    {
+        if (!input.PrimaryHeld)
+            return;
+
+        // Punto más cercano en el spline
+        SplineUtility.GetNearestPoint(
+            currentSpline.Spline,
+            currentSpline.transform.InverseTransformPoint(toolTip.position),
+            out float3 localPos,
+            out float nearestT
+        );
+
+        Vector3 nearestWorldPos =
+            currentSpline.transform.TransformPoint(localPos);
+
+        // Distancia al plano anatómico
+        float distance = Vector3.Distance(toolTip.position, nearestWorldPos);
+
+        // Influencia
+        float influence = Mathf.InverseLerp(
+            maxDistanceToSpline,
+            0f,
+            distance
+        );
+
+        // Penalty
+        if (influence < penaltyThreshold)
+        {
+            errorPenalty += (1f - influence) * (Time.deltaTime*0.05f);
+        }
         else
-            Advance();
-    }
-
-    // =========================
-    // Enganche al inicio
-    // =========================
-    void TrySnapStart()
-    {
-        Vector3 start = pathPointsActual[0].position;
-        float dist = Vector3.Distance(toolTip.position, start);
-
-        if (dist <= snapStartDistance && input.PrimaryDown)
         {
-            trabajando = true;
-            t = 0f;
+            errorPenalty -= (influence) * (Time.deltaTime * 0.15f);
         }
-    }
+        errorPenalty = Mathf.Clamp01(errorPenalty);
 
-    // =========================
-    // Avance por recorrido
-    // =========================
-    void Advance()
-    {
-        if (input.PrimaryHeld)
-            t += movementSpeed * Time.deltaTime;
-
-        t = Mathf.Clamp01(t);
-
-        Vector3 targetPos = GetPositionOnPath(pathPointsActual, t);
-        toolModel.position = Vector3.Lerp(toolModel.position, targetPos, Time.deltaTime * smoothPosition);
-
-        Quaternion targetRot = GetRotationOnPath(pathPointsActual, t);
-        toolModel.rotation = Quaternion.Slerp(toolModel.rotation, targetRot, Time.deltaTime * smoothRotation);
-
-        if (t >= 0.99f)
+        if (influence > 0f)
         {
-            trabajando = false;
-            
-            StartCoroutine(FinishCurrentStep());
+            // Progreso acumulativo (NO depende de T)
+            float speed = Speed;
+            if (errorPenalty <= 1 - penaltyThreshold)
+            {
+                validatedProgress += speed * influence * Time.deltaTime;
+            }
+            validatedProgress = Mathf.Clamp01(validatedProgress);
         }
+        
+        float effectiveT = validatedProgress * Mathf.Clamp01(influence);
+        
+        // 5. Feedback visual orgánico
+        UpdateVisualFeedback(validatedProgress, effectiveT, distance, nearestWorldPos);
+
+        // 6. Fin del paso
+        if (validatedProgress >= 0.98f)
+            CompleteCurrentStep();
     }
 
-    // =========================
-    // Fin de paso y transición
-    // =========================
-    System.Collections.IEnumerator FinishCurrentStep()
+    // =========================================================
+    // TRANSICIONES
+    // =========================================================
+    void CompleteCurrentStep()
     {
-        // Animación final opcional del paso actual
+        ResetValues();
+        
         if (pasoActual == Paso.Subcutanea)
         {
             if (endBoneSubcutanea != null)
-                yield return StartCoroutine(RotateBone(endBoneSubcutanea, finalRotationSubcutanea, boneSpeedSubcutanea));
+                StartCoroutine(RotateBone(endBoneSubcutanea));
+
+            if (doSubcutaneousThenFontanelle)
+            {
+                pasoActual = Paso.Fontanela;
+                SetCurrentSpline();
+                lastValidT = 0f;
+                validatedProgress = 0f;
+                return;
+            }
         }
-        else // Fontanela
+        else
         {
             if (endBoneFontanela != null)
-                yield return StartCoroutine(RotateBone(endBoneFontanela, finalRotationFontanela, boneSpeedFontanela));
-        }
-
-        // Si se quiere encadenar pasos: Subcutánea -> Fontanela
-        if (hacerSubcutaneaYLuegoFontanela && pasoActual == Paso.Subcutanea)
-        {
-            pasoActual = Paso.Fontanela;
-            if (!SetPathForCurrentStep())
-            {
-                terminado = true;
-                yield break;
-            }
-
-            // Queda listo para enganchar al inicio del segundo recorrido
-            t = 0f;
-            trabajando = false;
-            yield break;
-        }
-
-        // Si no hay más pasos
+                StartCoroutine(RotateBone(endBoneFontanela));
+        } 
+        ResetValues();
         terminado = true;
+        EndStep();
     }
 
-    System.Collections.IEnumerator RotateBone(Transform bone, float finalRotX, float speed)
+    void SetCurrentSpline()
     {
-        float angle = bone.localEulerAngles.x;
+        currentSpline = (pasoActual == Paso.Subcutanea)
+            ? subcutaneousSpline
+            : fontanelleSpline;
+    }
+
+    // =========================================================
+    // FEEDBACK
+    // =========================================================
+    void UpdateVisualFeedback(float t, float precision, float distance, Vector3 nearestWorldPos)
+    {
+        if (precisionHalo == null || haloRenderer == null)
+            return;
+
+        // Retorno si está muy mal
+        if (precision <= 0f)
+        {
+            return;
+        }
+
+        precisionHalo.gameObject.SetActive(true);
+
+        // Tamaño (más preciso = más chico)
+        float scale = Mathf.Lerp(maxHaloScale, minHaloScale, distance);
+        precisionHalo.localScale = Vector3.Lerp(
+            precisionHalo.localScale,
+            Vector3.one * scale,
+            Time.deltaTime * haloSmooth
+        );
+
+        // Color
+        Color c = Color.Lerp(badColor, goodColor, precision);
+        haloRenderer.material.color = c;
+        
+        // Apertura de piel
+        if (pasoActual == Paso.Subcutanea)
+        {
+            RotateBone(endBoneSubcutanea, precision);
+        }
+        // Painter Brush
+        else
+        {
+            Ray ray = new Ray(toolTip.position, Vector3.down);
+            Debug.DrawRay(ray.origin, ray.direction * 0.002f, Color.green);
+            if (Physics.Raycast(ray, out RaycastHit hit, 0.002f, fontanelleLayer))
+            {
+                painter.Paint(
+                    hit.textureCoord,
+                    paintRate * (Time.deltaTime * t)
+                );
+            }
+            
+            PlayFontanelaParticles(precision, toolTip.position);
+        }
+        
+    }
+
+    System.Collections.IEnumerator RotateBone(Transform bone)
+    {
+        float start = bone.localEulerAngles.x;
         float elapsed = 0f;
 
         while (elapsed < 1f)
         {
-            angle = Mathf.Lerp(angle, finalRotX, Time.deltaTime * speed);
+            float angle = Mathf.LerpAngle(start, finalRotation, elapsed);
             Vector3 e = bone.localEulerAngles;
             e.x = angle;
             bone.localEulerAngles = e;
 
-            elapsed += Time.deltaTime;
+            elapsed += Time.deltaTime * boneSpeed;
             yield return null;
         }
     }
 
-    bool SetPathForCurrentStep()
+    private void RotateBone(Transform bone, float t)
     {
-        pathPointsActual = (pasoActual == Paso.Subcutanea) ? subcutaneousPathPoints : fontanellePathPoints;
+        float start = initialBoneAngle;
+        float angle = Mathf.LerpAngle(start, finalRotation, t);
+        Vector3 e = bone.localEulerAngles;
+        e.x = angle;
+        bone.localEulerAngles = e;
+    }
 
-        if (pathPointsActual == null || pathPointsActual.Length < 2)
+    private void PlayFontanelaParticles(float precision, Vector3 pos)
+    {
+        if (tissueParticles == null)
+            return;
+
+        if(!tissueParticles.gameObject.activeInHierarchy)
+            tissueParticles.gameObject.SetActive(true);
+        
+        tissueParticles.transform.position = pos;
+        var emission = tissueParticles.emission;
+
+        if (precision < 0.1f)
         {
-            Debug.LogError("❌ DiseccionSubcutaneaFontanelaVR: pathPoints insuficientes para el paso: " + pasoActual);
-            return false;
+            emission.rateOverTime = 0f;
+            return;
         }
 
-        return true;
+        emission.rateOverTime = Mathf.Lerp(5f, maxEmissionRate, precision);
     }
 
-    // =========================
-    // Utils de Path
-    // =========================
-    Vector3 GetPositionOnPath(Transform[] path, float tNorm)
+    private void ResetValues()
     {
-        float scaled = tNorm * (path.Length - 1);
-        int idx = Mathf.FloorToInt(scaled);
-        int next = Mathf.Clamp(idx + 1, 0, path.Length - 1);
-
-        float localT = scaled - idx;
-        return Vector3.Lerp(path[idx].position, path[next].position, localT);
+        precisionHalo.gameObject.SetActive(false);
+        errorPenalty = 0;
+        tissueParticles.gameObject.SetActive(false);
     }
-
-    Quaternion GetRotationOnPath(Transform[] path, float tNorm)
-    {
-        float scaled = tNorm * (path.Length - 1);
-        int idx = Mathf.FloorToInt(scaled);
-        int next = Mathf.Clamp(idx + 1, 0, path.Length - 1);
-
-        Vector3 dir = (path[next].position - path[idx].position).normalized;
-        if (dir.sqrMagnitude < 0.000001f) dir = toolModel.forward;
-
-        return Quaternion.LookRotation(dir, Vector3.up);
-    }
-    
 }

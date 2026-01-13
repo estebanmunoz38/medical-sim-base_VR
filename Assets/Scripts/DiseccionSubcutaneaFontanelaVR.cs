@@ -65,7 +65,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             }
             else
             {
-                return 0.075f;
+                return 0.125f;
             }
         }
     }
@@ -77,7 +77,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         input = inputSourceBehaviour as IToolInputSource;
         if (input == null || toolTip == null)
         {
-            Debug.LogError("❌ Disección: Setup inválido.");
+            Debug.LogError("Disección: Setup inválido.");
             enabled = false;
             return;
         }
@@ -103,7 +103,10 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     private void EvaluateToolOnSpline()
     {
         if (!input.PrimaryHeld)
+        {
             return;
+        }
+            
 
         // Punto más cercano en el spline
         SplineUtility.GetNearestPoint(
@@ -233,8 +236,8 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         else
         {
             Ray ray = new Ray(toolTip.position, Vector3.down);
-            Debug.DrawRay(ray.origin, ray.direction * 0.002f, Color.green);
-            if (Physics.Raycast(ray, out RaycastHit hit, 0.002f, fontanelleLayer))
+            Debug.DrawRay(ray.origin, ray.direction * 0.003f, Color.green);
+            if (Physics.Raycast(ray, out RaycastHit hit, 0.003f, fontanelleLayer))
             {
                 painter.Paint(
                     hit.textureCoord,

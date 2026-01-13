@@ -42,7 +42,8 @@ public class SurgicalStep : MonoBehaviour
 
         if (shouldLockTool)
         {
-            toolModel.GetComponent<ToolInteractionLock>().Lock();
+            // Apply Lock Logic
+            //toolModel.GetComponent<ToolInteractionLock>().Lock();
         }
     }
 
@@ -52,7 +53,8 @@ public class SurgicalStep : MonoBehaviour
         
         if (shouldLockTool)
         {
-            toolModel.GetComponent<ToolInteractionLock>().Unlock();
+            // Apply Unlock Logic
+            // toolModel.GetComponent<ToolInteractionLock>().Unlock();
         }
     }
 

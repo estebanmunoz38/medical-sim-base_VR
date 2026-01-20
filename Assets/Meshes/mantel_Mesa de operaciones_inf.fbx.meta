@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c4652e42cd441884f8543b1f8c1b539f
+guid: 46e2c6b11bb7d0e4897be2fe88ab49fc
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,27 +7,12 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Cristal
-    second: {fileID: 2100000, guid: 58531e1c790585245b91fa2839dbca51, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Pared
-    second: {fileID: 2100000, guid: 4b60bfef34900684ea0c7dd6bc30ae47, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Piso
-    second: {fileID: 2100000, guid: 42f39ecf629bc944c915153d9e3593c5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Techo
-    second: {fileID: 2100000, guid: 087e766153a09954090bc5276639effe, type: 2}
+      name: Mantel_esterilizado
+    second: {fileID: 2100000, guid: 512b3db38a2fbf1429dbb0865762152a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
-    materialSearch: 1
+    materialSearch: 2
     materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
@@ -55,7 +40,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importPhysicalCameras: 1
@@ -66,7 +51,7 @@ ModelImporter:
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 1
+    generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1

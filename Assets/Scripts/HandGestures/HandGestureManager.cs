@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class HandGestureManager : MonoBehaviour
 {
     #region Fields
@@ -22,7 +23,7 @@ public class HandGestureManager : MonoBehaviour
 
     [Header("Precision")]
     public float maxAllowedError = 0.02f;
-
+    
     // =====================
     // OUTPUT (API pública)
     // =====================

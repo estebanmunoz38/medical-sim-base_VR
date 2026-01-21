@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class SurgicalTool : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class SurgicalTool : MonoBehaviour
     protected virtual void Awake()
     {
         grab = GetComponent<XRGrabInteractable>();
+        
+        if (!grab)
+        {
+            Debug.LogError($"{name} requires XRGrabInteractable");
+            enabled = false;
+        }
     }
     
     protected virtual void OnEnable()
@@ -35,7 +42,9 @@ public class SurgicalTool : MonoBehaviour
         var interactorGO = args.interactorObject.transform;
 
         activeGestures = interactorGO.GetComponentInParent<HandGestureManager>();
-
+        
+        OnToolGrabbed();
+        
         if (activeGestures == null)
             Debug.LogWarning("Tool grabbed but no HandGestureManager found.");
     }
@@ -43,6 +52,12 @@ public class SurgicalTool : MonoBehaviour
     private void OnReleased(SelectExitEventArgs args)
     {
         activeGestures = null;
+        
+        OnToolReleased();
     }
+    
+    // Hooks para hijos
+    protected virtual void OnToolGrabbed() { }
+    protected virtual void OnToolReleased() { }
     #endregion
 }

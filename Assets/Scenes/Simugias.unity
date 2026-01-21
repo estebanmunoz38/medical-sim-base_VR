@@ -6829,7 +6829,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503725, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1717954561962503726, guid: f6336ac4ac8b4d34bc5072418cdc62a0, type: 3}
       propertyPath: m_RootOrder
@@ -17746,6 +17746,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1085374340}
   m_CullTransparentMesh: 1
+--- !u!1001 &1090734468
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2490609178322986445, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_Name
+      value: XR Origin with Hands (XR Rig)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.359
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.00008796155
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2594549191239467977, guid: df0438b3632498147abbaaafe61a324d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: df0438b3632498147abbaaafe61a324d, type: 3}
 --- !u!1 &1117374924
 GameObject:
   m_ObjectHideFlags: 0
@@ -25573,34 +25630,10 @@ MonoBehaviour:
       m_Calls: []
   m_Activated:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1601772433}
-        m_TargetAssemblyTypeName: Draw, Assembly-CSharp
-        m_MethodName: StartDrawing
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_Deactivated:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1601772433}
-        m_TargetAssemblyTypeName: Draw, Assembly-CSharp
-        m_MethodName: StopDrawing
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_StartingHoverFilters: []
   m_StartingSelectFilters: []
   m_StartingInteractionStrengthFilters: []
@@ -25801,6 +25834,7 @@ MonoBehaviour:
   penWidth: 0.0025
   penColors: {r: 0.30588236, g: 0.47843137, b: 0.9137255, a: 1}
   isDrawing: 0
+  minPressure: 0.34
 --- !u!1 &1619622100
 GameObject:
   m_ObjectHideFlags: 0
@@ -38006,6 +38040,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 722329799}
   - {fileID: 450725698}
+  - {fileID: 1090734468}
   - {fileID: 441087506}
   - {fileID: 756192408}
   - {fileID: 2092139010}

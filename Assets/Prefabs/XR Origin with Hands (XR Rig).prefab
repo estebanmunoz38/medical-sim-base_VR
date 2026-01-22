@@ -509,11 +509,9 @@ MonoBehaviour:
   - {fileID: 2843042602663460145}
   m_StartingInteractionOverridesMap:
   - groupMember: {fileID: 4921094907996348086}
-    overrideGroupMembers:
-    - {fileID: 2232422506430948748}
+    overrideGroupMembers: []
   - groupMember: {fileID: 2843042602663460145}
-    overrideGroupMembers:
-    - {fileID: 2232422506430948748}
+    overrideGroupMembers: []
 --- !u!114 &9103689441531728570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1195,7 +1193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 1
   m_Handedness: 2
   m_AttachTransform: {fileID: 1029266924640112235}
   m_KeepSelectedTargetValid: 1
@@ -1223,7 +1221,7 @@ MonoBehaviour:
   m_PokeInteractionOffset: 0.005
   m_PhysicsLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32
   m_PhysicsTriggerInteraction: 1
   m_UIDocumentTriggerInteraction: 1
   m_RequirePokeFilter: 1
@@ -2634,11 +2632,9 @@ MonoBehaviour:
   - {fileID: 4438443695036186498}
   m_StartingInteractionOverridesMap:
   - groupMember: {fileID: 3207746515262703725}
-    overrideGroupMembers:
-    - {fileID: 1112183602048075227}
+    overrideGroupMembers: []
   - groupMember: {fileID: 4438443695036186498}
-    overrideGroupMembers:
-    - {fileID: 1112183602048075227}
+    overrideGroupMembers: []
 --- !u!114 &730753267520140685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3401,7 +3397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
   m_InteractionLayers:
-    m_Bits: 4294967295
+    m_Bits: 1
   m_Handedness: 1
   m_AttachTransform: {fileID: 4064545107660289747}
   m_KeepSelectedTargetValid: 1
@@ -3429,7 +3425,7 @@ MonoBehaviour:
   m_PokeInteractionOffset: 0.005
   m_PhysicsLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 32
   m_PhysicsTriggerInteraction: 1
   m_UIDocumentTriggerInteraction: 1
   m_RequirePokeFilter: 1
@@ -3791,7 +3787,7 @@ PrefabInstance:
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_ActivateInput.m_InputActionReferenceValue
       value: 
-      objectReference: {fileID: -4289430672226363583, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_SelectInput.m_InputActionReferencePerformed
       value: 
@@ -3799,7 +3795,7 @@ PrefabInstance:
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_ActivateInput.m_InputActionReferencePerformed
       value: 
-      objectReference: {fileID: -5982496924579745919, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6059725000919627127, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_Radius
       value: 0.1
@@ -3909,7 +3905,7 @@ PrefabInstance:
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_ActivateInput.m_InputActionReferenceValue
       value: 
-      objectReference: {fileID: 7904272356298805229, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_SelectInput.m_InputActionReferencePerformed
       value: 
@@ -3917,7 +3913,7 @@ PrefabInstance:
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_ActivateInput.m_InputActionReferencePerformed
       value: 
-      objectReference: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6059725000919627127, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_Radius
       value: 0.1

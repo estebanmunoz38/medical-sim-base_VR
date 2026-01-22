@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Draw : SurgicalTool
+public class Draw : MonoBehaviour
 {
     [Header("Pen Properties")]
     public Transform tip;
@@ -11,7 +11,6 @@ public class Draw : SurgicalTool
 
     [Header("Drawing Control")]
     public bool isDrawing = false;
-    [Range(0.1f,1f)] public float minPressure = .5f;
 
     private LineRenderer currentDrawing;
     private int index;
@@ -28,25 +27,12 @@ public class Draw : SurgicalTool
 
     void Update()
     {
-        if (activeGestures == null)
-            return;
-        
-
-        if (activeGestures.IsPinching &&
-            activeGestures.Pressure > minPressure)
-        {
-            RenderDrawing();
-        }
-        else
-        {
-            StopDrawing();
-        }
+        if (isDrawing)
+        { RenderDrawing(); }
     }
 
     public void RenderDrawing()
     {
-        if (!isDrawing) isDrawing = true;
-        
         if (currentDrawing == null)
         {
             index = 0;

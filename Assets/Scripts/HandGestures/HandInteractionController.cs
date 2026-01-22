@@ -27,14 +27,14 @@ public class HandInteractionController : MonoBehaviour
     #region Private Methods
     private void OnGrabStart(SelectEnterEventArgs arg0)
     {
-        _pokeInteractor.enabled = false;
-        _nearFarInteractor.enabled = false;
+        _pokeInteractor.gameObject.SetActive(false);
+        _nearFarInteractor.gameObject.SetActive(false);
     }
 
     private void OnGrabEnd(SelectExitEventArgs arg0)
     {
-        _pokeInteractor.enabled = true;
-        _nearFarInteractor.enabled = true;
+        _pokeInteractor.gameObject.SetActive(true);
+        _nearFarInteractor.gameObject.SetActive(true);
     }
     #endregion
 }

@@ -1444,8 +1444,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LeftHand: {fileID: 6304126358558043055}
   m_RightHand: {fileID: 1229578863823371070}
-  m_LeftController: {fileID: 0}
-  m_RightController: {fileID: 0}
+  m_LeftController: {fileID: 969947522398885980}
+  m_RightController: {fileID: 1429860524276565296}
   m_TrackedHandModeStarted:
     m_PersistentCalls:
       m_Calls: []

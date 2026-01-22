@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SkullPieces : MonoBehaviour
 {
+    [Header("Variables requeridas")]
+    [Tooltip("string key para la deteccion, colisionador necesario, efecto visual outline")]
     [SerializeField] string keyTag = "Anchor";
     [SerializeField] Collider col;
     [SerializeField] Outline outlineEffct;
@@ -23,17 +25,13 @@ public class SkullPieces : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == keyTag)
-        {
-            EnableOutline(true);
-        }
+        { EnableOutline(true); }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == keyTag)
-        {
-            EnableOutline(false);
-        }
+        { EnableOutline(false); }
     }
 
     public void SetOutlineColor(Color _col)

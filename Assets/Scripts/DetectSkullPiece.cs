@@ -2,17 +2,22 @@ using UnityEngine;
 
 public class DetectSkullPiece : MonoBehaviour
 {
-    public Encoscopy endoscopy;
+    public Endoscopio endoscopio;
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        if(other.gameObject.tag == "Removable")
-        { endoscopy.posStick.allowForwardMovement = false; }
+        if (other.CompareTag("Removable"))
+        {
+            endoscopio.MovementStop();
+            other.gameObject.GetComponent<Outline>().enabled = true;
+        }
     }
 
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
-        if(other.gameObject.tag == "Removable")
-        { endoscopy.posStick.allowForwardMovement = true; }
+        if (other.CompareTag("Removable"))
+        {
+            other.gameObject.GetComponent<Outline>().enabled = false;
+        }
     }
 }

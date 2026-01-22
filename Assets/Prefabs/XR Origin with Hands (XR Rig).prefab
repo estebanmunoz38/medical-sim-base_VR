@@ -798,7 +798,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1229578863823371070}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ccbdd52ba9c1ccd4d88d561b26d437ab, type: 3}
   m_Name: 
@@ -1221,7 +1221,7 @@ MonoBehaviour:
   m_PokeInteractionOffset: 0.005
   m_PhysicsLayerMask:
     serializedVersion: 2
-    m_Bits: 32
+    m_Bits: 33
   m_PhysicsTriggerInteraction: 1
   m_UIDocumentTriggerInteraction: 1
   m_RequirePokeFilter: 1
@@ -2921,7 +2921,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6304126358558043055}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ccbdd52ba9c1ccd4d88d561b26d437ab, type: 3}
   m_Name: 
@@ -3425,7 +3425,7 @@ MonoBehaviour:
   m_PokeInteractionOffset: 0.005
   m_PhysicsLayerMask:
     serializedVersion: 2
-    m_Bits: 32
+    m_Bits: 33
   m_PhysicsTriggerInteraction: 1
   m_UIDocumentTriggerInteraction: 1
   m_RequirePokeFilter: 1
@@ -3778,7 +3778,7 @@ PrefabInstance:
       objectReference: {fileID: 5820843714082727572}
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_SelectActionTrigger
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_SelectInput.m_InputActionReferenceValue
@@ -3896,7 +3896,7 @@ PrefabInstance:
       objectReference: {fileID: 9039222162620934990}
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_SelectActionTrigger
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 664489801923019586, guid: 2fd3e07afe5b461490fb8e314976b1b0, type: 3}
       propertyPath: m_SelectInput.m_InputActionReferenceValue

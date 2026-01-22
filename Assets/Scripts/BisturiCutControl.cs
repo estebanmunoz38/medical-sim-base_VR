@@ -35,7 +35,7 @@ public class BisturiCutControl : MonoBehaviour
             midCut.gameObject.SetActive(true);
             CheckAllCuts();
             ChangeAnimations("incision_1");
-            Debug.Log("Corte inicial hecho");
+            //Debug.Log("Corte inicial hecho");
         }
 
         if (other.gameObject.name == midCut.name)
@@ -45,7 +45,7 @@ public class BisturiCutControl : MonoBehaviour
             finalCut.gameObject.SetActive(true);
             CheckAllCuts();
             ChangeAnimations("incision_2");
-            Debug.Log("Corte medio hecho");
+            //Debug.Log("Corte medio hecho");
         }
 
         if (other.gameObject.name == finalCut.name)
@@ -54,7 +54,7 @@ public class BisturiCutControl : MonoBehaviour
             finalCut.gameObject.SetActive(false);
             CheckAllCuts();
             ChangeAnimations("incision_3");
-            Debug.Log("Corte final hecho");
+            //Debug.Log("Corte final hecho");
         }
     }
 

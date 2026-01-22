@@ -8,6 +8,7 @@ public class Endoscopio : MonoBehaviour
     [SerializeField] float speedMovement = 0.05f;
     [SerializeField] bool isMovingForward = false;
     [SerializeField] bool isMovingBackward = false;
+    [SerializeField] SplineRenderer endoscopyTail;
 
     void Start()
     { Init(); }
@@ -15,6 +16,7 @@ public class Endoscopio : MonoBehaviour
     void Init()
     {
         cameraFollower.follow = false;
+        endoscopyTail.SetClipRange(0f, 0f);
     }
 
     public void MoveForward()
@@ -25,7 +27,13 @@ public class Endoscopio : MonoBehaviour
 
     public void MoveBackward()
     {
+        isMovingForward = false;
         isMovingBackward = true;
+    }
+
+    public void MovementStop()
+    {
+        isMovingForward = false;
         isMovingBackward = false;
     }
 
@@ -35,6 +43,7 @@ public class Endoscopio : MonoBehaviour
             double _currentPercent = cameraFollower.result.percent;
             double _newPercent = Mathf.Clamp01((float)(_currentPercent + speedMovement * Time.deltaTime));
             cameraFollower.SetPercent(_newPercent);
+            endoscopyTail.SetClipRange(0, _newPercent);
         }
 
         if (isMovingBackward)
@@ -42,6 +51,7 @@ public class Endoscopio : MonoBehaviour
             double _currentPercent = cameraFollower.result.percent;
             double _newPercent = Mathf.Clamp01((float)(_currentPercent - speedMovement * Time.deltaTime));
             cameraFollower.SetPercent(_newPercent);
+            endoscopyTail.SetClipRange(0, _newPercent);
         }
     }
 }

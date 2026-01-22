@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c4652e42cd441884f8543b1f8c1b539f
+guid: 205afa9a8e9b7dd49a9f665e2bba09e0
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,27 +7,12 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Cristal
-    second: {fileID: 2100000, guid: 58531e1c790585245b91fa2839dbca51, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Pared
-    second: {fileID: 2100000, guid: 4b60bfef34900684ea0c7dd6bc30ae47, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Piso
-    second: {fileID: 2100000, guid: 42f39ecf629bc944c915153d9e3593c5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Techo
-    second: {fileID: 2100000, guid: 087e766153a09954090bc5276639effe, type: 2}
+      name: Manta_Esterilizada_Bebe
+    second: {fileID: 2100000, guid: c874520f771e1924aa15003af58f75aa, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
-    materialSearch: 1
+    materialSearch: 2
     materialLocation: 1
   animations:
     legacyGenerateAnimations: 4

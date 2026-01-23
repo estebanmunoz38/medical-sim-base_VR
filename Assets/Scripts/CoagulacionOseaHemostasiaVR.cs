@@ -140,7 +140,7 @@ public class CoagulacionOseaHemostasiaVR : MonoBehaviour
             trabajando = false;
             yield break;
         }
-
+        
         terminado = true;
     }
 

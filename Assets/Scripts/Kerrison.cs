@@ -1,14 +1,31 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.InputSystem.XR.Haptics;
 
 public class Kerrison : MonoBehaviour
 {
-    public UICount counter;
+    [Header("Variables requeridas")]
+    [Tooltip("Posicion de obj padre, bool de deteccion activa, bool si tiene una pieza agarrada, Controlador de Joystick")]
     [SerializeField] Transform targetPosition;
     [SerializeField] bool isDetecting;
     [SerializeField] string targetTag;
     [SerializeField] bool hasOne;
 
-    private Transform heldObj;
+    InputDevice rightHand;
+    InputDevice leftHand;
+
+    Transform heldObj;
+    SkullPieces skullPiece;
+
+    void Start()
+    { Init(); }
+
+    void Init()
+    {
+        rightHand = InputSystem.GetDevice<XRController>(CommonUsages.RightHand);
+        leftHand = InputSystem.GetDevice<XRController>(CommonUsages.LeftHand);
+    }
 
     public void DetectionActive()
     {
@@ -28,7 +45,6 @@ public class Kerrison : MonoBehaviour
             heldObj.GetComponent<Rigidbody>().useGravity = true;
             hasOne = false;
             heldObj = null;
-            counter.Sum();
         }
     }
 
@@ -41,6 +57,8 @@ public class Kerrison : MonoBehaviour
                 heldObj = other.transform;
                 heldObj.SetParent(targetPosition);
                 heldObj.localPosition = Vector3.zero;
+                skullPiece = heldObj.GetComponent<SkullPieces>();
+                skullPiece.SetOutlineColor(Color.green);
                 isDetecting = false;
                 hasOne = true;
             }
@@ -49,7 +67,6 @@ public class Kerrison : MonoBehaviour
         if(other.gameObject.name == "ClearCol" && hasOne)
         {
             DropPiece();
-            //piecesList.UpdateList(other.gameObject.name);
         }
     }
 }

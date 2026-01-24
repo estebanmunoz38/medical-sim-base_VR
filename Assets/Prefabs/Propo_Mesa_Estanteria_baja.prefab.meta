@@ -1,6 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/Propo_Mesa_Estanteria_baja.prefab.meta
 guid: fd7731cf03e6dc947be17ce056963a1d
 PrefabImporter:
+========
+guid: b3169d32327fe9b4ca4625470e3a252b
+folderAsset: yes
+DefaultImporter:
+>>>>>>>> origin/corr/development:Assets/Animations.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

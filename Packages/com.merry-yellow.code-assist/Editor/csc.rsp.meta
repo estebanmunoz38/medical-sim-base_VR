@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/Propo_Mesa_Estanteria_Ajustable.prefab.meta
+guid: 0cff309ebe623ed4f8752dc524514c70
+PrefabImporter:
+========
 guid: 45ca2846d675c9a438e49991db89e437
 DefaultImporter:
+>>>>>>>> origin/corr/development:Packages/com.merry-yellow.code-assist/Editor/csc.rsp.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

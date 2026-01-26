@@ -4,10 +4,6 @@ using UnityEngine.Splines;
 
 public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
 {
-    [Header("Input VR")]
-    public MonoBehaviour inputSourceBehaviour;
-    private IToolInputSource input;
-
     [Header("Splines")]
     public SplineContainer subcutaneousSpline;
     public SplineContainer fontanelleSpline;
@@ -72,16 +68,9 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     #endregion
 
     #region Unity Methods
-    void Start()
+    protected override void Start()
     {
-        input = inputSourceBehaviour as IToolInputSource;
-        if (input == null || toolTip == null)
-        {
-            Debug.LogError("Disección: Setup inválido.");
-            enabled = false;
-            return;
-        }
-
+        base.Start();
         errorPenalty = 0f;
         pasoActual = Paso.Subcutanea;
         SetCurrentSpline();
@@ -102,13 +91,14 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     // =========================================================
     private void EvaluateToolOnSpline()
     {
-        if (!input.PrimaryHeld)
-        {
+        if (activeHandGestures == null)
             return;
-        }
+
+        if (!activeHandGestures.IsPinching)
+            return;
             
 
-        // Punto más cercano en el spline
+        // Nearest point on spline
         SplineUtility.GetNearestPoint(
             currentSpline.Spline,
             currentSpline.transform.InverseTransformPoint(toolTip.position),
@@ -119,46 +109,69 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         Vector3 nearestWorldPos =
             currentSpline.transform.TransformPoint(localPos);
 
-        // Distancia al plano anatómico
-        float distance = Vector3.Distance(toolTip.position, nearestWorldPos);
+        float distance =
+            Vector3.Distance(toolTip.position, nearestWorldPos);
 
-        // Influencia
+        // Influencia espacial (0..1)
         float influence = Mathf.InverseLerp(
             maxDistanceToSpline,
             0f,
             distance
         );
 
-        // Penalty
-        if (influence < penaltyThreshold)
+        influence = Mathf.Clamp01(influence);
+
+        // Actualizar precisión gestual (para feedback)
+        activeHandGestures.UpdatePrecision(distance);
+        float precision = activeHandGestures.Precision;
+
+        // Penalización acumulativa (solo errores graves)
+        bool pushingHardOutside =
+            influence < 0.4f &&
+            activeHandGestures.Pressure > 0.25f;
+
+        if (pushingHardOutside)
         {
-            errorPenalty += (1f - influence) * (Time.deltaTime*0.05f);
+            errorPenalty += Time.deltaTime * 0.2f;
         }
         else
         {
-            errorPenalty -= (influence) * (Time.deltaTime * 0.15f);
+            errorPenalty -= Time.deltaTime * 0.1f;
         }
+
         errorPenalty = Mathf.Clamp01(errorPenalty);
 
-        if (influence > 0f)
-        {
-            // Progreso acumulativo (NO depende de T)
-            float speed = Speed;
-            if (errorPenalty <= 1 - penaltyThreshold)
-            {
-                validatedProgress += speed * influence * Time.deltaTime;
-            }
-            validatedProgress = Mathf.Clamp01(validatedProgress);
-        }
-        
-        float effectiveT = validatedProgress * Mathf.Clamp01(influence);
-        
-        // 5. Feedback visual orgánico
-        UpdateVisualFeedback(validatedProgress, effectiveT, distance, nearestWorldPos);
+        // Factores del progreso
+        float pressureFactor = activeHandGestures.Pressure;
+        float stabilityFactor = activeHandGestures.IsStable ? 1f : 0.6f;
+        float penaltyFactor = Mathf.Lerp(1f, 0.3f, errorPenalty);
 
-        // 6. Fin del paso
+        float speed = Speed;
+
+        // Progreso validado (orgánico)
+        float deltaProgress = speed *
+                              pressureFactor *
+                              influence *
+                              stabilityFactor *
+                              penaltyFactor *
+                              Time.deltaTime;
+
+        validatedProgress += deltaProgress;
+        validatedProgress = Mathf.Clamp01(validatedProgress);
+
+        // Feedback visual
+        UpdateVisualFeedback(
+            validatedProgress,
+            precision,
+            distance,
+            nearestWorldPos
+        );
+
+        // Finalización
         if (validatedProgress >= 0.98f)
+        {
             CompleteCurrentStep();
+        }
     }
 
     // =========================================================

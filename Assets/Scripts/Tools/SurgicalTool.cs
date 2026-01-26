@@ -8,6 +8,12 @@ public class SurgicalTool : MonoBehaviour
     #region Fields
     protected HandGestureManager activeGestures;
     protected XRGrabInteractable grab;
+    
+    public HandGestureManager ActiveGestures
+    {
+        get => activeGestures;
+    }
+
     #endregion
     
     #region Unity Methods

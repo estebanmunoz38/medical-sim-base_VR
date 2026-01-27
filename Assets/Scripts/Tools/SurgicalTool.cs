@@ -11,14 +11,14 @@ public class SurgicalTool : MonoBehaviour
     public float releasePinchThreshold = 0.2f;
     public float minHoldTime = 0.15f;
     
-    protected HandGestureManager activeGestures;
+    protected IHandGestureProvider activeGestures;
     protected XRGrabInteractable grab;
     
     private float holdTimer;
     private bool isLatched;
     private bool allowRelease;
     
-    public HandGestureManager ActiveGestures => activeGestures;
+    public IHandGestureProvider ActiveGestures => activeGestures;
     #endregion
     
     #region Unity Methods
@@ -47,16 +47,9 @@ public class SurgicalTool : MonoBehaviour
 
     protected void Update()
     {
-        if (!isLatched)
+        if (!isLatched || activeGestures == null)
             return;
 
-        if (activeGestures == null)
-        {
-            //allowRelease = true;
-            //ForceRelease();
-            return;
-        }
-            
         holdTimer += Time.deltaTime;
 
         if (holdTimer > minHoldTime &&
@@ -75,14 +68,11 @@ public class SurgicalTool : MonoBehaviour
         // El interactor que agarró el objeto
         var interactorGO = args.interactorObject.transform;
 
-        activeGestures = interactorGO.GetComponentInParent<HandGestureManager>();
+        activeGestures = interactorGO.GetComponentInParent<IHandGestureProvider>();
         
-        // Fallback para controllers
+        // Fallback si no hay gesture provider
         if (activeGestures == null)
         {
-            Debug.LogWarning("Tool grabbed but no HandGestureManager found.");
-            isLatched = true;
-            allowRelease = true; // dejamos que XRI maneje
             return;
         }
         
@@ -96,17 +86,15 @@ public class SurgicalTool : MonoBehaviour
 
     private void OnReleaseAttempt(SelectExitEventArgs args)
     {
-        // Cancelamos el release automático
+        print("OnReleaseAttempt");
+        // Si no permitimos soltar, simplemente ignoramos
         if (!allowRelease)
         {
-            // Bloqueamos el release
-            grab.interactionManager.SelectEnter(
-                args.interactorObject,
-                grab
-            );
+            // Volvemos a marcar el estado interno
+            isLatched = true;
             return;
         }
-        
+
         // Release real
         isLatched = false;
         activeGestures = null;
@@ -115,6 +103,8 @@ public class SurgicalTool : MonoBehaviour
 
     private void ForceRelease()
     {
+        print("ForseRelease");
+        
         if (grab.firstInteractorSelecting == null)
         {
             isLatched = false;
@@ -124,7 +114,8 @@ public class SurgicalTool : MonoBehaviour
         }
 
         isLatched = false;
-
+        
+        
         grab.interactionManager.SelectExit(
             grab.firstInteractorSelecting,
             grab

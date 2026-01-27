@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class HandGestureManager : MonoBehaviour
+public class HandGestureProvider : MonoBehaviour, IHandGestureProvider
 {
     #region Fields
     [Header("Hand Joints")]
@@ -12,6 +12,9 @@ public class HandGestureManager : MonoBehaviour
     [Header("Pinch")]
     public float pinchMaxDistance = 0.035f;
     public float pinchActivation = 0.7f;
+    
+    [Header("Grasp")]
+    public float graspActivation = 0.9f;
 
     [Header("Pressure")]
     public float maxScrubSpeed = 0.12f;
@@ -29,7 +32,7 @@ public class HandGestureManager : MonoBehaviour
     // =====================
     public float Pinch { get; private set; }          // 0..1
     public bool IsPinching => Pinch >= pinchActivation;
-
+    public bool IsGrasping => Pinch >= graspActivation;
     public float ScrubSpeed { get; private set; }
     public float Pressure { get; private set; }       // 0..1
     public bool IsStable { get; private set; }
@@ -68,7 +71,8 @@ public class HandGestureManager : MonoBehaviour
     void UpdatePinch()
     {
         float d = Vector3.Distance(thumbTip.position, indexTip.position);
-        Pinch = 1f - Mathf.Clamp01(d / pinchMaxDistance);
+        float rawPinch = 1f - Mathf.Clamp01(d / pinchMaxDistance);
+        Pinch = Mathf.Lerp(Pinch, rawPinch, Time.deltaTime * 12f);
     }
 
     // =====================
@@ -119,7 +123,7 @@ public class HandGestureManager : MonoBehaviour
             Time.deltaTime * pressureSmooth
         );
 
-        Pressure = smoothedPressure;
+        Pressure = Mathf.Clamp01(smoothedPressure);
     }
     #endregion
 

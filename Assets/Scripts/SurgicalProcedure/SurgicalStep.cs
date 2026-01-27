@@ -21,7 +21,7 @@ public class SurgicalStep : MonoBehaviour
     [SerializeField] public Transform toolModel;
     [SerializeField] public Transform toolTip;   
     
-    protected HandGestureManager activeHandGestures;
+    protected IHandGestureProvider activeHandGestures;
     protected SurgicalTool surgicalTool;
     protected bool isEnabled = false;
     protected bool trabajando = false;

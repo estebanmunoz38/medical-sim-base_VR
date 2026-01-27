@@ -423,6 +423,7 @@ GameObject:
   - component: {fileID: 6187343935620650710}
   - component: {fileID: 5170186530438551479}
   - component: {fileID: 778662030282824660}
+  - component: {fileID: 3334591415737511771}
   m_Layer: 0
   m_Name: Left Controller
   m_TagString: Untagged
@@ -592,6 +593,44 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+--- !u!114 &3334591415737511771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969947522398885980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f413d771ca88f4d88da2bccf6fea5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControllerGestureProvider
+  trigger:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Trigger
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 1b916f7d-0e56-43ce-9de4-8e297f5b297e
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 6558622148059887818, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  grip:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Grip
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: ea6f9c63-4f75-43ff-ac74-c0df15f7a176
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 6558622148059887818, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  fakeStabilityThreshold: 0.02
+  pinchSmooth: 12
 --- !u!1 &1229578863823371070
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,6 +972,7 @@ MonoBehaviour:
   palm: {fileID: 6567802322507880294}
   pinchMaxDistance: 0.035
   pinchActivation: 0.7
+  graspActivation: 0.9
   maxScrubSpeed: 0.12
   pressureSmooth: 8
   stabilityThreshold: 0.002
@@ -1043,6 +1083,7 @@ GameObject:
   - component: {fileID: 7405749747203520427}
   - component: {fileID: 2514052934107283040}
   - component: {fileID: 106733948422287902}
+  - component: {fileID: 8692622550023208090}
   m_Layer: 0
   m_Name: Right Controller
   m_TagString: Untagged
@@ -1212,6 +1253,44 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+--- !u!114 &8692622550023208090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429860524276565296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f413d771ca88f4d88da2bccf6fea5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControllerGestureProvider
+  trigger:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Trigger
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 3290b6e8-9b8e-4045-87b1-d49ab9ce77cd
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -1758520528963094988, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  grip:
+    m_UseReference: 1
+    m_Action:
+      m_Name: Grip
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 7d28569e-43e8-4c53-96a2-334914f8b1c8
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: -1758520528963094988, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  fakeStabilityThreshold: 0.02
+  pinchSmooth: 12
 --- !u!1 &1445517754492631489
 GameObject:
   m_ObjectHideFlags: 0
@@ -3108,6 +3187,7 @@ MonoBehaviour:
   palm: {fileID: 1794742862605117079}
   pinchMaxDistance: 0.035
   pinchActivation: 0.7
+  graspActivation: 0.9
   maxScrubSpeed: 0.12
   pressureSmooth: 8
   stabilityThreshold: 0.002

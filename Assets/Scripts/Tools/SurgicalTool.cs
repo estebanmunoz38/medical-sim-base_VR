@@ -52,8 +52,8 @@ public class SurgicalTool : MonoBehaviour
 
         if (activeGestures == null)
         {
-            allowRelease = true;
-            ForceRelease();
+            //allowRelease = true;
+            //ForceRelease();
             return;
         }
             
@@ -77,14 +77,21 @@ public class SurgicalTool : MonoBehaviour
 
         activeGestures = interactorGO.GetComponentInParent<HandGestureManager>();
         
+        // Fallback para controllers
+        if (activeGestures == null)
+        {
+            Debug.LogWarning("Tool grabbed but no HandGestureManager found.");
+            isLatched = true;
+            allowRelease = true; // dejamos que XRI maneje
+            return;
+        }
+        
         holdTimer = 0f;
         isLatched = true;
         allowRelease = false;
         
         OnToolGrabbed();
-        
-        if (activeGestures == null)
-            Debug.LogWarning("Tool grabbed but no HandGestureManager found.");
+            
     }
 
     private void OnReleaseAttempt(SelectExitEventArgs args)

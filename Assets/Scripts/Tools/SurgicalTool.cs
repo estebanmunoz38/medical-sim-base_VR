@@ -121,6 +121,8 @@ public class SurgicalTool : MonoBehaviour
             grab
         );
         
+        activeGestures = null;
+        OnToolReleased();
     }
     
     // Hooks para hijos

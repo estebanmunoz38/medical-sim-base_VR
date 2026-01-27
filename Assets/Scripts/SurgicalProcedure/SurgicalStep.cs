@@ -21,10 +21,27 @@ public class SurgicalStep : MonoBehaviour
     [SerializeField] public Transform toolModel;
     [SerializeField] public Transform toolTip;   
     
+    protected HandGestureManager activeHandGestures;
+    protected SurgicalTool surgicalTool;
     protected bool isEnabled = false;
     protected bool trabajando = false;
     protected bool terminado = false;
 
+    #region Unity Methods
+
+    protected virtual void Start()
+    {
+        if (surgicalTool != null)
+        {
+            SurgicalTool st = toolModel.GetComponent<SurgicalTool>();
+            surgicalTool = st != null ? st : toolModel.gameObject.AddComponent<SurgicalTool>();
+
+            activeHandGestures = surgicalTool.ActiveGestures;
+        }
+        
+    }
+    #endregion
+    
     #region Public Methods
     public void EnableStep()
     {

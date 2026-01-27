@@ -17,6 +17,8 @@ public class SurgicalTool : MonoBehaviour
     private float holdTimer;
     private bool isLatched;
     private bool allowRelease;
+    
+    public HandGestureManager ActiveGestures => activeGestures;
     #endregion
     
     #region Unity Methods

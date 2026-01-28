@@ -12,6 +12,11 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     public float maxDistanceToSpline = 0.015f;
     public bool doSubcutaneousThenFontanelle = true;
     public float penaltyThreshold = 0.7f;
+    
+    [Header("Segmented Progress")]
+    [SerializeField] int segmentCount = 12;
+    [SerializeField] float segmentUnlockThreshold = 0.85f;
+    [SerializeField] SplineSegmentVisualizer segmentVisualizer;
 
     [Header("FEEDBACK")]
     [Header("Bones Movement")]
@@ -50,6 +55,9 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
 
     private float initialBoneAngle;
     private float errorPenalty;
+    
+    private int currentSegmentIndex = 0;
+    private float segmentProgress = 0f;
 
     private float Speed
     {
@@ -91,14 +99,17 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     // =========================================================
     private void EvaluateToolOnSpline()
     {
+        var activeHandGestures = surgicalTool.ActiveGestures;
+        
         if (activeHandGestures == null)
             return;
 
         if (!activeHandGestures.IsPinching)
             return;
-            
 
-        // Nearest point on spline
+        // ===============================
+        // NEAREST POINT ON SPLINE
+        // ===============================
         SplineUtility.GetNearestPoint(
             currentSpline.Spline,
             currentSpline.transform.InverseTransformPoint(toolTip.position),
@@ -112,7 +123,29 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         float distance =
             Vector3.Distance(toolTip.position, nearestWorldPos);
 
-        // Influencia espacial (0..1)
+        // ===============================
+        // SPLINE SEGMENT LOGIC
+        // ===============================
+        float segmentSize = 1f / segmentCount;
+
+        int nearestSegment =
+            Mathf.FloorToInt(nearestT / segmentSize);
+
+        nearestSegment = Mathf.Clamp(
+            nearestSegment,
+            0,
+            segmentCount - 1
+        );
+
+        bool isCorrectSegment =
+            nearestSegment == currentSegmentIndex;
+
+        bool isAheadOfSegment =
+            nearestSegment > currentSegmentIndex;
+
+        // ===============================
+        // INFLUENCE (SPATIAL)
+        // ===============================
         float influence = Mathf.InverseLerp(
             maxDistanceToSpline,
             0f,
@@ -121,56 +154,88 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
 
         influence = Mathf.Clamp01(influence);
 
-        // Actualizar precisión gestual (para feedback)
+        // ===============================
+        // PRECISION FEEDBACK
+        // ===============================
         activeHandGestures.UpdatePrecision(distance);
         float precision = activeHandGestures.Precision;
 
-        // Penalización acumulativa (solo errores graves)
+        // ===============================
+        // ERROR PENALTY (ORDER + FORCE)
+        // ===============================
         bool pushingHardOutside =
             influence < 0.4f &&
             activeHandGestures.Pressure > 0.25f;
 
-        if (pushingHardOutside)
+        if (pushingHardOutside || isAheadOfSegment)
         {
-            errorPenalty += Time.deltaTime * 0.2f;
+            errorPenalty += Time.deltaTime * 0.25f;
         }
         else
         {
-            errorPenalty -= Time.deltaTime * 0.1f;
+            errorPenalty -= Time.deltaTime * 0.15f;
         }
 
         errorPenalty = Mathf.Clamp01(errorPenalty);
 
-        // Factores del progreso
+        // ===============================
+        // PROGRESS FACTORS
+        // ===============================
         float pressureFactor = activeHandGestures.Pressure;
         float stabilityFactor = activeHandGestures.IsStable ? 1f : 0.6f;
         float penaltyFactor = Mathf.Lerp(1f, 0.3f, errorPenalty);
 
         float speed = Speed;
 
-        // Progreso validado (orgánico)
-        float deltaProgress = speed *
-                              pressureFactor *
-                              influence *
-                              stabilityFactor *
-                              penaltyFactor *
-                              Time.deltaTime;
+        float deltaProgress =
+            speed *
+            pressureFactor *
+            influence *
+            stabilityFactor *
+            penaltyFactor *
+            Time.deltaTime;
 
-        validatedProgress += deltaProgress;
-        validatedProgress = Mathf.Clamp01(validatedProgress);
+        // ===============================
+        // SEGMENTED PROGRESS
+        // ===============================
+        if (isCorrectSegment)
+        {
+            segmentProgress += deltaProgress;
+            segmentProgress = Mathf.Clamp01(segmentProgress);
+        }
+        else if (isAheadOfSegment)
+        {
+            // Feedback negativo por adelantarse
+            segmentProgress -= Time.deltaTime * 0.2f;
+            segmentProgress = Mathf.Clamp01(segmentProgress);
+        }
 
-        // Feedback visual
+        // ===============================
+        // VISUAL FEEDBACK
+        // ===============================
         UpdateVisualFeedback(
-            validatedProgress,
+            segmentProgress,
             precision,
             distance,
-            nearestWorldPos
+            nearestSegment
         );
 
-        // Finalización
-        if (validatedProgress >= 0.98f)
+        // ===============================
+        // SEGMENT COMPLETION
+        // ===============================
+        if (segmentProgress >= segmentUnlockThreshold)
         {
-            CompleteCurrentStep();
+            currentSegmentIndex++;
+            segmentProgress = 0f;
+
+            // Refuerzo visual / auditivo (hook)
+            OnSegmentCompleted();
+
+            // Paso terminado
+            if (currentSegmentIndex >= segmentCount)
+            {
+                CompleteCurrentStep();
+            }
         }
     }
 
@@ -215,7 +280,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     // =========================================================
     // FEEDBACK
     // =========================================================
-    void UpdateVisualFeedback(float t, float precision, float distance, Vector3 nearestWorldPos)
+    void UpdateVisualFeedback(float t, float precision, float distance, int nearestSegment)
     {
         if (precisionHalo == null || haloRenderer == null)
             return;
@@ -226,7 +291,15 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             return;
         }
 
+        segmentVisualizer.UpdateVisual(currentSegmentIndex);
         precisionHalo.gameObject.SetActive(true);
+        
+        if (nearestSegment != currentSegmentIndex)
+        {
+            precisionHalo.gameObject.SetActive(false);
+            return;
+        }
+        
 
         // Tamaño (más preciso = más chico)
         float scale = Mathf.Lerp(maxHaloScale, minHaloScale, distance);
@@ -263,6 +336,14 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         
     }
 
+    void OnSegmentCompleted()
+    {
+        // flash halo
+        // sound
+        // small particle burst
+        // haptic (si aplica)
+    }
+    
     System.Collections.IEnumerator RotateBone(Transform bone)
     {
         float start = bone.localEulerAngles.x;

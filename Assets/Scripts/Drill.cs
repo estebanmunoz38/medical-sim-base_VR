@@ -5,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Drill : MonoBehaviour
 {
+    public GameObject holeObj;
     public Renderer targetRenderer;
     public Material baseMat;
     public Material[] interactableMat;
@@ -24,13 +25,22 @@ public class Drill : MonoBehaviour
         if (isDrilling)
         {
             if (other.name == ("low"))
-            { ChangeColor(0); }
+            {
+                ChangeColor(0);
+                holeObj.SetActive(false);
+            }
 
             if (other.name == ("ideal"))
-            { ChangeColor(1); }
+            {
+                ChangeColor(1);
+                holeObj.SetActive(false);
+            }
 
             if (other.name == ("high"))
-            { ChangeColor(2); }
+            {
+                ChangeColor(2);
+                holeObj.SetActive(false);
+            }
         }
     }
     

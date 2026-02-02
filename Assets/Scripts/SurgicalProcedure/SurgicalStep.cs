@@ -21,8 +21,7 @@ public class SurgicalStep : MonoBehaviour
     [SerializeField] public Transform toolModel;
     [SerializeField] public Transform toolTip;   
     
-    protected IHandGestureProvider activeHandGestures;
-    protected SurgicalTool surgicalTool;
+    [SerializeField] protected SurgicalTool surgicalTool;
     protected bool isEnabled = false;
     protected bool trabajando = false;
     protected bool terminado = false;
@@ -31,12 +30,10 @@ public class SurgicalStep : MonoBehaviour
 
     protected virtual void Start()
     {
-        if (surgicalTool != null)
+        if (toolModel != null)
         {
             SurgicalTool st = toolModel.GetComponent<SurgicalTool>();
             surgicalTool = st != null ? st : toolModel.gameObject.AddComponent<SurgicalTool>();
-
-            activeHandGestures = surgicalTool.ActiveGestures;
         }
         
     }

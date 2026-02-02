@@ -91,10 +91,10 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     // =========================================================
     private void EvaluateToolOnSpline()
     {
-        if (activeHandGestures == null)
+        if (surgicalTool.ActiveGestures == null)
             return;
 
-        if (!activeHandGestures.IsPinching)
+        if (!surgicalTool.ActiveGestures.IsPinching)
             return;
             
 
@@ -122,13 +122,13 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         influence = Mathf.Clamp01(influence);
 
         // Actualizar precisión gestual (para feedback)
-        activeHandGestures.UpdatePrecision(distance);
-        float precision = activeHandGestures.Precision;
+        surgicalTool.ActiveGestures.UpdatePrecision(distance);
+        float precision = surgicalTool.ActiveGestures.Precision;
 
         // Penalización acumulativa (solo errores graves)
         bool pushingHardOutside =
             influence < 0.4f &&
-            activeHandGestures.Pressure > 0.25f;
+            surgicalTool.ActiveGestures.Pressure > 0.25f;
 
         if (pushingHardOutside)
         {
@@ -142,8 +142,8 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         errorPenalty = Mathf.Clamp01(errorPenalty);
 
         // Factores del progreso
-        float pressureFactor = activeHandGestures.Pressure;
-        float stabilityFactor = activeHandGestures.IsStable ? 1f : 0.6f;
+        float pressureFactor = surgicalTool.ActiveGestures.Pressure;
+        float stabilityFactor = surgicalTool.ActiveGestures.IsStable ? 1f : 0.6f;
         float penaltyFactor = Mathf.Lerp(1f, 0.3f, errorPenalty);
 
         float speed = Speed;
@@ -158,7 +158,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
 
         validatedProgress += deltaProgress;
         validatedProgress = Mathf.Clamp01(validatedProgress);
-
+        print(validatedProgress);
         // Feedback visual
         UpdateVisualFeedback(
             validatedProgress,

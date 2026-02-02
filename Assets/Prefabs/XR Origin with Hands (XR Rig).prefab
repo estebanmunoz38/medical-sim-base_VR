@@ -894,9 +894,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thumbTip: {fileID: 5186654083683269470}
   indexTip: {fileID: 5999907940629357817}
+  middleTip: {fileID: 1798765823997562180}
   palm: {fileID: 6567802322507880294}
   pinchMaxDistance: 0.035
   pinchActivation: 0.7
+  secondaryPinchActivation: 0.8
   graspActivation: 0.9
   maxScrubSpeed: 0.12
   pressureSmooth: 8
@@ -3034,9 +3036,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thumbTip: {fileID: 1621036276862702904}
   indexTip: {fileID: 6316031928099076107}
+  middleTip: {fileID: 7753671014272053749}
   palm: {fileID: 1794742862605117079}
   pinchMaxDistance: 0.035
   pinchActivation: 0.7
+  secondaryPinchActivation: 0.8
   graspActivation: 0.9
   maxScrubSpeed: 0.12
   pressureSmooth: 8
@@ -4617,6 +4621,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5b9cf54c47f40ee9c3eb30ea8eb89b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &7753671014272053749 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4704764437844226647, guid: ffd656bf2a3ba3d41b1e4a94b81b7c85, type: 3}
+  m_PrefabInstance: {fileID: 3085032680261534626}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3227276321868253927
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5919,6 +5928,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 212323219407825813}
   m_SourcePrefab: {fileID: 100100000, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
+--- !u!4 &1798765823997562180 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7743788931914206630, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}
+  m_PrefabInstance: {fileID: 8322943472351166690}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5186654083683269470 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3781821463198235580, guid: 89e80c47615e4f043926d66492d3ca5f, type: 3}

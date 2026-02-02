@@ -15,7 +15,7 @@ public class FontanellePainter : MonoBehaviour
 
     void Awake()
     {
-        brushMaterial.shader = Shader.Find("Hidden/FontanelleBrush");
+        //brushMaterial.shader = Shader.Find("Hidden/FontanelleBrush");
     }
 
     private void Start()

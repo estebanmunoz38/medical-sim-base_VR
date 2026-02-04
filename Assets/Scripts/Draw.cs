@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Draw : MonoBehaviour
+public class Draw : SurgicalTool
 {
     [Header("Pen Properties")]
     public Transform tip;

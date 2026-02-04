@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
@@ -37,12 +38,19 @@ public class SurgicalTool : MonoBehaviour
     {
         grab.selectEntered.AddListener(OnGrabbed);
         grab.selectExited.AddListener(OnReleaseAttempt);
+        
     }
     
     protected virtual void OnDisable()
     {
         grab.selectEntered.RemoveListener(OnGrabbed);
         grab.selectExited.RemoveListener(OnReleaseAttempt);
+        
+        if (activeGestures != null)
+        {
+            activeGestures.OnSecondaryActivated -= OnToolActivated;
+            activeGestures.OnSecondaryDeactivated -= OnToolDeactivated;
+        }
     }
 
     protected void Update()
@@ -70,6 +78,9 @@ public class SurgicalTool : MonoBehaviour
 
         activeGestures = interactorGO.GetComponentInParent<IHandGestureProvider>();
         
+        activeGestures.OnSecondaryActivated += OnToolActivated;
+        activeGestures.OnSecondaryDeactivated += OnToolDeactivated;
+        
         // Fallback si no hay gesture provider
         if (activeGestures == null)
         {
@@ -81,12 +92,10 @@ public class SurgicalTool : MonoBehaviour
         allowRelease = false;
         
         OnToolGrabbed();
-            
     }
 
     private void OnReleaseAttempt(SelectExitEventArgs args)
     {
-        print("OnReleaseAttempt");
         // Si no permitimos soltar, simplemente ignoramos
         if (!allowRelease)
         {
@@ -97,25 +106,27 @@ public class SurgicalTool : MonoBehaviour
 
         // Release real
         isLatched = false;
+        activeGestures.OnSecondaryActivated -= OnToolActivated;
+        activeGestures.OnSecondaryDeactivated -= OnToolDeactivated;
         activeGestures = null;
+        
         OnToolReleased();
     }
 
     private void ForceRelease()
     {
-        print("ForseRelease");
-        
         if (grab.firstInteractorSelecting == null)
         {
             isLatched = false;
+            activeGestures.OnSecondaryActivated -= OnToolActivated;
+            activeGestures.OnSecondaryDeactivated -= OnToolDeactivated;
             activeGestures = null;
             OnToolReleased();
             return;
         }
 
         isLatched = false;
-        
-        
+
         grab.interactionManager.SelectExit(
             grab.firstInteractorSelecting,
             grab
@@ -123,6 +134,16 @@ public class SurgicalTool : MonoBehaviour
         
         activeGestures = null;
         OnToolReleased();
+    }
+
+    private void OnToolActivated()
+    {
+        grab.activated.Invoke(new ActivateEventArgs());
+    }
+
+    private void OnToolDeactivated()
+    {
+        grab.deactivated.Invoke(new DeactivateEventArgs());
     }
     
     // Hooks para hijos

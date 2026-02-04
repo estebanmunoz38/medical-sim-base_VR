@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 
@@ -7,11 +8,13 @@ public class HandGestureProvider : MonoBehaviour, IHandGestureProvider
     [Header("Hand Joints")]
     public Transform thumbTip;
     public Transform indexTip;
+    public Transform middleTip;
     public Transform palm;
 
     [Header("Pinch")]
     public float pinchMaxDistance = 0.035f;
     public float pinchActivation = 0.7f;
+    public float secondaryPinchActivation = 0.75f;
     
     [Header("Grasp")]
     public float graspActivation = 0.9f;
@@ -31,6 +34,7 @@ public class HandGestureProvider : MonoBehaviour, IHandGestureProvider
     // OUTPUT (API pública)
     // =====================
     public float Pinch { get; private set; }          // 0..1
+    public float SecondaryPinch { get; private set; }
     public bool IsPinching => Pinch >= pinchActivation;
     public bool IsGrasping => Pinch >= graspActivation;
     public float ScrubSpeed { get; private set; }
@@ -41,12 +45,19 @@ public class HandGestureProvider : MonoBehaviour, IHandGestureProvider
     public Vector3 PalmNormal => palm.forward;
 
     // =====================
+    // Eventos
+    // =====================
+    public event Action OnSecondaryActivated;
+    public event Action OnSecondaryDeactivated;
+    
+    // =====================
     // Internos
     // =====================
     Vector3 lastIndexPos;
     Vector3 velocityAccumulator;
     float stableTimer;
     float smoothedPressure;
+    bool secondaryWasActive;
     #endregion
 
     #region Unity Methods
@@ -58,6 +69,7 @@ public class HandGestureProvider : MonoBehaviour, IHandGestureProvider
     void Update()
     {
         UpdatePinch();
+        UpdateSecondaryPinch();
         UpdateMotion();
         UpdateStability();
         UpdatePressure();
@@ -73,6 +85,23 @@ public class HandGestureProvider : MonoBehaviour, IHandGestureProvider
         float d = Vector3.Distance(thumbTip.position, indexTip.position);
         float rawPinch = 1f - Mathf.Clamp01(d / pinchMaxDistance);
         Pinch = Mathf.Lerp(Pinch, rawPinch, Time.deltaTime * 12f);
+    }
+    
+    void UpdateSecondaryPinch()
+    {
+        float d = Vector3.Distance(thumbTip.position, middleTip.position);
+        float rawPinch = 1f - Mathf.Clamp01(d / pinchMaxDistance);
+        SecondaryPinch = Mathf.Lerp(SecondaryPinch, rawPinch, Time.deltaTime * 12f);
+
+        bool isActive = SecondaryPinch >= secondaryPinchActivation;
+
+        // Edge detection
+        if (isActive && !secondaryWasActive)
+            OnSecondaryActivated?.Invoke();
+        else if (!isActive && secondaryWasActive)
+            OnSecondaryDeactivated?.Invoke();
+
+        secondaryWasActive = isActive;
     }
 
     // =====================

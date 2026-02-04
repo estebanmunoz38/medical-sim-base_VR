@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,12 +18,15 @@ public class ControllerGestureProvider : MonoBehaviour, IHandGestureProvider
 
     public float Pinch => pinch;
     public bool IsPinching => trigger.action.ReadValue<float>() > 0.5f;
+    public float SecondaryPinch => Pressure;
     public bool IsGrasping => grip.action.ReadValue<float>() > 0.5f;
 
     public float Pressure => trigger.action.ReadValue<float>();
     public bool IsStable => velocity < fakeStabilityThreshold;
 
     public float Precision { get; private set; }
+    public event Action OnSecondaryActivated;
+    public event Action OnSecondaryDeactivated;
 
     void Update()
     {

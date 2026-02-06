@@ -1,13 +1,13 @@
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.Splines;
 
 public class SplineSegmentVisualizer : MonoBehaviour
 {
-    [Header("Spline")]
-    public SplineContainer spline;
-    public int segmentCount = 14;
-
     [Header("Visual")]
+    public GameObject prefab;
+
+    public GameObject markerArrow;
     public Material lineMaterial;
     public float lineWidth = 0.002f;
 
@@ -15,52 +15,97 @@ public class SplineSegmentVisualizer : MonoBehaviour
     public Color activeColor = new Color(1f, 0.9f, 0.2f);
     public Color lockedColor = new Color(0.3f, 0.3f, 0.3f, 0.4f);
 
-    LineRenderer[] segments;
-
-    void Awake()
+    DissectorMarker[] segments;
+    
+    public void Initialize(SplineContainer spline, int segmentCount)
     {
-        BuildSegments();
-    }
+        segments = new DissectorMarker[segmentCount];
 
-    void BuildSegments()
-    {
-        segments = new LineRenderer[segmentCount];
-
+        Quaternion averageRotation = GetAverageKnotRotation(spline);
+        
         for (int i = 0; i < segmentCount; i++)
         {
-            GameObject go = new GameObject($"Segment_{i}");
+            GameObject go = Instantiate(prefab);//new GameObject($"Segment_{i}");
+            go.name = $"Segment_{i}";
             go.transform.SetParent(transform, false);
-
-            LineRenderer lr = go.AddComponent<LineRenderer>();
+            go.transform.rotation = averageRotation;
+            
+            /*LineRenderer lr = go.AddComponent<LineRenderer>();
             lr.material = lineMaterial;
+            lr.alignment = LineAlignment.TransformZ;
             lr.startWidth = lineWidth;
             lr.endWidth = lineWidth;
             lr.useWorldSpace = true;
-            lr.positionCount = 2;
-
+            lr.positionCount = 2;*/
+            
             float t0 = (float)i / segmentCount;
             float t1 = (float)(i + 1) / segmentCount;
 
             Vector3 p0 = spline.EvaluatePosition(t0);
             Vector3 p1 = spline.EvaluatePosition(t1);
 
-            lr.SetPosition(0, p0);
-            lr.SetPosition(1, p1);
+            go.transform.position = p0;
 
-            segments[i] = lr;
+            segments[i] = go.GetComponent<DissectorMarker>();
+            segments[i].SetBaseColor(lockedColor);
         }
+        
+        UpdateVisual(0);
+        
     }
 
+    public void ClearCurrentSegments()
+    {
+        foreach (var segment in segments)
+        {
+            Destroy(segment.gameObject);
+        }
+    }
     public void UpdateVisual(int activeSegment)
     {
         for (int i = 0; i < segments.Length; i++)
         {
             if (i < activeSegment)
-                segments[i].material.color = completedColor;
+                segments[i].SetBaseColor(completedColor);
             else if (i == activeSegment)
-                segments[i].material.color = activeColor;
+                segments[i].SetBaseColor(activeColor);
             else
-                segments[i].material.color = lockedColor;
+                segments[i].SetBaseColor(lockedColor);
         }
+
+        if (activeSegment < segments.Length)
+        {
+            markerArrow.transform.position = segments[activeSegment].transform.position + (Vector3.up*0.02f);
+        }
+        
+    }
+    
+    private Quaternion GetAverageKnotRotation(SplineContainer container)
+    {
+        var spline = container.Spline;
+        int knotCount = spline.Count;
+
+        if (knotCount == 0) return Quaternion.identity;
+
+        float x = 0, y = 0, z = 0, w = 0;
+
+        foreach (var knot in spline)
+        {
+            // Obtenemos la rotación en el espacio del mundo
+            Quaternion worldRot = container.transform.rotation * knot.Rotation;
+
+            // Acumulamos los componentes (Asegurando que los cuaterniones no se cancelen)
+            float dot = x * worldRot.x + y * worldRot.y + z * worldRot.z + w * worldRot.w;
+            float multiplier = dot < 0 ? -1.0f : 1.0f;
+
+            x += worldRot.x * multiplier;
+            y += worldRot.y * multiplier;
+            z += worldRot.z * multiplier;
+            w += worldRot.w * multiplier;
+        }
+
+        // Normalizamos para obtener un cuaternión válido
+        float k = 1.0f / Mathf.Sqrt(x * x + y * y + z * z + w * w);
+        return new Quaternion(x * k, y * k, z * k, w * k);
     }
 }

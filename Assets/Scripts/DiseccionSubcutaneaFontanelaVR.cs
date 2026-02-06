@@ -18,7 +18,6 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     [SerializeField] float segmentUnlockThreshold = 0.85f;
     [SerializeField] SplineSegmentVisualizer segmentVisualizer;
 
-    [Header("FEEDBACK")]
     [Header("Bones Movement")]
     public Transform endBoneSubcutanea;
     public Transform endBoneFontanela;
@@ -83,6 +82,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         pasoActual = Paso.Subcutanea;
         SetCurrentSpline();
         initialBoneAngle = endBoneSubcutanea.localEulerAngles.x;
+        
     }
 
     void Update()
@@ -209,7 +209,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             segmentProgress -= Time.deltaTime * 0.2f;
             segmentProgress = Mathf.Clamp01(segmentProgress);
         }
-
+        //print("Segment Progress: "+segmentProgress + " and current Segment: "+currentSegmentIndex);
         // ===============================
         // VISUAL FEEDBACK
         // ===============================
@@ -219,7 +219,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             distance,
             nearestSegment
         );
-
+        
         // ===============================
         // SEGMENT COMPLETION
         // ===============================
@@ -227,7 +227,8 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         {
             currentSegmentIndex++;
             segmentProgress = 0f;
-
+            
+            segmentVisualizer.UpdateVisual(currentSegmentIndex);
             // Refuerzo visual / auditivo (hook)
             OnSegmentCompleted();
 
@@ -235,6 +236,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             if (currentSegmentIndex >= segmentCount)
             {
                 CompleteCurrentStep();
+                
             }
         }
     }
@@ -245,7 +247,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     void CompleteCurrentStep()
     {
         ResetValues();
-        
+        print("Completed Step");
         if (pasoActual == Paso.Subcutanea)
         {
             if (endBoneSubcutanea != null)
@@ -265,7 +267,6 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             if (endBoneFontanela != null)
                 StartCoroutine(RotateBone(endBoneFontanela));
         } 
-        ResetValues();
         terminado = true;
         EndStep();
     }
@@ -275,6 +276,8 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         currentSpline = (pasoActual == Paso.Subcutanea)
             ? subcutaneousSpline
             : fontanelleSpline;
+        
+        segmentVisualizer.Initialize(currentSpline, segmentCount);
     }
 
     // =========================================================
@@ -290,8 +293,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         {
             return;
         }
-
-        segmentVisualizer.UpdateVisual(currentSegmentIndex);
+        
         precisionHalo.gameObject.SetActive(true);
         
         if (nearestSegment != currentSegmentIndex)
@@ -300,7 +302,6 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             return;
         }
         
-
         // Tamaño (más preciso = más chico)
         float scale = Mathf.Lerp(maxHaloScale, minHaloScale, distance);
         precisionHalo.localScale = Vector3.Lerp(
@@ -330,10 +331,8 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
                     paintRate * (Time.deltaTime * t)
                 );
             }
-            
             PlayFontanelaParticles(precision, toolTip.position);
         }
-        
     }
 
     void OnSegmentCompleted()
@@ -395,5 +394,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         precisionHalo.gameObject.SetActive(false);
         errorPenalty = 0;
         tissueParticles.gameObject.SetActive(false);
+        currentSegmentIndex = 0;
+        segmentVisualizer.ClearCurrentSegments();
     }
 }

@@ -7,6 +7,10 @@ TagManager:
   - Anchor
   - Projectile
   - Flame
+  - Drillable
+  - Removable
+  - Destroyer
+  - Coagulador
   layers:
   - Default
   - TransparentFX

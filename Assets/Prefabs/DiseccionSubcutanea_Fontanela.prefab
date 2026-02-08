@@ -6217,10 +6217,10 @@ MonoBehaviour:
   surgicalTool: {fileID: 0}
   subcutaneousSpline: {fileID: 3304463533859236289}
   fontanelleSpline: {fileID: 2230085870562656605}
-  maxDistanceToSpline: 0.0125
+  maxDistanceToSpline: 0.01
   doSubcutaneousThenFontanelle: 1
   penaltyThreshold: 0.7
-  segmentCount: 4
+  segmentCount: 3
   segmentUnlockThreshold: 0.5
   segmentVisualizer: {fileID: 6961071338514882857}
   endBoneSubcutanea: {fileID: 0}
@@ -6292,7 +6292,7 @@ MonoBehaviour:
   m_LoopMode: 1
   m_Method: 0
   m_Duration: 1
-  m_MaxSpeed: 0.003323378
+  m_MaxSpeed: 0.006704231
   m_EasingMode: 0
   m_AlignmentMode: 1
   m_ObjectForwardAxis: 2
@@ -6392,8 +6392,8 @@ MonoBehaviour:
     m_Knots:
     - Position:
         x: 0.000049984155
-        y: -0.007100582
-        z: 0.000048279762
+        y: -0.006083131
+        z: 0.00084763765
       TangentIn:
         x: 0
         y: 0
@@ -6410,8 +6410,8 @@ MonoBehaviour:
           w: 0.6965893
     - Position:
         x: 0.00010998416
-        y: -0.00588727
-        z: 0.0012379289
+        y: -0.0041404963
+        z: 0.0034837723
       TangentIn:
         x: 0
         y: 0
@@ -6428,22 +6428,22 @@ MonoBehaviour:
           w: 0.9653154
     - Position:
         x: 0.000039984167
-        y: -0.005082011
-        z: 0.002645433
+        y: -0.0027450323
+        z: 0.006615281
       TangentIn:
         x: -0
         y: -0
-        z: -0.00016230864
+        z: -0.0003429077
       TangentOut:
         x: 0
         y: 0
-        z: 0.00016230864
+        z: 0.0003429077
       Rotation:
         value:
-          x: -0.2565896
-          y: -0.023937441
-          z: -0.0060977456
-          w: 0.9662047
+          x: -0.2079806
+          y: -0.011532366
+          z: -0.00515634
+          w: 0.97805136
     m_MetaData:
     - Mode: 1
       Tension: 0.5

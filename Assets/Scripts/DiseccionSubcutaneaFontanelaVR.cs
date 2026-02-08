@@ -313,11 +313,13 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         // Color
         Color c = Color.Lerp(badColor, goodColor, precision);
         haloRenderer.material.color = c;
-        
+
+        //print("precision: "+precision);
+        var deltaPrecision = precision * ( (float)(currentSegmentIndex + 1) / segmentCount);
         // Apertura de piel
         if (pasoActual == Paso.Subcutanea)
         {
-            RotateBone(endBoneSubcutanea, precision);
+            RotateBone(endBoneSubcutanea, deltaPrecision);
         }
         // Painter Brush
         else

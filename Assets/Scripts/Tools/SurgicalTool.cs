@@ -150,4 +150,16 @@ public class SurgicalTool : MonoBehaviour
     protected virtual void OnToolGrabbed() { }
     protected virtual void OnToolReleased() { }
     #endregion
+    
+    #region Public Methods
+    public void LockPosition(bool state)
+    {
+        var rb = GetComponent<Rigidbody>();
+        if (!rb) return;
+
+        rb.constraints = state
+            ? RigidbodyConstraints.FreezePosition
+            : RigidbodyConstraints.None;
+    }
+    #endregion
 }

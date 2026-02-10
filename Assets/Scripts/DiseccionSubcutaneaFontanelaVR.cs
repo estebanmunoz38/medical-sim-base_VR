@@ -12,6 +12,13 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     public float maxDistanceToSpline = 0.015f;
     public bool doSubcutaneousThenFontanelle = true;
     public float penaltyThreshold = 0.7f;
+    public float maxLiftDistance = 0.003f;
+    
+    [Header("Ghost Guidance")]
+    [SerializeField] Transform ghostPose;
+    [SerializeField] float snapDistance = 0.015f;
+    [SerializeField] float snapAngle = 10f;
+    [SerializeField] float maxRotationAngle = 25f;
     
     [Header("Segmented Progress")]
     [SerializeField] int segmentCount = 12;
@@ -57,6 +64,10 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     
     private int currentSegmentIndex = 0;
     private float segmentProgress = 0f;
+    bool toolSnapped;
+    float splineT;
+    Vector3 tipLocalOffset;
+    Vector3 lastTipPos;
 
     private float Speed
     {
@@ -82,6 +93,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         pasoActual = Paso.Subcutanea;
         SetCurrentSpline();
         initialBoneAngle = endBoneSubcutanea.localEulerAngles.x;
+        tipLocalOffset = toolModel.InverseTransformPoint(toolTip.position);
         
     }
 
@@ -90,7 +102,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         if (terminado)
             return;
 
-        EvaluateToolOnSpline();
+        EvaluateGhostGuidedSplineMotion();
     }
     #endregion
 
@@ -240,6 +252,214 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             }
         }
     }
+    
+    private void EvaluateGhostGuidedSplineMotion()
+    {
+        var gestures = surgicalTool.ActiveGestures;
+        if (gestures == null)
+        { 
+            return;
+        }
+        
+        if (!gestures.IsPinching)
+        {
+            if (toolSnapped)
+            {
+                LockTool(false);
+            }
+
+            return;
+        }
+        
+        if (!toolSnapped)
+        {
+            TrySnapToGhost();
+            return;
+        }
+
+        EvaluateGuidedRotation(gestures);
+    }
+    
+    void TrySnapToGhost()
+    {
+        float posDist = Vector3.Distance(
+            toolModel.position,
+            ghostPose.position
+        );
+
+        float angDist = Quaternion.Angle(
+            toolModel.rotation,
+            ghostPose.rotation
+        );
+
+        if (posDist < snapDistance && angDist < snapAngle)
+        {
+            toolModel.SetPositionAndRotation(
+                ghostPose.position,
+                ghostPose.rotation
+            );
+
+            LockTool(true);
+            
+            ghostPose.gameObject.SetActive(false);
+            
+            lastTipPos = toolTip.position;
+            segmentProgress = 0f;
+        }
+    }
+    
+    // =========================================================
+    // ROTATION → PROGRESS
+    // =========================================================
+    void EvaluateGuidedRotation(IHandGestureProvider gestures)
+    {
+        Vector3 axis = pasoActual == Paso.Subcutanea
+            ? ghostPose.right
+            : ghostPose.up;
+
+        float angle = Vector3.SignedAngle(
+            ghostPose.forward,
+            toolTip.forward,
+            axis
+        );
+
+        float rotation01 = Mathf.InverseLerp(0f, maxRotationAngle, angle);
+        rotation01 = Mathf.Clamp01(rotation01);
+
+        Vector3 deltaTip = toolTip.position - lastTipPos;
+        lastTipPos = toolTip.position;
+
+        float lift = Vector3.Dot(deltaTip, ghostPose.up);
+
+        // 🔥 ESCALA REALISTA
+        float lift01 = Mathf.InverseLerp(0f, 0.003f, lift);
+        lift01 = Mathf.Clamp01(lift01);
+
+        float pressure = gestures.Pressure;
+        float stability = gestures.IsStable ? 1f : 0.6f;
+
+        float delta =
+            Speed *
+            rotation01 *
+            lift01 *
+            pressure *
+            stability *
+            Time.deltaTime;
+
+        segmentProgress += delta;
+        segmentProgress = Mathf.Clamp01(segmentProgress);
+
+        UpdateVisualFeedback(
+            segmentProgress,
+            rotation01,
+            lift01,
+            currentSegmentIndex
+        );
+
+        if (segmentProgress >= segmentUnlockThreshold)
+            CompleteSegment();
+    }
+    
+    // =========================================================
+    // SPLINE GUIDED MOTION
+    // =========================================================
+    void UpdateToolAlongSpline(float t)
+    {
+        SplineUtility.Evaluate(
+            currentSpline.Spline,
+            t,
+            out float3 localPos,
+            out float3 tangent,
+            out float3 up
+        );
+
+        Vector3 worldPos =
+            currentSpline.transform.TransformPoint(localPos);
+
+        Vector3 worldTangent =
+            currentSpline.transform.TransformDirection(tangent);
+
+        Quaternion targetRot = Quaternion.LookRotation(
+            worldTangent,
+            currentSpline.transform.up
+        );
+
+        //toolModel.rotation = ghostPose.rotation;
+
+        // 🔹 Aplicamos offset LOCAL rotado a mundo
+        toolModel.position = worldPos - toolModel.TransformVector(tipLocalOffset);
+
+        ghostPose.position = worldPos;
+    }
+    
+    void RotateAroundTip(Quaternion targetRotation)
+    {
+        Vector3 tipPos = toolTip.position;
+
+        // Offset actual modelo → tip
+        Vector3 offset = toolModel.position - tipPos;
+
+        // Rotamos offset al nuevo frame
+        offset = targetRotation * Quaternion.Inverse(toolModel.rotation) * offset;
+
+        // Aplicamos rotación
+        toolModel.rotation = targetRotation;
+
+        // Reposicionamos manteniendo el tip fijo
+        toolModel.position = tipPos + offset;
+    }
+    
+    // =========================================================
+    // SEGMENTS
+    // =========================================================
+    void UpdateSegmentProgress()
+    {
+        int newSegment =
+            Mathf.FloorToInt(splineT * segmentCount);
+
+        if (newSegment > currentSegmentIndex)
+        {
+            currentSegmentIndex = newSegment;
+            segmentVisualizer.UpdateVisual(currentSegmentIndex);
+            OnSegmentCompleted();
+        }
+    }
+    
+    void CompleteSegment()
+    {
+        segmentProgress = 0f;
+        currentSegmentIndex++;
+
+        float t = (float)currentSegmentIndex / segmentCount;
+
+        splineT = t;
+
+        UpdateToolAlongSpline(splineT);
+
+        segmentVisualizer.UpdateVisual(currentSegmentIndex);
+
+        OnSegmentCompleted();
+
+        if (currentSegmentIndex >= segmentCount)
+            CompleteCurrentStep();
+    }
+    
+    // =========================================================
+    // STEP COMPLETION
+    // =========================================================
+    void CheckStepCompletion()
+    {
+        if (splineT >= 1f)
+        {
+            CompleteCurrentStep();
+        }
+    }
+
+    void LockTool(bool locked)
+    {
+        surgicalTool.LockPosition(locked);
+        toolSnapped = locked;
+    }
 
     // =========================================================
     // TRANSICIONES
@@ -247,7 +467,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     void CompleteCurrentStep()
     {
         ResetValues();
-        print("Completed Step");
+        
         if (pasoActual == Paso.Subcutanea)
         {
             if (endBoneSubcutanea != null)
@@ -269,6 +489,12 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         } 
         terminado = true;
         EndStep();
+    }
+
+    public override void EndStep()
+    {
+        base.EndStep();
+        precisionHalo.gameObject.SetActive(false);
     }
 
     void SetCurrentSpline()
@@ -294,11 +520,11 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             return;
         }
         
-        precisionHalo.gameObject.SetActive(true);
+        //precisionHalo.gameObject.SetActive(true);
         
         if (nearestSegment != currentSegmentIndex)
         {
-            precisionHalo.gameObject.SetActive(false);
+            //precisionHalo.gameObject.SetActive(false);
             return;
         }
         
@@ -398,5 +624,6 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         tissueParticles.gameObject.SetActive(false);
         currentSegmentIndex = 0;
         segmentVisualizer.ClearCurrentSegments();
+        LockTool(false);
     }
 }

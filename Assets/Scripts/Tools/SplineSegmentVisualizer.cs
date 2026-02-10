@@ -8,8 +8,6 @@ public class SplineSegmentVisualizer : MonoBehaviour
     public GameObject prefab;
 
     public GameObject markerArrow;
-    public Material lineMaterial;
-    public float lineWidth = 0.002f;
 
     public Color completedColor = new Color(0.3f, 1f, 0.8f);
     public Color activeColor = new Color(1f, 0.9f, 0.2f);
@@ -25,18 +23,11 @@ public class SplineSegmentVisualizer : MonoBehaviour
         
         for (int i = 0; i < segmentCount; i++)
         {
-            GameObject go = Instantiate(prefab);//new GameObject($"Segment_{i}");
+            GameObject go = Instantiate(prefab);
             go.name = $"Segment_{i}";
             go.transform.SetParent(transform, false);
             go.transform.rotation = averageRotation;
             
-            /*LineRenderer lr = go.AddComponent<LineRenderer>();
-            lr.material = lineMaterial;
-            lr.alignment = LineAlignment.TransformZ;
-            lr.startWidth = lineWidth;
-            lr.endWidth = lineWidth;
-            lr.useWorldSpace = true;
-            lr.positionCount = 2;*/
             
             float t0 = (float)i / segmentCount;
             float t1 = (float)(i + 1) / segmentCount;
@@ -78,6 +69,11 @@ public class SplineSegmentVisualizer : MonoBehaviour
             markerArrow.transform.position = segments[activeSegment].transform.position + (Vector3.up*0.02f);
         }
         
+    }
+
+    public void Clear()
+    {
+        markerArrow.gameObject.SetActive(false);
     }
     
     private Quaternion GetAverageKnotRotation(SplineContainer container)

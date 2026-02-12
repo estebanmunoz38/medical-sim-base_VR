@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -55,8 +56,8 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     private float initialBoneAngle;
     private float errorPenalty;
     
-    private int currentSegmentIndex = 0;
-    private float segmentProgress = 0f;
+    [SerializeField] private int currentSegmentIndex = 0;
+    [SerializeField] private float segmentProgress = 0f;
     bool toolSnapped;
     float splineT;
     Vector3 tipLocalOffset;
@@ -194,13 +195,13 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
                 GhostPose.position,
                 GhostPose.rotation
             );
-
-            LockTool(true);
             
             GhostPose.gameObject.SetActive(false);
             
             lastTipPos = toolTip.position;
             segmentProgress = 0f;
+            
+            LockTool(true);
         }
     }
     
@@ -223,6 +224,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         {
             lastAngle = currentAngle;
         }
+
         
         float rotationSpeed = angleDelta / Time.deltaTime;
     
@@ -248,8 +250,9 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         segmentProgress = Mathf.Clamp01(segmentProgress + delta);
 
         var feedbackProgress = smoothedScrapeIntensity * angleFactor;
+        //print("ScrapeIntensity: "+smoothedScrapeIntensity + " || angleFactor: " +angleFactor);
         // Feedback: usa el valor suavizado para que las barras de la UI no vibren locamente
-        UpdateVisualFeedback(segmentProgress, feedbackProgress, smoothedScrapeIntensity, currentSegmentIndex);
+        UpdateVisualFeedback(segmentProgress, feedbackProgress, currentSegmentIndex);
 
         if (segmentProgress >= segmentUnlockThreshold)
             CompleteSegment();
@@ -268,7 +271,9 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             out float3 tangent,
             out float3 up
         );
-
+        
+        toolModel.rotation = GhostPose.rotation;
+        
         Vector3 worldPos =
             currentSpline.transform.TransformPoint(localPos);
 
@@ -280,7 +285,7 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
             currentSpline.transform.up
         );
 
-        //toolModel.rotation = ghostPose.rotation;
+        
 
         // 🔹 Aplicamos offset LOCAL rotado a mundo
         toolModel.position = worldPos - toolModel.TransformVector(tipLocalOffset);
@@ -354,6 +359,25 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     void LockTool(bool locked)
     {
         surgicalTool.LockPosition(locked);
+        //surgicalTool.LockPosition(false,false,false);
+        
+        if (locked)
+        {
+            if (pasoActual == Paso.Subcutanea)
+            {
+                
+                surgicalTool.LimitRotation(ConfigurableJointMotion.Limited, ConfigurableJointMotion.Locked, ConfigurableJointMotion.Free, MaxRotationAngle);
+            }
+            else
+            {
+                surgicalTool.LimitRotation(ConfigurableJointMotion.Locked, ConfigurableJointMotion.Limited, ConfigurableJointMotion.Locked, MaxRotationAngle);                //surgicalTool.LimiteYRotation(-MaxRotationAngle,MaxRotationAngle);
+            }
+        }
+        else
+        {
+            surgicalTool.ClearLimits();
+        }
+
         toolSnapped = locked;
     }
 
@@ -406,10 +430,10 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     // =========================================================
     // FEEDBACK
     // =========================================================
-    void UpdateVisualFeedback(float t, float precision, float distance, int nearestSegment)
+    void UpdateVisualFeedback(float t, float precision, int nearestSegment)
     {
         // Retorno si está muy mal
-        if (precision <= 0f)
+        if (precision <= 0.1f)
         {
             return;
         }
@@ -420,24 +444,26 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
         }
 
         //print("precision: "+precision);
-        var deltaPrecision = precision * ( (float)(currentSegmentIndex + 1) / SegmentCount);
+        var deltaPrecisionBasedOnSegment = Mathf.Clamp(t, 1, precision);
+        
+        var deltaPrecision = deltaPrecisionBasedOnSegment * (( (float)(currentSegmentIndex + 1) / SegmentCount)  );
         // Apertura de piel
         if (pasoActual == Paso.Subcutanea)
         {
-            RotateBone(endBoneSubcutanea, deltaPrecision);
+            RotateBone(endBoneSubcutanea, precision);
         }
         // Painter Brush
         else
         {
             Ray ray = new Ray(toolTip.position, Vector3.down);
             Debug.DrawRay(ray.origin, ray.direction * 0.003f, Color.green);
-            if (Physics.Raycast(ray, out RaycastHit hit, 0.003f, fontanelleLayer))
+            /*if (Physics.Raycast(ray, out RaycastHit hit, 0.003f, fontanelleLayer))
             {
                 painter.Paint(
                     hit.textureCoord,
                     paintRate * (Time.deltaTime * t)
                 );
-            }
+            }*/
             PlayFontanelaParticles(precision, toolTip.position);
         }
     }

@@ -120,6 +120,7 @@ namespace UltimateXR.Animation.IK
         {
             base.Awake();
             ComputeLinkData();
+            EnsureGoalNotChildOfChain();
         }
 
         /// <summary>
@@ -129,10 +130,7 @@ namespace UltimateXR.Animation.IK
         {
             base.Start();
             
-            if (_goal.HasParent(_endEffector) || _links.Any(l => _goal.HasParent(l.Bone)))
-            {
-                _goal.SetParent(transform);
-            }
+            EnsureGoalNotChildOfChain();
         }
 
         #endregion
@@ -379,6 +377,20 @@ namespace UltimateXR.Animation.IK
             }
 
             return goal;
+        }
+
+    public void EnsureGoalNotChildOfChain()
+    {
+    if (_goal == null) return;
+
+    bool underEffector = _endEffector != null && _goal.HasParent(_endEffector);
+    bool underBone     = _links != null && _links.Any(l => l.Bone != null && _goal.HasParent(l.Bone));
+
+    if (underEffector || underBone)
+    {
+        // Importante: mantener posición/rotación en mundo
+        _goal.SetParent(transform, true);
+     }
         }
 
         #endregion

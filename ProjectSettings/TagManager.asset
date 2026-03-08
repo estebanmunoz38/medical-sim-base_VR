@@ -11,6 +11,7 @@ TagManager:
   - Removable
   - Destroyer
   - Coagulador
+  - Hemostasico
   layers:
   - Default
   - TransparentFX

@@ -2412,7 +2412,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &181710329
 Transform:
   m_ObjectHideFlags: 0
@@ -2476,8 +2476,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 199583150}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.8132533, z: -0, w: -0.5819099}
-  m_LocalPosition: {x: -0.6706, y: 0.95, z: 0.764}
+  m_LocalRotation: {x: -0.53768957, y: 0.45922872, z: -0.5376873, w: -0.45922902}
+  m_LocalPosition: {x: 0.0015000037, y: 1.0292, z: 0.8847}
   m_LocalScale: {x: 0.39999998, y: 0.4, z: 0.39999998}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -2541,7 +2541,7 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 711214102}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -2556,7 +2556,7 @@ MonoBehaviour:
   m_SelectExited:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 711214102}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -2607,6 +2607,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 643200951}
+        m_TargetAssemblyTypeName: HemostasicoTool, Assembly-CSharp
+        m_MethodName: togglePressing
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 711214102}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   m_Deactivated:
     m_PersistentCalls:
       m_Calls:
@@ -2623,6 +2647,30 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 1141089625}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 643200951}
+        m_TargetAssemblyTypeName: HemostasicoTool, Assembly-CSharp
+        m_MethodName: togglePressing
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -3185,13 +3233,15 @@ GameObject:
   - component: {fileID: 242803501}
   - component: {fileID: 242803503}
   - component: {fileID: 242803502}
+  - component: {fileID: 242803504}
+  - component: {fileID: 242803505}
   m_Layer: 0
-  m_Name: Tapon irregular (7)
-  m_TagString: Untagged
+  m_Name: Tapon irregular (8)
+  m_TagString: Hemostasico
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &242803501
 Transform:
   m_ObjectHideFlags: 0
@@ -3200,12 +3250,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 242803500}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.6225146, y: 0, z: 0, w: 0.7826082}
-  m_LocalPosition: {x: 0.000002, y: 0.008865, z: 0.003418}
-  m_LocalScale: {x: 0.015, y: 0.04, z: 0.01}
+  m_LocalRotation: {x: -0.62251467, y: -3.5527128e-15, z: 5.3290692e-15, w: 0.7826082}
+  m_LocalPosition: {x: 0, y: 0.008865019, z: 0.0034179927}
+  m_LocalScale: {x: 0.015, y: 0.04, z: 0.010000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 505999334}
+  m_Father: {fileID: 711214103}
   m_LocalEulerAnglesHint: {x: -77, y: 0, z: 0}
 --- !u!23 &242803502
 MeshRenderer:
@@ -3232,7 +3282,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0ed585ac626404fa541159264c49d4, type: 2}
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3264,6 +3314,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 242803500}
   m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!65 &242803504
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242803500}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530299, y: 0.021259915, z: 0.0215228}
+  m_Center: {x: 0.000006254778, y: 0.010627825, z: 0.000028445664}
+--- !u!114 &242803505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242803500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!1 &246927757
 GameObject:
   m_ObjectHideFlags: 0
@@ -7820,14 +7907,7 @@ Transform:
   - {fileID: 108186313}
   - {fileID: 1152747358}
   - {fileID: 206943299}
-  - {fileID: 543450653271826200}
-  - {fileID: 625555729}
-  - {fileID: 1935888350}
-  - {fileID: 1492997473}
-  - {fileID: 1292422505}
-  - {fileID: 1713063553}
-  - {fileID: 1519254687}
-  - {fileID: 242803501}
+  - {fileID: 711214103}
   m_Father: {fileID: 512265025}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &506096307
@@ -9587,13 +9667,15 @@ GameObject:
   - component: {fileID: 625555729}
   - component: {fileID: 625555731}
   - component: {fileID: 625555730}
+  - component: {fileID: 625555732}
+  - component: {fileID: 625555733}
   m_Layer: 0
   m_Name: Tapon irregular (1)
-  m_TagString: Untagged
+  m_TagString: Hemostasico
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &625555729
 Transform:
   m_ObjectHideFlags: 0
@@ -9602,12 +9684,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625555728}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.16801853, y: 2.8421696e-14, z: 3.3306674e-14, w: 0.9857839}
-  m_LocalPosition: {x: -0.000004, y: 0.00511, z: 0.007003}
-  m_LocalScale: {x: 0.01, y: 0.04, z: 0.005}
+  m_LocalRotation: {x: -0.16801846, y: 5.68434e-14, z: 6.4837004e-14, w: 0.98578393}
+  m_LocalPosition: {x: -0, y: 0.0051100147, z: 0.0070029963}
+  m_LocalScale: {x: 0.010000001, y: 0.04000001, z: 0.0050000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 505999334}
+  m_Father: {fileID: 711214103}
   m_LocalEulerAnglesHint: {x: -19.345, y: 0, z: 0}
 --- !u!23 &625555730
 MeshRenderer:
@@ -9634,7 +9716,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0ed585ac626404fa541159264c49d4, type: 2}
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9666,6 +9748,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625555728}
   m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!65 &625555732
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625555728}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530297, y: 0.021259915, z: 0.0215228}
+  m_Center: {x: 0.000006254704, y: 0.01062854, z: 0.000026061478}
+--- !u!114 &625555733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625555728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!1 &633387298
 GameObject:
   m_ObjectHideFlags: 0
@@ -9784,6 +9903,7 @@ GameObject:
   m_Component:
   - component: {fileID: 643200949}
   - component: {fileID: 643200950}
+  - component: {fileID: 643200951}
   m_Layer: 0
   m_Name: Hemostasico Tip
   m_TagString: Hemostasico
@@ -9827,6 +9947,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &643200951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643200948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8bb2144ac80cce44b94ec660b721282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HemostasicoTool
+  isPressing: 0
 --- !u!1 &682351017
 GameObject:
   m_ObjectHideFlags: 0
@@ -9843,7 +9976,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &682351018
 Transform:
   m_ObjectHideFlags: 0
@@ -10545,6 +10678,46 @@ MonoBehaviour:
   keyTag: Anchor
   col: {fileID: 708308189}
   outlineEffct: {fileID: 708308191}
+--- !u!1 &711214102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 711214103}
+  m_Layer: 0
+  m_Name: Colliders Hemostasico
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &711214103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711214102}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 543450653271826200}
+  - {fileID: 625555729}
+  - {fileID: 1935888350}
+  - {fileID: 1492997473}
+  - {fileID: 1292422505}
+  - {fileID: 1713063553}
+  - {fileID: 1519254687}
+  - {fileID: 2146516861}
+  - {fileID: 242803501}
+  m_Father: {fileID: 505999334}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &722329799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18619,7 +18792,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1159582062}
-  m_Mesh: {fileID: 2063125382}
+  m_Mesh: {fileID: 1676401677}
 --- !u!1 &1160093825
 GameObject:
   m_ObjectHideFlags: 0
@@ -19227,7 +19400,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1179138258
 Transform:
   m_ObjectHideFlags: 0
@@ -20901,13 +21074,15 @@ GameObject:
   - component: {fileID: 1292422505}
   - component: {fileID: 1292422507}
   - component: {fileID: 1292422506}
+  - component: {fileID: 1292422508}
+  - component: {fileID: 1292422509}
   m_Layer: 0
   m_Name: Tapon irregular (4)
-  m_TagString: Untagged
+  m_TagString: Hemostasico
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1292422505
 Transform:
   m_ObjectHideFlags: 0
@@ -20916,12 +21091,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1292422504}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.35942045, y: 7.105424e-15, z: -1.576516e-14, w: 0.93317574}
-  m_LocalPosition: {x: 0.000002, y: 0.007396, z: 0.005874}
-  m_LocalScale: {x: 0.0125, y: 0.04, z: 0.005}
+  m_LocalRotation: {x: -0.35942045, y: 1.0658138e-14, z: -8.659736e-15, w: 0.93317574}
+  m_LocalPosition: {x: 0, y: 0.00739602, z: 0.0058739902}
+  m_LocalScale: {x: 0.012500001, y: 0.04000001, z: 0.005000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 505999334}
+  m_Father: {fileID: 711214103}
   m_LocalEulerAnglesHint: {x: -42.129, y: 0, z: 0}
 --- !u!23 &1292422506
 MeshRenderer:
@@ -20948,7 +21123,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0ed585ac626404fa541159264c49d4, type: 2}
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -20980,6 +21155,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1292422504}
   m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!65 &1292422508
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292422504}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530297, y: 0.021259917, z: 0.0215228}
+  m_Center: {x: 0.0000062547624, y: 0.010628064, z: 0.000028930097}
+--- !u!114 &1292422509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292422504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!1 &1301380202
 GameObject:
   m_ObjectHideFlags: 0
@@ -23964,13 +24176,15 @@ GameObject:
   - component: {fileID: 1492997473}
   - component: {fileID: 1492997475}
   - component: {fileID: 1492997474}
+  - component: {fileID: 1492997476}
+  - component: {fileID: 1492997477}
   m_Layer: 0
   m_Name: Tapon irregular (3)
-  m_TagString: Untagged
+  m_TagString: Hemostasico
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1492997473
 Transform:
   m_ObjectHideFlags: 0
@@ -23979,12 +24193,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1492997472}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.27162045, y: 1.06581385e-14, z: -3.352873e-14, w: 0.96240443}
-  m_LocalPosition: {x: 0.000002, y: 0.006671, z: 0.006319}
-  m_LocalScale: {x: 0.0125, y: 0.04, z: 0.005}
+  m_LocalRotation: {x: -0.27162045, y: -3.5527128e-15, z: -3.5305085e-14, w: 0.96240443}
+  m_LocalPosition: {x: 0, y: 0.00667101, z: 0.006318999}
+  m_LocalScale: {x: 0.012500001, y: 0.040000007, z: 0.005000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 505999334}
+  m_Father: {fileID: 711214103}
   m_LocalEulerAnglesHint: {x: -31.521, y: 0, z: 0}
 --- !u!23 &1492997474
 MeshRenderer:
@@ -24011,7 +24225,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0ed585ac626404fa541159264c49d4, type: 2}
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -24043,6 +24257,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1492997472}
   m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!65 &1492997476
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492997472}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530297, y: 0.021259915, z: 0.021522803}
+  m_Center: {x: 0.000006254777, y: 0.010628302, z: 0.000027977689}
+--- !u!114 &1492997477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492997472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!1 &1496188643
 GameObject:
   m_ObjectHideFlags: 0
@@ -24218,13 +24469,15 @@ GameObject:
   - component: {fileID: 1519254687}
   - component: {fileID: 1519254689}
   - component: {fileID: 1519254688}
+  - component: {fileID: 1519254690}
+  - component: {fileID: 1519254691}
   m_Layer: 0
   m_Name: Tapon irregular (6)
-  m_TagString: Untagged
+  m_TagString: Hemostasico
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1519254687
 Transform:
   m_ObjectHideFlags: 0
@@ -24233,12 +24486,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519254686}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.58169115, y: 3.1974416e-14, z: 1.3766762e-14, w: 0.81340986}
-  m_LocalPosition: {x: 0.000002, y: 0.008544, z: 0.004451}
-  m_LocalScale: {x: 0.014, y: 0.05, z: 0.005}
+  m_LocalRotation: {x: -0.5816911, y: 2.1316277e-14, z: -8.8817825e-15, w: 0.8134098}
+  m_LocalPosition: {x: 0, y: 0.008544025, z: 0.0044509927}
+  m_LocalScale: {x: 0.014, y: 0.020000001, z: 0.0050000018}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 505999334}
+  m_Father: {fileID: 711214103}
   m_LocalEulerAnglesHint: {x: -71.139, y: 0, z: 0}
 --- !u!23 &1519254688
 MeshRenderer:
@@ -24265,7 +24518,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0ed585ac626404fa541159264c49d4, type: 2}
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -24297,6 +24550,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519254686}
   m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!65 &1519254690
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519254686}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530299, y: 0.021259917, z: 0.021522803}
+  m_Center: {x: 0.0000062547633, y: 0.010627826, z: 0.00003083745}
+--- !u!114 &1519254691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519254686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!1 &1536229360
 GameObject:
   m_ObjectHideFlags: 0
@@ -26041,6 +26331,184 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1643153288}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!43 &1676401677
+Mesh:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Mesh
+  serializedVersion: 12
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 0
+    topology: 0
+    baseVertex: 0
+    firstVertex: 0
+    vertexCount: 0
+    localAABB:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_BonesAABB: []
+  m_VariableBoneCountWeights:
+    m_Data: 
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexFormat: 0
+  m_IndexBuffer: 
+  m_VertexData:
+    serializedVersion: 3
+    m_VertexCount: 2
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 40
+      format: 0
+      dimension: 4
+    - stream: 0
+      offset: 56
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 128
+    _typelessdata: 49b6823a68019bb8636869b403bc443d4a90253f3ade423f00000000d71743bf3dc1253f0000803f0000803f0000803f0000803f0000803f00000033000080b348b682ba17b19b3810956cb403bc443d4a90253f3ade423f00000000d71743bf3dc1253f0000803f0000803f0000803f0000803f0000803f0000803f00000033
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 5.820766e-11, y: 0.0000001636181, z: -0.00000021885617}
+    m_Extent: {x: 0.0009972537, y: 0.000074076, z: 0.0000000014782486}
+  m_MeshUsageFlags: 0
+  m_CookingOptions: 30
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  'm_MeshMetrics[0]': 1
+  'm_MeshMetrics[1]': 1
+  m_MeshOptimizationFlags: 1
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
+  m_MeshLodInfo:
+    serializedVersion: 2
+    m_LodSelectionCurve:
+      serializedVersion: 1
+      m_LodSlope: 0
+      m_LodBias: 0
+    m_NumLevels: 1
+    m_SubMeshes:
+    - serializedVersion: 2
+      m_Levels:
+      - serializedVersion: 1
+        m_IndexStart: 0
+        m_IndexCount: 0
 --- !u!1 &1685176087
 GameObject:
   m_ObjectHideFlags: 0
@@ -26197,13 +26665,15 @@ GameObject:
   - component: {fileID: 1713063553}
   - component: {fileID: 1713063555}
   - component: {fileID: 1713063554}
+  - component: {fileID: 1713063556}
+  - component: {fileID: 1713063557}
   m_Layer: 0
   m_Name: Tapon irregular (5)
-  m_TagString: Untagged
+  m_TagString: Hemostasico
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1713063553
 Transform:
   m_ObjectHideFlags: 0
@@ -26212,12 +26682,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1713063552}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.47539538, y: 1.0658136e-14, z: 2.4730206e-14, w: 0.87977225}
-  m_LocalPosition: {x: 0.000002, y: 0.008021, z: 0.005309}
-  m_LocalScale: {x: 0.0125, y: 0.04, z: 0.005}
+  m_LocalRotation: {x: -0.47539538, y: 1.0658136e-14, z: 5.3568234e-14, w: 0.87977225}
+  m_LocalPosition: {x: 0, y: 0.008021015, z: 0.0053090015}
+  m_LocalScale: {x: 0.012500001, y: 0.040000003, z: 0.0050000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 505999334}
+  m_Father: {fileID: 711214103}
   m_LocalEulerAnglesHint: {x: -56.77, y: 0, z: 0}
 --- !u!23 &1713063554
 MeshRenderer:
@@ -26244,7 +26714,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0ed585ac626404fa541159264c49d4, type: 2}
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -26276,6 +26746,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1713063552}
   m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!65 &1713063556
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713063552}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530297, y: 0.021259908, z: 0.0215228}
+  m_Center: {x: 0.000006254777, y: 0.0106280595, z: 0.00002940946}
+--- !u!114 &1713063557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713063552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!224 &1714251360 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1035790433963668018, guid: 085ce58b196caa446a8545c9dd388793, type: 3}
@@ -28406,13 +28913,15 @@ GameObject:
   - component: {fileID: 1935888350}
   - component: {fileID: 1935888352}
   - component: {fileID: 1935888351}
+  - component: {fileID: 1935888353}
+  - component: {fileID: 1935888354}
   m_Layer: 0
   m_Name: Tapon irregular (2)
-  m_TagString: Untagged
+  m_TagString: Hemostasico
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1935888350
 Transform:
   m_ObjectHideFlags: 0
@@ -28421,12 +28930,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1935888349}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.21416135, y: 1.7763565e-14, z: -4.4408913e-15, w: 0.97679836}
-  m_LocalPosition: {x: 0.000002, y: 0.0059, z: 0.006674}
-  m_LocalScale: {x: 0.01, y: 0.04, z: 0.005}
+  m_LocalRotation: {x: -0.21416134, y: 1.4210853e-14, z: -1.8651745e-14, w: 0.97679836}
+  m_LocalPosition: {x: 0, y: 0.0059000147, z: 0.006673999}
+  m_LocalScale: {x: 0.010000001, y: 0.040000003, z: 0.0050000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 505999334}
+  m_Father: {fileID: 711214103}
   m_LocalEulerAnglesHint: {x: -24.733, y: 0, z: 0}
 --- !u!23 &1935888351
 MeshRenderer:
@@ -28453,7 +28962,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0ed585ac626404fa541159264c49d4, type: 2}
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -28485,6 +28994,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1935888349}
   m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!65 &1935888353
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935888349}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530297, y: 0.021259911, z: 0.0215228}
+  m_Center: {x: 0.0000062547915, y: 0.0106283, z: 0.000026068441}
+--- !u!114 &1935888354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935888349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!1001 &1939649481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29749,7 +30295,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2006962352
 Transform:
   m_ObjectHideFlags: 0
@@ -30711,184 +31257,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2059991940}
   m_CullTransparentMesh: 1
---- !u!43 &2063125382
-Mesh:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Mesh
-  serializedVersion: 12
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 0
-    topology: 0
-    baseVertex: 0
-    firstVertex: 0
-    vertexCount: 0
-    localAABB:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_BonesAABB: []
-  m_VariableBoneCountWeights:
-    m_Data: 
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexFormat: 0
-  m_IndexBuffer: 
-  m_VertexData:
-    serializedVersion: 3
-    m_VertexCount: 2
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 24
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 40
-      format: 0
-      dimension: 4
-    - stream: 0
-      offset: 56
-      format: 0
-      dimension: 2
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 128
-    _typelessdata: 19bfd4b9c9a16f3a14523fb4b52065bf7874cbbe69624fbea0c2cf3ef0f969bf000000000000803f0000803f0000803f0000803f0000803f00000033000080b319bfd43928906fbaa80e2bb4b52065bf7874cbbe69624fbea0c2cf3ef0f969bf000000000000803f0000803f0000803f0000803f0000803f0000803f00000033
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 0, y: 0.00000013134559, z: -0.00000016874534}
-    m_Extent: {x: 0.0004057817, y: 0.00091399206, z: 0.000000009435865}
-  m_MeshUsageFlags: 0
-  m_CookingOptions: 30
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  'm_MeshMetrics[0]': 1
-  'm_MeshMetrics[1]': 1
-  m_MeshOptimizationFlags: 1
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
-  m_MeshLodInfo:
-    serializedVersion: 2
-    m_LodSelectionCurve:
-      serializedVersion: 1
-      m_LodSlope: 0
-      m_LodBias: 0
-    m_NumLevels: 1
-    m_SubMeshes:
-    - serializedVersion: 2
-      m_Levels:
-      - serializedVersion: 1
-        m_IndexStart: 0
-        m_IndexCount: 0
 --- !u!1001 &2072166508
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32036,6 +32404,135 @@ MonoBehaviour:
   keyTag: Anchor
   col: {fileID: 2142864688}
   outlineEffct: {fileID: 2142864690}
+--- !u!1 &2146516860
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2146516861}
+  - component: {fileID: 2146516864}
+  - component: {fileID: 2146516863}
+  - component: {fileID: 2146516862}
+  - component: {fileID: 2146516865}
+  m_Layer: 0
+  m_Name: Tapon irregular (7)
+  m_TagString: Hemostasico
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2146516861
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146516860}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.5816911, y: 2.1316277e-14, z: -8.8817825e-15, w: 0.8134098}
+  m_LocalPosition: {x: 0, y: 0.008665014, z: 0.0040949928}
+  m_LocalScale: {x: 0.014, y: 0.030000007, z: 0.0050000018}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 711214103}
+  m_LocalEulerAnglesHint: {x: -71.139, y: 0, z: 0}
+--- !u!65 &2146516862
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146516860}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530299, y: 0.021259917, z: 0.021522803}
+  m_Center: {x: 0.0000062547633, y: 0.010627826, z: 0.00003083745}
+--- !u!23 &2146516863
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146516860}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &2146516864
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146516860}
+  m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!114 &2146516865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146516860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!222 &7183079049338575
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -32681,12 +33178,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149616526754}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.004276125, y: -0.0000071915183, z: -0.0016798317, w: 0.9999895}
-  m_LocalPosition: {x: -0, y: 0.00427, z: 0.006978}
-  m_LocalScale: {x: 0.01, y: 0.04, z: 0.005}
+  m_LocalRotation: {x: -0.004276162, y: -0.0000071915174, z: -0.0016798314, w: 0.99998945}
+  m_LocalPosition: {x: 0, y: 0.0042700106, z: 0.006977994}
+  m_LocalScale: {x: 0.010000001, y: 0.040000018, z: 0.005}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 505999334}
+  m_Father: {fileID: 711214103}
   m_LocalEulerAnglesHint: {x: -0.49, y: 0, z: -0.192}
 --- !u!4 &543450653339378781 stripped
 Transform:
@@ -33076,13 +33573,15 @@ GameObject:
   - component: {fileID: 543450653271826200}
   - component: {fileID: 3469287837121614013}
   - component: {fileID: 1711813855474574455}
+  - component: {fileID: 3469287837121614014}
+  - component: {fileID: 3469287837121614015}
   m_Layer: 0
   m_Name: Tapon irregular (0)
-  m_TagString: Untagged
+  m_TagString: Hemostasico
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!64 &920321451614597426
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -34096,7 +34595,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0ed585ac626404fa541159264c49d4, type: 2}
+  - {fileID: 2100000, guid: 0ace58845ee37884bb7a6ee4c86630ae, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -36102,6 +36601,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132149616526754}
   m_Mesh: {fileID: 5065503977446733706, guid: 3e035535a5bc5ae4bad8db1bd614a353, type: 3}
+--- !u!65 &3469287837121614014
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149616526754}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.021530299, y: 0.021259915, z: 0.021522805}
+  m_Center: {x: 0.0000062472336, y: 0.010628302, z: 0.000026053864}
+--- !u!114 &3469287837121614015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132149616526754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbe9d1ea60ce6e64a963e8cc16a6952b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hemostasico
+  meshRenderer: {fileID: 0}
+  ghostMaterial: {fileID: 0}
+  activeMaterial: {fileID: 2100000, guid: d6e7c204ec5e119468f1581829188d17, type: 2}
+  isChanging: 0
 --- !u!33 &3469287838202199142
 MeshFilter:
   m_ObjectHideFlags: 0

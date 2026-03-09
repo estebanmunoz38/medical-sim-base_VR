@@ -7,8 +7,12 @@ public class Hemostasico : MonoBehaviour
     [SerializeField] Material ghostMaterial;
     [SerializeField] Material activeMaterial;
 
-    [Header("Materials Settings")]
+    [Header("Changing Settings")]
     [SerializeField] bool isChanging;
+    [SerializeField] float changeTimer;
+
+    float _timer = 0;
+    bool _timerEnabled = false;
 
     void Awake()
     { Init(); }
@@ -18,6 +22,7 @@ public class Hemostasico : MonoBehaviour
         GetMeshRenderer();
         GetMaterial();
     }
+
     private void GetMeshRenderer()
     { meshRenderer = this.GetComponent<MeshRenderer>(); }
 
@@ -30,19 +35,25 @@ public class Hemostasico : MonoBehaviour
     void ChangeParent(Transform _parent)
     { this.gameObject.transform.SetParent(_parent); }
 
+    void SetBackupMaterial()
+    {
+        activeMaterial = new Material(ghostMaterial);
+        activeMaterial.color = Color.yellow;
+        //activeMaterial.color.a = 1f;
+    }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Hemostasico"))
         {
             GameObject _other = other.gameObject;
-            if(_other.name == "Hemostasico Tip")
+            if (_other.name == "Hemostasico Tip")
             {
                 HemostasicoTool _htool = _other.GetComponent<HemostasicoTool>();
-                if(_htool.isPressing)
+                if (_htool.isPressing)
                 {
-                    ChangeMaterial(activeMaterial);
-                    ChangeParent(null);
+                    isChanging = true; // <-- Activa el timer al presionar
+                    Debug.Log("[Hemostasico] Contacto detectado. isChanging activado.");
                 }
             }
         }
@@ -51,11 +62,42 @@ public class Hemostasico : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Hemostasico"))
-        { Debug.Log("exit"); }
+        {
+            isChanging = false;
+            Debug.Log("[Hemostasico] exit");
+        }
     }
 
     void Update()
     {
-        
+        if (isChanging && !_timerEnabled)
+        {
+            _timerEnabled = true;
+            _timer = 0f;
+            Debug.Log("[Hemostasico] Timer iniciado. Esperando " + changeTimer + " segundos...");
+        }
+
+        if (!isChanging && _timerEnabled)
+        {
+            _timerEnabled = false;
+            _timer = 0f;
+            Debug.Log("[Hemostasico] isChanging desactivado. Timer reiniciado.");
+        }
+
+        if (_timerEnabled)
+        {
+            _timer += Time.deltaTime;
+            Debug.Log("[Hemostasico] Timer: " + _timer.ToString("F2") + " / " + changeTimer + "s");
+
+            if (_timer >= changeTimer)
+            {
+                ChangeMaterial(activeMaterial);
+                ChangeParent(null);
+                _timerEnabled = false;
+                _timer = 0f;
+                isChanging = false;
+                Debug.Log("[Hemostasico] Material cambiado a: " + activeMaterial.name + " | Parent reseteado.");
+            }
+        }
     }
 }

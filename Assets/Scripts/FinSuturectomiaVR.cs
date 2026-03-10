@@ -2,167 +2,127 @@ using UnityEngine;
 
 public class FinSuturectomiaVR : MonoBehaviour
 {
-    [Header("Input VR")]
-    public MonoBehaviour inputSourceBehaviour;
-    private IToolInputSource input;
+    [Header("Hoja / punta de la herramienta (igual que el bisturí)")]
+    [SerializeField] Collider bladeCollider;
 
-    [Header("Herramienta (gubia / separador)")]
-    public Transform toolModel;
-    public Transform toolTip;
+    [Header("Waypoints de sutura")]
+    [SerializeField] GameObject initialPoint;
+    private bool initialPointDone = false;
 
-    [Header("Recorrido")]
-    public Transform[] pathPoints;
+    [SerializeField] GameObject midPoint;
+    private bool midPointDone = false;
 
-    [Header("Huesos del cráneo a separar")]
-    public Transform craneoIzquierdo;
-    public Transform craneoDerecho;
+    [SerializeField] GameObject finalPoint;
+    private bool finalPointDone = false;
 
-    [Header("Separación")]
-    public Vector3 desplazamientoIzquierdo = new Vector3(-0.01f, 0f, 0f);
-    public Vector3 desplazamientoDerecho = new Vector3(0.01f, 0f, 0f);
+    [Header("Animaciones (cierre inverso)")]
+    [SerializeField] BoneCutClip inferiorClips;
+    [SerializeField] BoneCutClip superiorClips;
 
-    [Header("Movimiento")]
-    public float movementSpeed = 0.6f;
-    public float snapStartDistance = 0.08f;
-    public float smoothPosition = 12f;
-    public float smoothRotation = 12f;
+    [Header("Helper visual")]
+    [SerializeField] GameObject suturaHelper;
 
-    [Header("Chequeo de puentes óseos")]
-    public bool chequearPuentes = true;
-    public LayerMask puenteMask = ~0;
-    public float chequeoDistance = 0.02f;
+    [Header("Hilo de sutura")]
+    [SerializeField] LineRenderer sutureLine;
+    [SerializeField] float lineWidth = 0.002f;
 
-    private float t = 0f;
-    private bool trabajando = false;
-    private bool terminado = false;
-
-    private Vector3 craneoIzqInicial;
-    private Vector3 craneoDerInicial;
+    private int lineIndex = 0;
 
     void Start()
     {
-        input = inputSourceBehaviour as IToolInputSource;
-
-        if (input == null || toolModel == null || toolTip == null)
+        if (bladeCollider == null)
         {
+            Debug.LogError("FinSuturectomiaVR: falta bladeCollider.");
             enabled = false;
             return;
         }
 
-        if (pathPoints == null || pathPoints.Length < 2)
+        if (initialPoint != null) initialPoint.SetActive(true);
+        if (midPoint != null) midPoint.SetActive(false);
+        if (finalPoint != null) finalPoint.SetActive(false);
+
+        if (suturaHelper != null)
+            suturaHelper.SetActive(true);
+
+        if (sutureLine != null)
         {
-            enabled = false;
+            sutureLine.useWorldSpace = true;
+            sutureLine.positionCount = 0;
+            sutureLine.startWidth = lineWidth;
+            sutureLine.endWidth = lineWidth;
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        // Solo reaccionar si el que tocó fue la punta real
+        if (other != bladeCollider) return;
+
+        if (!initialPointDone && other.gameObject.name == initialPoint.name)
+        {
+            initialPointDone = true;
+            initialPoint.SetActive(false);
+            if (midPoint != null) midPoint.SetActive(true);
+
+            AddLinePoint(initialPoint.transform.position);
+            ChangeAnimations("incision_2");
+            CheckAllPoints();
             return;
         }
 
-        if (craneoIzquierdo == null || craneoDerecho == null)
+        if (!midPointDone && other.gameObject.name == midPoint.name)
         {
-            enabled = false;
+            midPointDone = true;
+            midPoint.SetActive(false);
+            if (finalPoint != null) finalPoint.SetActive(true);
+
+            AddLinePoint(midPoint.transform.position);
+            ChangeAnimations("incision_1");
+            CheckAllPoints();
             return;
         }
 
-        craneoIzqInicial = craneoIzquierdo.localPosition;
-        craneoDerInicial = craneoDerecho.localPosition;
-    }
-
-    void Update()
-    {
-        if (terminado) return;
-
-        if (!trabajando)
-            TrySnapStart();
-        else
-            Advance();
-    }
-
-    void TrySnapStart()
-    {
-        Vector3 start = pathPoints[0].position;
-        float dist = Vector3.Distance(toolTip.position, start);
-
-        if (dist <= snapStartDistance && input.PrimaryDown)
+        if (!finalPointDone && other.gameObject.name == finalPoint.name)
         {
-            trabajando = true;
-            t = 0f;
+            finalPointDone = true;
+            finalPoint.SetActive(false);
+
+            AddLinePoint(finalPoint.transform.position);
+            CheckAllPoints();
         }
     }
 
-    void Advance()
+    void AddLinePoint(Vector3 pos)
     {
-        if (input.PrimaryHeld)
-            t += movementSpeed * Time.deltaTime;
+        if (sutureLine == null) return;
 
-        t = Mathf.Clamp01(t);
+        sutureLine.positionCount++;
+        sutureLine.SetPosition(lineIndex, pos);
+        lineIndex++;
+    }
 
-        // Movimiento herramienta
-        Vector3 targetPos = GetPositionOnPath(t);
-        toolModel.position = Vector3.Lerp(toolModel.position, targetPos, Time.deltaTime * smoothPosition);
-
-        Quaternion targetRot = GetRotationOnPath(t);
-        toolModel.rotation = Quaternion.Slerp(toolModel.rotation, targetRot, Time.deltaTime * smoothRotation);
-
-        // Separación progresiva del cráneo
-        craneoIzquierdo.localPosition = Vector3.Lerp(
-            craneoIzqInicial,
-            craneoIzqInicial + desplazamientoIzquierdo,
-            t
-        );
-
-        craneoDerecho.localPosition = Vector3.Lerp(
-            craneoDerInicial,
-            craneoDerInicial + desplazamientoDerecho,
-            t
-        );
-
-        // Chequeo simple de puentes
-        if (chequearPuentes && HayPuenteOseo())
+    void CheckAllPoints()
+    {
+        if (initialPointDone && midPointDone && finalPointDone)
         {
-            // Bloquea avance si hay puente
-            t -= movementSpeed * Time.deltaTime;
-            t = Mathf.Clamp01(t);
-            return;
-        }
-
-        if (t >= 0.99f)
-        {
-            trabajando = false;
-            terminado = true;
+            CompleteSuture();
         }
     }
 
-    bool HayPuenteOseo()
+    void ChangeAnimations(string key)
     {
-        Vector3 origen = craneoIzquierdo.position;
-        Vector3 dir = (craneoDerecho.position - craneoIzquierdo.position).normalized;
+        if (superiorClips != null)
+            superiorClips.ChangeClip(key);
 
-        return Physics.Raycast(
-            origen,
-            dir,
-            chequeoDistance,
-            puenteMask,
-            QueryTriggerInteraction.Ignore
-        );
+        if (inferiorClips != null)
+            inferiorClips.ChangeClip(key);
     }
 
-    Vector3 GetPositionOnPath(float tNorm)
+    void CompleteSuture()
     {
-        float scaled = tNorm * (pathPoints.Length - 1);
-        int idx = Mathf.FloorToInt(scaled);
-        int next = Mathf.Clamp(idx + 1, 0, pathPoints.Length - 1);
+        if (suturaHelper != null)
+            suturaHelper.SetActive(false);
 
-        float localT = scaled - idx;
-        return Vector3.Lerp(pathPoints[idx].position, pathPoints[next].position, localT);
-    }
-
-    Quaternion GetRotationOnPath(float tNorm)
-    {
-        float scaled = tNorm * (pathPoints.Length - 1);
-        int idx = Mathf.FloorToInt(scaled);
-        int next = Mathf.Clamp(idx + 1, 0, pathPoints.Length - 1);
-
-        Vector3 dir = (pathPoints[next].position - pathPoints[idx].position).normalized;
-        if (dir.sqrMagnitude < 0.000001f) dir = toolModel.forward;
-
-        return Quaternion.LookRotation(dir, Vector3.up);
+        Debug.Log("SUTURA COMPLETA");
     }
 }

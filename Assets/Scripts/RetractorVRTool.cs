@@ -26,6 +26,17 @@ public class RetractorVRTool : MonoBehaviour
     public float rotationMultiplier = 80f;
     public float smooth = 10f;
 
+    [Header("Estado para FinSuturectomiaVR")]
+    public bool wasEverAttached = false;
+    public bool wasDetachedAfterAttach = false;
+    [Range(0f, 1f)] public float currentOpenNormalized = 0f;
+    [Range(0f, 1f)] public float remainingOpenNormalized = 0f;
+
+    [Header("Lectura de apertura")]
+    public float maxOpenAngleForNormalization = 35f;
+    public bool keepPartiallyOpenOnDetach = true;
+    [Range(0f, 1f)] public float detachOpenRetention = 0.35f;
+
     private bool isAttached = false;
     private Transform activeSnap = null;
     private Transform activeBone = null;
@@ -33,6 +44,10 @@ public class RetractorVRTool : MonoBehaviour
     private float initialBoneAngle = 0f;
     private Vector3 initialControllerPos;
 
+    public bool IsAttached => isAttached;
+    public bool WasEverAttached => wasEverAttached;
+    public bool WasDetachedAfterAttach => wasDetachedAfterAttach;
+    public float RemainingOpenNormalized => remainingOpenNormalized;
 
     void Start()
     {
@@ -74,11 +89,11 @@ public class RetractorVRTool : MonoBehaviour
     // =====================================================================================
     void TryAttach()
     {
-        // Distancias
+        if (snapFrontal == null || snapTrasera == null || retractorTip == null) return;
+
         float distFrontal = Vector3.Distance(retractorTip.position, snapFrontal.position);
         float distTrasera = Vector3.Distance(retractorTip.position, snapTrasera.position);
 
-        // Enganchar
         if (input.PrimaryDown)
         {
             if (distFrontal <= snapDistance)
@@ -93,7 +108,7 @@ public class RetractorVRTool : MonoBehaviour
     }
 
     // =====================================================================================
-    // ENGANCHAR REACTOR
+    // ENGANCHAR RETRACTOR
     // =====================================================================================
     void Attach(Transform snap, Transform bone)
     {
@@ -101,14 +116,14 @@ public class RetractorVRTool : MonoBehaviour
         activeSnap = snap;
         activeBone = bone;
 
-        // Pegar la herramienta físicamente al snap
+        wasEverAttached = true;
+        wasDetachedAfterAttach = false;
+
         retractorModel.position = snap.position;
         retractorModel.rotation = snap.rotation;
 
-        // Guardamos la posición inicial de la mano
         initialControllerPos = controllerTransform.position;
 
-        // Guardamos ángulo inicial del hueso
         if (activeBone != null)
             initialBoneAngle = activeBone.localEulerAngles.x;
     }
@@ -120,11 +135,12 @@ public class RetractorVRTool : MonoBehaviour
     {
         if (activeBone == null) return;
 
-        // Cuánto subió o bajó la mano desde el momento de enganchar
         float deltaY = controllerTransform.position.y - initialControllerPos.y;
 
-        // Convertimos movimiento vertical del control → rotación del hueso
         float targetAngle = initialBoneAngle - deltaY * rotationMultiplier;
+
+        float angleDelta = Mathf.Abs(targetAngle - initialBoneAngle);
+        currentOpenNormalized = Mathf.Clamp01(angleDelta / maxOpenAngleForNormalization);
 
         Vector3 e = activeBone.localEulerAngles;
         e.x = targetAngle;
@@ -142,10 +158,24 @@ public class RetractorVRTool : MonoBehaviour
     void Detach()
     {
         isAttached = false;
+        wasDetachedAfterAttach = true;
+
+        if (keepPartiallyOpenOnDetach)
+            remainingOpenNormalized = Mathf.Clamp01(currentOpenNormalized * detachOpenRetention);
+        else
+            remainingOpenNormalized = currentOpenNormalized;
+
         activeBone = null;
         activeSnap = null;
     }
 
+    // =====================================================================================
+    // PERMITIR QUE FinSuturectomiaVR ACTUALICE EL CIERRE PROGRESIVO
+    // =====================================================================================
+    public void SetRemainingOpenNormalized(float value)
+    {
+        remainingOpenNormalized = Mathf.Clamp01(value);
+    }
 
     // =====================================================================================
     // DIBUJAR GIZMOS PARA DEPURAR

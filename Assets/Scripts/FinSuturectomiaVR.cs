@@ -55,6 +55,9 @@ public class FinSuturectomiaVR : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (other.name == "InitialCut")
+        { Debug.Log ("OK");
+        }
         // Solo reaccionar si el que tocó fue la punta real
         if (other != bladeCollider) return;
 

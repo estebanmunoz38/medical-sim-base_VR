@@ -1,8 +1,8 @@
 <!-- UNITY CODE ASSIST INSTRUCTIONS START -->
 - Project name: medical-sim-base_VR
-- Unity version: Unity 6000.2.6f2
+- Unity version: Unity 6000.3.2f1
 - Active game object:
-  - Name: Endoscopio Unlock
-  - Tag: Anchor
+  - Name: Tapon irregular (8)
+  - Tag: Hemostasico
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

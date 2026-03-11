@@ -38,8 +38,7 @@ public class Hemostasico : MonoBehaviour
     void SetBackupMaterial()
     {
         activeMaterial = new Material(ghostMaterial);
-        activeMaterial.color = Color.yellow;
-        //activeMaterial.color.a = 1f;
+        activeMaterial.color = Color.sandyBrown;
     }
 
     void OnTriggerEnter(Collider other)

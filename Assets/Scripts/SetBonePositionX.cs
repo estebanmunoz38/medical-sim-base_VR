@@ -7,33 +7,40 @@ public class SetBonePositionX : MonoBehaviour
     [SerializeField] Vector3 initialRotation;
 
     void Start()
-    { Init(); }
+    {
+        Init();
+    }
 
     private void Init()
-    { initialRotation = transform.rotation.eulerAngles; }
+    {
+        initialRotation = transform.localEulerAngles;
+    }
 
     public void InitialRotationX()
     {
-        Vector3 _rotacion = new Vector3(initialValue, 0, 0);   
-        transform.eulerAngles = _rotacion;
+        Vector3 _rotacion = initialRotation;
+        _rotacion.x = initialValue;
+        transform.localEulerAngles = _rotacion;
+
+        Debug.Log("[SetBonePositionX] InitialRotationX -> " + _rotacion);
     }
 
     public void FinalRotationX()
     {
-        Vector3 _rotacion = new Vector3(finalValue, 0, 0);
-        transform.eulerAngles = _rotacion;
+        Vector3 _rotacion = initialRotation;
+        _rotacion.x = finalValue;
+        transform.localEulerAngles = _rotacion;
+
+        Debug.Log("[SetBonePositionX] FinalRotationX -> " + _rotacion);
     }
 
-    // ESTO ANTES ERA Z — AHORA USA X
     public void InitialRotationAlt()
     {
-        Vector3 _rotacion = new Vector3(initialValue, 0, 0);
-        transform.eulerAngles = _rotacion;
+        InitialRotationX();
     }
 
     public void FinalRotationAlt()
     {
-        Vector3 _rotacion = new Vector3(finalValue, 0, 0);
-        transform.eulerAngles = initialRotation + _rotacion;
+        FinalRotationX();
     }
 }

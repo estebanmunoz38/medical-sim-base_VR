@@ -2,48 +2,73 @@ using UnityEngine;
 
 public class SetPosition : MonoBehaviour
 {
+    [Header("Target (opcional)")]
     [SerializeField] Transform target;
-    //[SerializeField] float initialValue;
-    //[SerializeField] float finalValue;
 
+    [Header("Valores iniciales (se guardan automáticamente al iniciar)")]
     [SerializeField] Vector3 local_position;
     [SerializeField] Quaternion local_rotation;
 
+    [Header("Valores finales")]
     [SerializeField] Vector3 final_position;
     [SerializeField] Quaternion final_rotation;
 
     void Start()
-    { Init(); }
+    {
+        Init();
+    }
 
     private void Init()
     {
         GetPosition();
         GetRotation();
+        Debug.Log("[SetPosition] Valores iniciales guardados");
     }
+
+    private void GetPosition()
+    {
+        local_position = transform.localPosition;
+    }
+
+    private void GetRotation()
+    {
+        local_rotation = transform.localRotation;
+    }
+
+    // --- POSICIONES ---
 
     public void MoveToInitialPos()
     {
-        Vector3 _position = target.position;
-        //_position.z = initialValue;
-        //transform.position = _position;
+        transform.localPosition = local_position;
+        Debug.Log("[SetPosition] Posición inicial restaurada");
     }
 
     public void MoveToFixedPos()
     {
-        Vector3 _position = transform.position;
-        //_position.z = finalValue;
-        //transform.position = _position;
+        transform.localPosition = final_position;
+        Debug.Log("[SetPosition] Posición final aplicada");
     }
 
-    private void GetPosition()
-    { local_position = this.transform.localPosition; }
-
-    private void GetRotation()
-    { local_rotation = this.transform.rotation; }
-
     public void ChangePosition()
-    { this.transform.position = final_position; }
+    {
+        transform.localPosition = final_position;
+        Debug.Log("[SetPosition] ChangePosition ejecutado");
+    }
+
+    // --- ROTACIONES ---
 
     public void ChangeRotation()
-    { this.transform.rotation = final_rotation; }
+    {
+        transform.localRotation = final_rotation;
+        Debug.Log("[SetPosition] Rotación final aplicada");
+    }
+
+
+    public void ResetRotation()
+    {
+    transform.localPosition = local_position;
+    transform.localRotation = local_rotation;
+    Debug.Log("[SetPosition] Posición y rotación inicial restauradas");
+}
+
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SetBonePosition : MonoBehaviour
+public class SetBonePositionX : MonoBehaviour
 {
     [SerializeField] float initialValue;
     [SerializeField] float finalValue;
@@ -20,18 +20,20 @@ public class SetBonePosition : MonoBehaviour
 
     public void FinalRotationX()
     {
-        Vector3 _rotacion = new Vector3(finalValue, 0, 0) ;
-        transform.eulerAngles = _rotacion;
-    }
-    public void InitialRotationZ()
-    {
-        Vector3 _rotacion = new Vector3(0, 0, initialValue);
+        Vector3 _rotacion = new Vector3(finalValue, 0, 0);
         transform.eulerAngles = _rotacion;
     }
 
-    public void FinalRotationZ()
+    // ESTO ANTES ERA Z — AHORA USA X
+    public void InitialRotationAlt()
     {
-        Vector3 _rotacion = new Vector3(0, 0, finalValue);
+        Vector3 _rotacion = new Vector3(initialValue, 0, 0);
+        transform.eulerAngles = _rotacion;
+    }
+
+    public void FinalRotationAlt()
+    {
+        Vector3 _rotacion = new Vector3(finalValue, 0, 0);
         transform.eulerAngles = initialRotation + _rotacion;
     }
 }

@@ -1,0 +1,474 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5648773751449241051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2869427451398662461}
+  m_Layer: 0
+  m_Name: Propo_Mesa_Estanteria_baja_larga
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2869427451398662461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5648773751449241051}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6409716615621544560}
+  - {fileID: 7407206763135206249}
+  - {fileID: 5394761767831018906}
+  - {fileID: 6795067607536976685}
+  - {fileID: 2348538088917698573}
+  - {fileID: 8996991436614434348}
+  - {fileID: 1870157329496442311}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1041201849951470103
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2869427451398662461}
+    m_Modifications:
+    - target: {fileID: 621417328456067656, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_Name
+      value: Rueda_Mueble_Quirofano (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.289
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.084
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.013671756
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+--- !u!4 &6795067607536976685 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+  m_PrefabInstance: {fileID: 1041201849951470103}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1937094651831524512
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2869427451398662461}
+    m_Modifications:
+    - target: {fileID: 621417328456067656, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_Name
+      value: Rueda_Mueble_Quirofano (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.289
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.084
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.78461456
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+--- !u!4 &5394761767831018906 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+  m_PrefabInstance: {fileID: 1937094651831524512}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3234787842625732374
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2869427451398662461}
+    m_Modifications:
+    - target: {fileID: 621417328456067656, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_Name
+      value: Rueda_Mueble_Quirofano (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.29134086
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.084
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.78461456
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+--- !u!4 &8996991436614434348 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+  m_PrefabInstance: {fileID: 3234787842625732374}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3959883577140478547
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2869427451398662461}
+    m_Modifications:
+    - target: {fileID: 621417328456067656, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_Name
+      value: Rueda_Mueble_Quirofano
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.289
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.084
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.765
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+--- !u!4 &7407206763135206249 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+  m_PrefabInstance: {fileID: 3959883577140478547}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5317581565628089597
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2869427451398662461}
+    m_Modifications:
+    - target: {fileID: 621417328456067656, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_Name
+      value: Rueda_Mueble_Quirofano (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.29134086
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.084
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.013671756
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+--- !u!4 &1870157329496442311 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+  m_PrefabInstance: {fileID: 5317581565628089597}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6879629069059091867
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2869427451398662461}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.084
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+      propertyPath: m_Name
+      value: Propo_Mesa_Estanteria_baja_larga
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+--- !u!4 &6409716615621544560 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e264c47e8b79a5844a46d2a14fb270d4, type: 3}
+  m_PrefabInstance: {fileID: 6879629069059091867}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8117831369049835831
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2869427451398662461}
+    m_Modifications:
+    - target: {fileID: 621417328456067656, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_Name
+      value: Rueda_Mueble_Quirofano (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.29134086
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.084
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.765
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+--- !u!4 &2348538088917698573 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5782615789837680954, guid: 92f39868a7d9fd248b5bcc4f29a6e414, type: 3}
+  m_PrefabInstance: {fileID: 8117831369049835831}
+  m_PrefabAsset: {fileID: 0}

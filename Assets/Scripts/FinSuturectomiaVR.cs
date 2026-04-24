@@ -85,6 +85,8 @@ public class FinSuturectomiaVR : MonoBehaviour
 public void OnToolGrab()
 {
     Debug.Log("Herramienta agarrada");
+  if (ProcedureManager.Instance != null)
+    ProcedureManager.Instance.CompleteStep("take_suture");  
 
     if (suturaHelper != null && !sutureCompleted)
         suturaHelper.SetActive(true);
@@ -187,10 +189,14 @@ public void OnToolRelease()
     }
 
     private void CompleteSuture()
-    {
-        if (suturaHelper != null)
-            suturaHelper.SetActive(false);
+{
+    if (suturaHelper != null)
+        suturaHelper.SetActive(false);
 
-        Debug.Log("SUTURA COMPLETA");
-    }
+    Debug.Log("SUTURA COMPLETA");
+
+    if (ProcedureManager.Instance != null)
+        ProcedureManager.Instance.CompleteStep("make_suture");
+}
+
 }

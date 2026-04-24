@@ -69,9 +69,15 @@ public class BisturiCutControl : MonoBehaviour
         superiorClips.ChangeClip(_key);
         inferiorClips.ChangeClip(_key);
     }
-    
+    public void NotifyTakeBisturi()
+    {
+    if (ProcedureManager.Instance != null)
+        ProcedureManager.Instance.CompleteStep("take_bisturi");
+    }
     public void CompleteCuts()
     {
         Debug.Log("TODOS LOS CORTES HECHO");
+            if (ProcedureManager.Instance != null)
+        ProcedureManager.Instance.CompleteStep("make_cut");
     }
 }

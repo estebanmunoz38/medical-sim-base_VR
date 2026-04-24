@@ -67,6 +67,14 @@ public class Kerrison : MonoBehaviour
         if(other.gameObject.name == "ClearCol" && hasOne)
         {
             DropPiece();
+            if (ProcedureManager.Instance != null)
+    ProcedureManager.Instance.CompleteStep("remove_piece");
         }
     }
+public void NotifyTakeKerrison()
+{
+    if (ProcedureManager.Instance != null)
+        ProcedureManager.Instance.CompleteStep("take_kerrison");
+}
+
 }

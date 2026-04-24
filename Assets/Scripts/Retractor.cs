@@ -94,6 +94,8 @@ public class Retractor : MonoBehaviour
 
         if (LeverRetractor != null)
             LeverRetractor.SetActive(true);
+            if (ProcedureManager.Instance != null)
+    ProcedureManager.Instance.CompleteStep("place_retractor");
     }
 
     public void UnfreezeRetractor()
@@ -148,5 +150,12 @@ public class Retractor : MonoBehaviour
         snapCheckDownChild.SetActive(true);
 
     Debug.Log("Snap reactivado luego del delay");
-}
+    }
+    public void NotifyTakeRetractor()
+    {
+    if (ProcedureManager.Instance != null)
+        ProcedureManager.Instance.CompleteStep("take_retractor");
+    }
+
+
 }

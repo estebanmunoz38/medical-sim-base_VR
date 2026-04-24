@@ -13,6 +13,8 @@ public class EndoscopioHandler : MonoBehaviour
             other.gameObject.SetActive(false);
             handlerManipulator.SetActive(true);
             screenUI.gameObject.SetActive(true);
+            if (ProcedureManager.Instance != null)
+    ProcedureManager.Instance.CompleteStep("take_endoscope");
         }
     }
 

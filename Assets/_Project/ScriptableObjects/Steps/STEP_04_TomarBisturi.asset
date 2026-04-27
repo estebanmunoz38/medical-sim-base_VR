@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_04_TomarBisturi
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
-  title: 
-  instruction: 
-  inactivityReminder: 
+  stepID: take_bisturi
+  title: " Tomar bistur\xED"
+  instruction: "Toma el bistur\xED resaltado. Vas a realizar una incisi\xF3n siguiendo
+    la trayectoria indicada."
+  inactivityReminder: "Sujeta el bistur\xED para comenzar el corte.\n"
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}

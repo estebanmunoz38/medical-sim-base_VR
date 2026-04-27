@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_10_Creditos
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
-  title: 
-  instruction: 
-  inactivityReminder: 
+  stepID: credits
+  title: "Cr\xE9ditos"
+  instruction: " Simulaci\xF3n Endosc\xF3pica VR desarrollada para Plagiocefalia
+    Argentina. Dise\xF1o, integraci\xF3n, programaci\xF3n, modelado, animaci\xF3n
+    y sistema tutorial implementados para entrenamiento m\xE9dico inmersivo."
+  inactivityReminder: ' Presiona Continuar para cerrar.'
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}
   movementPath: {fileID: 0}
   waitForExternalComplete: 1
   inactivitySeconds: 12
-  isCreditsStep: 0
+  isCreditsStep: 1

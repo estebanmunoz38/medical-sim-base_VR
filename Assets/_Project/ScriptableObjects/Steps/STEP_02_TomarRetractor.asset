@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_02_TomarRetractor
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
+  stepID: take_retractor
   title: 
-  instruction: 
+  instruction: Toma el retractor indicado. La herramienta sirve para separar tejido
+    y mantener abierta la zona de trabajo.
   inactivityReminder: 
   objectsToEnable: []
   objectsToDisable: []

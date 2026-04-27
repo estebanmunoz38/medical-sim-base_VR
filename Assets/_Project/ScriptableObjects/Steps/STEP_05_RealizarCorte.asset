@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_05_RealizarCorte
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
+  stepID: make_cut
   title: 
-  instruction: 
-  inactivityReminder: 
+  instruction: " Sigue los puntos de corte en orden. Avanza por la trayectoria visual
+    hasta completar la incisi\xF3n."
+  inactivityReminder: " Contin\xFAa el recorrido del corte siguiendo la gu\xEDa visual."
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}

@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_00_Bienvenida
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
-  title: 
-  instruction: 
-  inactivityReminder: 
+  stepID: welcome
+  title: "Bienvenido a la simulaci\xF3n Endosc\xF3pica VR"
+  instruction: " En esta experiencia vas a aprender paso a paso c\xF3mo utilizar
+    las herramientas, seguir zonas guiadas y completar el procedimiento. Presiona
+    Continuar para comenzar."
+  inactivityReminder: Presiona Continuar para iniciar el tutorial.
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}
   movementPath: {fileID: 0}
-  waitForExternalComplete: 1
+  waitForExternalComplete: 0
   inactivitySeconds: 12
   isCreditsStep: 0

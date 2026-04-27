@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_08_TomarSutura
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
-  title: 
-  instruction: 
-  inactivityReminder: 
+  stepID: take_suture
+  title: Tomar herramienta de sutura
+  instruction: "Toma la herramienta de sutura. Luego deber\xE1s cerrar siguiendo
+    los puntos indicados."
+  inactivityReminder: Sujeta la herramienta de sutura para avanzar.
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}

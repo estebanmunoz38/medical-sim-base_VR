@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_06_TomarKerrison
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
-  title: 
-  instruction: 
-  inactivityReminder: 
+  stepID: take_kerrison
+  title: ' Tomar Kerrison'
+  instruction: "Toma la herramienta Kerrison. Se usar\xE1 para retirar la pieza indicada."
+  inactivityReminder: ' Sujeta la Kerrison resaltada para continuar.'
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}

@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_01_TomarEndoscopio
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
-  title: 
-  instruction: 
-  inactivityReminder: 
+  stepID: 'take_endoscope '
+  title: Tomar endoscopio
+  instruction: ' Mira la herramienta resaltada. Acerca el controlador y sujeta el
+    endoscopio. Esta herramienta permite visualizar la zona de trabajo durante el
+    procedimiento.'
+  inactivityReminder: Toma el endoscopio resaltado para continuar.
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}

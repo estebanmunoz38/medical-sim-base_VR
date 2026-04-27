@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_07_RetirarPieza
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
-  title: 
-  instruction: 
-  inactivityReminder: 
+  stepID: ' remove_piece'
+  title: ' Retirar pieza'
+  instruction: " Acerca la Kerrison a la pieza resaltada, suj\xE9tala y ret\xEDrala
+    hacia la zona indicada."
+  inactivityReminder: "Toma la pieza resaltada y ll\xE9vala fuera de la zona quir\xFArgica."
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}

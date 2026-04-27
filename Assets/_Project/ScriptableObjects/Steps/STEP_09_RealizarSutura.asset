@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_09_RealizarSutura
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: 
-  title: 
-  instruction: 
-  inactivityReminder: 
+  stepID: make_suture
+  title: Realizar sutura
+  instruction: "Sigue los puntos de sutura en orden. Cada punto correcto dibujar\xE1
+    el recorrido del hilo.\n"
+  inactivityReminder: " Contin\xFAa la sutura siguiendo los puntos visibles.\n"
   objectsToEnable: []
   objectsToDisable: []
   validActionZone: {fileID: 0}

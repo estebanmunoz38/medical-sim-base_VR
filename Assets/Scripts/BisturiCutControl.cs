@@ -30,6 +30,9 @@ public class BisturiCutControl : MonoBehaviour
     {
         if (other.gameObject.name == initialCut.name)
         {
+
+           
+
             initialCutDone = true;
             initialCut.gameObject.SetActive(false);
             midCut.gameObject.SetActive(true);
@@ -50,6 +53,9 @@ public class BisturiCutControl : MonoBehaviour
 
         if (other.gameObject.name == finalCut.name)
         {
+            //borramos las lineas de la cabeza (Cambiamos de objetos)
+            MarkerInAction fibron = FindObjectOfType<MarkerInAction>();
+            fibron.SetInAction(false);
             finalCutDone = true;
             finalCut.gameObject.SetActive(false);
             CheckAllCuts();

@@ -17,10 +17,12 @@ MonoBehaviour:
   instruction: " Acerca la Kerrison a la pieza resaltada, suj\xE9tala y ret\xEDrala
     hacia la zona indicada."
   inactivityReminder: "Toma la pieza resaltada y ll\xE9vala fuera de la zona quir\xFArgica."
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - validzone_kerrison_drop
+  - path_kerrison_drop
+  objectsToDisableIDs: []
+  validActionZoneID: validzone_kerrison_drop
+  movementPathID: path_kerrison_drop
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

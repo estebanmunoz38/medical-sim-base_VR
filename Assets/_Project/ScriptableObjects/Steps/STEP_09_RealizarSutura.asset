@@ -17,10 +17,12 @@ MonoBehaviour:
   instruction: "Sigue los puntos de sutura en orden. Cada punto correcto dibujar\xE1
     el recorrido del hilo.\n"
   inactivityReminder: " Contin\xFAa la sutura siguiendo los puntos visibles.\n"
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - validzone_suture
+  - path_suture
+  objectsToDisableIDs: []
+  validActionZoneID: validzone_suture
+  movementPathID: path_suture
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

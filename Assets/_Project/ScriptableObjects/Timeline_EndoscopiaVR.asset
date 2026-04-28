@@ -12,6 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9c8c7e7d02a2fb42a08ed530ec6e938, type: 3}
   m_Name: Timeline_EndoscopiaVR
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureTimelineSO
-  procedureName: 
+  procedureName: Endooscopia Asistida
   steps:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: c2abf72e6e0a2c9409ea1d29aa5e420f, type: 2}
+  - {fileID: 11400000, guid: d5b7a4bfbd1791f4c9b7b428acc3ce6c, type: 2}
+  - {fileID: 11400000, guid: d11389b8ea602bc4c87f84ed95581bce, type: 2}
+  - {fileID: 11400000, guid: 3edf7ba93751a4d428082ce8eeba485a, type: 2}
+  - {fileID: 11400000, guid: 5239fdcd1c70db241ae07774ce6b05d5, type: 2}
+  - {fileID: 11400000, guid: 3d1effa54260cad408c4e55d8116fa31, type: 2}
+  - {fileID: 11400000, guid: 034fccca234be1d4d8e585fe6fb444ac, type: 2}
+  - {fileID: 11400000, guid: b07f89ad8940ce441965c48e7074f5af, type: 2}
+  - {fileID: 11400000, guid: 5a2d34ff19fdf554b9bf5fcef9bbef96, type: 2}
+  - {fileID: 11400000, guid: 9df06640683dbd84e9f9056ad832769f, type: 2}
+  - {fileID: 11400000, guid: 415fdc3dc5f59eb4d982632e3ccc65c3, type: 2}

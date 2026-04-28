@@ -17,10 +17,11 @@ MonoBehaviour:
   instruction: "Toma la herramienta de sutura. Luego deber\xE1s cerrar siguiendo
     los puntos indicados."
   inactivityReminder: Sujeta la herramienta de sutura para avanzar.
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - suture_outline
+  objectsToDisableIDs: []
+  validActionZoneID: 
+  movementPathID: 
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

@@ -17,10 +17,13 @@ MonoBehaviour:
   instruction: " Lleva el retractor hacia la zona marcada. Debes colocarlo dentro
     del \xE1rea visual indicada."
   inactivityReminder: ' Mueve el retractor hacia la zona iluminada.'
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - retractor_outline
+  - validzone_retractor
+  - path_retractor
+  objectsToDisableIDs: []
+  validActionZoneID: validzone_retractor
+  movementPathID: path_retractor
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

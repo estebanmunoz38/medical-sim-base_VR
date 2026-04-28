@@ -17,10 +17,11 @@ MonoBehaviour:
   instruction: "Toma el bistur\xED resaltado. Vas a realizar una incisi\xF3n siguiendo
     la trayectoria indicada."
   inactivityReminder: "Sujeta el bistur\xED para comenzar el corte.\n"
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - bisturi_outline
+  objectsToDisableIDs: []
+  validActionZoneID: 
+  movementPathID: 
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

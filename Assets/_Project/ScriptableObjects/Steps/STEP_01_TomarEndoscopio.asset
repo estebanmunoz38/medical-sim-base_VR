@@ -18,10 +18,11 @@ MonoBehaviour:
     endoscopio. Esta herramienta permite visualizar la zona de trabajo durante el
     procedimiento.'
   inactivityReminder: Toma el endoscopio resaltado para continuar.
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - endoscope_outline
+  objectsToDisableIDs: []
+  validActionZoneID: 
+  movementPathID: 
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

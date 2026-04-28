@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -27,6 +28,11 @@ public class ProcedureManager : MonoBehaviour
     [SerializeField] private AudioSource reminderAudio;
     [SerializeField] private float defaultInactivitySeconds = 12f;
 
+    [Header("Referencias de escena")]
+    [SerializeField] private ProcedureSceneReference[] sceneReferences;
+
+    private Dictionary<string, GameObject> sceneObjects = new Dictionary<string, GameObject>();
+
     private int currentStepIndex;
     private float inactivityTimer;
     private ProcedureStepSO currentStep;
@@ -39,6 +45,8 @@ public class ProcedureManager : MonoBehaviour
 
     private void Start()
     {
+        BuildSceneReferences();
+
         if (continueButton != null)
             continueButton.onClick.AddListener(CompleteCurrentStep);
 
@@ -59,12 +67,29 @@ public class ProcedureManager : MonoBehaviour
 
         inactivityTimer += Time.deltaTime;
 
-        float limit = currentStep.inactivitySeconds > 0 ? currentStep.inactivitySeconds : defaultInactivitySeconds;
+        float limit = currentStep.inactivitySeconds > 0
+            ? currentStep.inactivitySeconds
+            : defaultInactivitySeconds;
 
         if (inactivityTimer >= limit)
         {
             inactivityTimer = 0f;
             ShowReminder();
+        }
+    }
+
+    private void BuildSceneReferences()
+    {
+        sceneObjects.Clear();
+
+        foreach (ProcedureSceneReference reference in sceneReferences)
+        {
+            if (reference == null) continue;
+            if (string.IsNullOrEmpty(reference.referenceID)) continue;
+            if (reference.targetObject == null) continue;
+
+            if (!sceneObjects.ContainsKey(reference.referenceID))
+                sceneObjects.Add(reference.referenceID, reference.targetObject);
         }
     }
 
@@ -106,6 +131,12 @@ public class ProcedureManager : MonoBehaviour
             return;
         }
 
+        if (index < 0 || index >= timeline.steps.Length)
+        {
+            Debug.LogError("ProcedureManager: índice de paso inválido.");
+            return;
+        }
+
         currentStep = timeline.steps[index];
         waitingForStepCompletion = true;
         inactivityTimer = 0f;
@@ -133,28 +164,36 @@ public class ProcedureManager : MonoBehaviour
 
     private void ApplyStepVisuals(ProcedureStepSO step)
     {
-        foreach (GameObject obj in step.objectsToDisable)
-            if (obj != null) obj.SetActive(false);
+        foreach (string id in step.objectsToDisableIDs)
+            SetSceneObjectActive(id, false);
 
-        foreach (GameObject obj in step.objectsToEnable)
-            if (obj != null) obj.SetActive(true);
+        foreach (string id in step.objectsToEnableIDs)
+            SetSceneObjectActive(id, true);
 
-        if (step.validActionZone != null)
-            step.validActionZone.SetActive(true);
-
-        if (step.movementPath != null)
-            step.movementPath.gameObject.SetActive(true);
+        SetSceneObjectActive(step.validActionZoneID, true);
+        SetSceneObjectActive(step.movementPathID, true);
     }
 
     private void DisableCurrentVisuals()
     {
         if (currentStep == null) return;
 
-        if (currentStep.validActionZone != null)
-            currentStep.validActionZone.SetActive(false);
+        SetSceneObjectActive(currentStep.validActionZoneID, false);
+        SetSceneObjectActive(currentStep.movementPathID, false);
+    }
 
-        if (currentStep.movementPath != null)
-            currentStep.movementPath.gameObject.SetActive(false);
+    private void SetSceneObjectActive(string id, bool active)
+    {
+        if (string.IsNullOrEmpty(id)) return;
+
+        if (sceneObjects.TryGetValue(id, out GameObject obj))
+        {
+            obj.SetActive(active);
+        }
+        else
+        {
+            Debug.LogWarning("ProcedureManager: no existe referencia de escena con ID: " + id);
+        }
     }
 
     private void ShowReminder()

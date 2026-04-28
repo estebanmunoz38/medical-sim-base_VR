@@ -17,10 +17,11 @@ MonoBehaviour:
   instruction: Toma el retractor indicado. La herramienta sirve para separar tejido
     y mantener abierta la zona de trabajo.
   inactivityReminder: 
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - retractor_outline
+  objectsToDisableIDs: []
+  validActionZoneID: 
+  movementPathID: 
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

@@ -17,10 +17,12 @@ MonoBehaviour:
   instruction: " Sigue los puntos de corte en orden. Avanza por la trayectoria visual
     hasta completar la incisi\xF3n."
   inactivityReminder: " Contin\xFAa el recorrido del corte siguiendo la gu\xEDa visual."
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - validzone_cut
+  - path_cut
+  objectsToDisableIDs: []
+  validActionZoneID: validzone_cut
+  movementPathID: path_cut
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

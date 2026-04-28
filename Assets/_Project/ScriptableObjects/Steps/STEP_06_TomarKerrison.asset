@@ -16,10 +16,11 @@ MonoBehaviour:
   title: ' Tomar Kerrison'
   instruction: "Toma la herramienta Kerrison. Se usar\xE1 para retirar la pieza indicada."
   inactivityReminder: ' Sujeta la Kerrison resaltada para continuar.'
-  objectsToEnable: []
-  objectsToDisable: []
-  validActionZone: {fileID: 0}
-  movementPath: {fileID: 0}
+  objectsToEnableIDs:
+  - kerrison_outline
+  objectsToDisableIDs: []
+  validActionZoneID: 
+  movementPathID: 
   waitForExternalComplete: 1
   inactivitySeconds: 12
   isCreditsStep: 0

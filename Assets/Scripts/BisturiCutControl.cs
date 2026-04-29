@@ -21,6 +21,10 @@ public class BisturiCutControl : MonoBehaviour
     [SerializeField] BoneCutClip inferiorClips;
     [SerializeField] BoneCutClip superiorClips;
 
+    [Header("Spline Bisturi")]
+    [Tooltip("Apagamos SplineBisturi cuando terminamos el corte")]
+    [SerializeField] GameObject SplineBisturi;
+
     void Start()
     {
         
@@ -53,6 +57,7 @@ public class BisturiCutControl : MonoBehaviour
 
         if (other.gameObject.name == finalCut.name)
         {
+            SplineBisturi.SetActive(false);
             //borramos las lineas de la cabeza (Cambiamos de objetos)
             MarkerInAction fibron = FindObjectOfType<MarkerInAction>();
             fibron.SetInAction(false);

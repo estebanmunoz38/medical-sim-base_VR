@@ -18,7 +18,7 @@ public class MarkerInAction : MonoBehaviour
     void OnEnable()
     {
         grab.selectEntered.AddListener(_ => SetInAction(true));
-        //grab.selectExited.AddListener(_ => SetInAction(false));
+        grab.selectExited.AddListener(_ => SetInAction(false));
     }
 
     void OnDisable()

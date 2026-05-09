@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0038caa4bfc847241bef79c76b9e1983, type: 3}
   m_Name: STEP_03_ColocarRetractor
   m_EditorClassIdentifier: Assembly-CSharp::ProcedureStepSO
-  stepID: place_retractor
+  stepID: colocar_retractor
   title: " Colocar retractor en zona v\xE1lida"
   instruction: " Lleva el retractor hacia la zona marcada. Debes colocarlo dentro
     del \xE1rea visual indicada."

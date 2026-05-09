@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.Events;
+
 
 public class Retractor : MonoBehaviour
 {
@@ -11,6 +13,12 @@ public class Retractor : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private string colKeyName;
     [SerializeField] private bool isFreeze;
+    [Header("Procedure Manager")]
+    [SerializeField] private string stepIDToComplete;
+    [SerializeField] private bool completeProcedureStepOnFreeze = true;
+
+    [Header("Tutorial Events")]
+    public UnityEvent onRetractorPlaced;
 
     [Header("Ghost OBJ")]
     [SerializeField] private GameObject GhostRetractor;
@@ -94,6 +102,15 @@ public class Retractor : MonoBehaviour
 
         if (LeverRetractor != null)
             LeverRetractor.SetActive(true);
+
+            onRetractorPlaced?.Invoke();
+
+if (completeProcedureStepOnFreeze && ProcedureManager.Instance != null && !string.IsNullOrEmpty(stepIDToComplete))
+{
+    ProcedureManager.Instance.CompleteStep(stepIDToComplete);
+}
+
+
     }
 
     public void UnfreezeRetractor()

@@ -8,6 +8,7 @@ public class MarkerInAction : MonoBehaviour
     public List<GameObject> objectsToHide;
     public List<GameObject> objectsToShow;
 
+    public bool ResetSelectExited=true;
     private XRGrabInteractable grab;
 
     void Awake()
@@ -18,6 +19,8 @@ public class MarkerInAction : MonoBehaviour
     void OnEnable()
     {
         grab.selectEntered.AddListener(_ => SetInAction(true));
+
+        if(ResetSelectExited)
         grab.selectExited.AddListener(_ => SetInAction(false));
     }
 

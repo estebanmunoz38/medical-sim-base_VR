@@ -49,6 +49,20 @@ public class CoagulacionOseaHemostasiaVR : MonoBehaviour
     private bool trabajando = false;
     private bool terminado = false;
 
+    public bool IsWorking => trabajando;
+    public bool IsComplete => terminado;
+    public Paso CurrentPaso => pasoActual;
+    public Transform CurrentPathFocus
+    {
+        get
+        {
+            if (pathPointsActual == null || pathPointsActual.Length == 0)
+                return toolTip != null ? toolTip : transform;
+            int i = Mathf.Clamp(Mathf.FloorToInt(t * (pathPointsActual.Length - 1)), 0, pathPointsActual.Length - 1);
+            return pathPointsActual[i] != null ? pathPointsActual[i] : toolTip;
+        }
+    }
+
     void Start()
     {
         input = inputSourceBehaviour as IToolInputSource;

@@ -17,7 +17,32 @@ public class MarkerVRTool : MonoBehaviour
     public Renderer targetRenderer;
     public RenderTexture paintTexture;
 
+    [Header("Rasurado previo")]
+    [Tooltip("Si está asignado, no se puede demarcar hasta completar el rasurado.")]
+    public ShaveVRTool requiredShave;
+    public bool paintingEnabled = true;
+
+    [Header("Tutorial")]
+    public bool showTutorial = true;
+    [TextArea] public string tutorialWaitShave =
+        "Demarcación bloqueada. Complete el rasurado del campo antes de pintar la incisión.";
+    [TextArea] public string tutorialPaint =
+        "Demarcación. Trace la línea de incisión sobre la piel rasurada. Gatillo para pintar.";
+
     private Material paintMaterial;
+    SurgicalGuideBeacon _guide;
+    bool _paintingEnabled;
+    bool _hasPainted;
+    int _strokeCount;
+
+    public bool HasPainted => _hasPainted;
+    public int StrokeCount => _strokeCount;
+
+    public void SetPaintingEnabled(bool enabledPainting)
+    {
+        _paintingEnabled = enabledPainting;
+        paintingEnabled = enabledPainting;
+    }
 
     void Awake()
     {
@@ -37,18 +62,38 @@ public class MarkerVRTool : MonoBehaviour
             return;
         }
 
-        // Crear material para pintar
-        paintMaterial = new Material(Shader.Find("Hidden/MarkerPainter"));
-        paintMaterial.SetColor("_Color", brushColor);
-        paintMaterial.SetFloat("_Size", brushSize);
+        if (requiredShave == null)
+            requiredShave = FindFirstObjectByType<ShaveVRTool>();
 
-        // Asignar RenderTexture al material de la piel
+        _paintingEnabled = paintingEnabled && (requiredShave == null || requiredShave.IsComplete);
+
+        Shader shader = Shader.Find("Hidden/MarkerPainter");
+        if (shader != null)
+        {
+            paintMaterial = new Material(shader);
+            paintMaterial.SetColor("_Color", brushColor);
+            paintMaterial.SetFloat("_Size", brushSize);
+        }
+
         targetRenderer.material.SetTexture("_PaintTex", paintTexture);
+
+        if (showTutorial)
+            _guide = SurgicalGuideBeacon.Attach(transform, "Demarcación", tutorialPaint, new Vector3(0f, 0.05f, 0f));
     }
 
     void Update()
     {
-        // No pintamos nada si el gatillo NO está apretado
+        bool shaveOk = requiredShave == null || requiredShave.IsComplete;
+        bool canPaint = _paintingEnabled && shaveOk;
+
+        if (_guide != null)
+        {
+            _guide.SetText("Demarcación", canPaint ? tutorialPaint : tutorialWaitShave);
+        }
+
+        if (!canPaint)
+            return;
+
         if (!input.PrimaryHeld) return;
 
         Ray ray = input.PointerRay;
@@ -57,14 +102,18 @@ public class MarkerVRTool : MonoBehaviour
         {
             Vector2 uv = hit.textureCoord;
 
-            // Pintar en textura usando Blit
             PaintAtUV(uv);
+            _hasPainted = true;
+            _strokeCount++;
         }
     }
 
     void PaintAtUV(Vector2 uv)
     {
         // Set uniform values
+        if (paintMaterial == null || paintTexture == null)
+            return;
+
         paintMaterial.SetVector("_UV", new Vector4(uv.x, uv.y, 0, 0));
 
         RenderTexture active = RenderTexture.active;

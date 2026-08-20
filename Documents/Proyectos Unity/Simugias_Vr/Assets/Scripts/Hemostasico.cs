@@ -13,6 +13,7 @@ public class Hemostasico : MonoBehaviour
 
     float _timer = 0;
     bool _timerEnabled = false;
+    public bool IsActivated { get; private set; }
 
     void Awake()
     { Init(); }
@@ -96,6 +97,7 @@ public class Hemostasico : MonoBehaviour
                 _timerEnabled = false;
                 _timer = 0f;
                 isChanging = false;
+                IsActivated = true;
                 Debug.Log("[Hemostasico] Material cambiado a: " + activeMaterial.name + " | Parent reseteado.");
             }
         }

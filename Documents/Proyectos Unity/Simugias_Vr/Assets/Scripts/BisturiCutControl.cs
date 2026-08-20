@@ -16,14 +16,53 @@ public class BisturiCutControl : MonoBehaviour
     [SerializeField] GameObject finalCut;
     bool finalCutDone = false;
 
+    public bool InitialCutDone => initialCutDone;
+    public bool MidCutDone => midCutDone;
+    public bool FinalCutDone => finalCutDone;
+    public bool AllCutsDone => initialCutDone && midCutDone && finalCutDone;
+    public Transform InitialCutPoint => initialCut != null ? initialCut.transform : null;
+    public Transform MidCutPoint => midCut != null ? midCut.transform : null;
+    public Transform FinalCutPoint => finalCut != null ? finalCut.transform : null;
+    public Transform NextCutPoint
+    {
+        get
+        {
+            if (!initialCutDone && initialCut != null) return initialCut.transform;
+            if (!midCutDone && midCut != null) return midCut.transform;
+            if (!finalCutDone && finalCut != null) return finalCut.transform;
+            return null;
+        }
+    }
+
     [Header("Control de las posiciones")]
     [Tooltip("Script, desde donde toma las posiciones de cada corte")]
     [SerializeField] BoneCutClip inferiorClips;
     [SerializeField] BoneCutClip superiorClips;
 
+    [Header("Tutorial")]
+    [SerializeField] bool showTutorial = true;
+
+    SurgicalGuideBeacon _guideInitial;
+    SurgicalGuideBeacon _guideMid;
+    SurgicalGuideBeacon _guideFinal;
+
     void Start()
     {
-        
+        if (midCut != null) midCut.SetActive(false);
+        if (finalCut != null) finalCut.SetActive(false);
+        if (initialCut != null) initialCut.SetActive(true);
+
+        if (showTutorial)
+        {
+            if (initialCut != null)
+                _guideInitial = SurgicalGuideBeacon.Attach(initialCut.transform, "Incisión — punto 1", "Toque este hito con la hoja. La piel se abre tramo a tramo.", new Vector3(0f, 0.025f, 0f));
+            if (midCut != null)
+                _guideMid = SurgicalGuideBeacon.Attach(midCut.transform, "Incisión — punto 2", "Continúe la incisión hasta este punto.", new Vector3(0f, 0.025f, 0f));
+            if (finalCut != null)
+                _guideFinal = SurgicalGuideBeacon.Attach(finalCut.transform, "Incisión — punto 3", "Complete la incisión en este hito.", new Vector3(0f, 0.025f, 0f));
+        }
+
+        RefreshGuides();
     }
 
     void OnTriggerEnter(Collider other)
@@ -60,8 +99,16 @@ public class BisturiCutControl : MonoBehaviour
 
     private void CheckAllCuts()
     {
+        RefreshGuides();
         if(initialCutDone && midCutDone && finalCutDone)
         { CompleteCuts(); }
+    }
+
+    void RefreshGuides()
+    {
+        if (_guideInitial != null) _guideInitial.SetVisible(!initialCutDone);
+        if (_guideMid != null) _guideMid.SetVisible(initialCutDone && !midCutDone);
+        if (_guideFinal != null) _guideFinal.SetVisible(midCutDone && !finalCutDone);
     }
 
     private void ChangeAnimations(string _key)

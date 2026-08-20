@@ -36,6 +36,18 @@ public class FinSuturectomiaVR : MonoBehaviour
     private int lineIndex = 0;
     private bool sutureCompleted = false;
 
+    public bool IsComplete => sutureCompleted;
+    public Transform NextSuturePoint
+    {
+        get
+        {
+            if (!initialPointDone && initialPoint != null) return initialPoint.transform;
+            if (!midPointDone && midPoint != null) return midPoint.transform;
+            if (!finalPointDone && finalPoint != null) return finalPoint.transform;
+            return null;
+        }
+    }
+
     private void Start()
     {
         if (bladeCollider == null)

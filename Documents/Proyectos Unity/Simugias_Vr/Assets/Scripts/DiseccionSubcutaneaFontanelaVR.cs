@@ -43,6 +43,10 @@ public class DiseccionSubcutaneaFontanelaVR : SurgicalStep
     
 
     enum Paso { Subcutanea, Fontanela }
+
+    public bool IsComplete => terminado;
+    public bool IsOnFontanelle => pasoActual == Paso.Fontanela;
+    public float Progress01 => validatedProgress;
     
     #region PRIVATE FIELDS
     [SerializeField] Paso pasoActual;

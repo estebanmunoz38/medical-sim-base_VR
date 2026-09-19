@@ -52,12 +52,27 @@ public static class TutorialProgressStore
         SetInt("Mod." + moduleId, 1);
     }
 
+    public static bool OnboardingComplete
+    {
+        get => PlayerPrefs.GetInt(Prefix + "Onboarding", 0) == 1;
+        set => SetInt("Onboarding", value ? 1 : 0);
+    }
+
+    /// <summary>0 = desconocida, 1 = derecha, 2 = izquierda.</summary>
+    public static int DominantHand
+    {
+        get => PlayerPrefs.GetInt(Prefix + "DominantHand", 0);
+        set => SetInt("DominantHand", Mathf.Clamp(value, 0, 2));
+    }
+
     public static void Clear()
     {
         PlayerPrefs.DeleteKey(Prefix + "Started");
         PlayerPrefs.DeleteKey(Prefix + "Finished");
         PlayerPrefs.DeleteKey(Prefix + "LastStep");
         PlayerPrefs.DeleteKey(Prefix + "LastModule");
+        PlayerPrefs.DeleteKey(Prefix + "Onboarding");
+        PlayerPrefs.DeleteKey(Prefix + "DominantHand");
         PlayerPrefs.Save();
     }
 

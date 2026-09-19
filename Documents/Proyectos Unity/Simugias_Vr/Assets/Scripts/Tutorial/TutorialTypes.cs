@@ -71,7 +71,10 @@ public enum TutorialCompleteWhen
     SutureComplete,
     PlastyComplete,
     HemostaticPlaced,
-    EnterFreeMode
+    EnterFreeMode,
+    // --- append-only (movimiento guiado / onboarding manos) ---
+    BothHandsVisible,
+    GuidedMotionComplete
 }
 
 [Serializable]
@@ -93,6 +96,14 @@ public class TutorialStepConfig
     public AudioClip successSound;
     public AudioClip errorSound;
     public bool skipIfTargetMissing = true;
+
+    [Header("Movimiento guiado (opcional)")]
+    [Tooltip("Si completeWhen = GuidedMotionComplete, arranca demo + validación de trayectoria.")]
+    public bool useGuidedMotion;
+    [Tooltip("0 = preset Principiante (4.5 cm). Radio del corredor válido.")]
+    [Min(0f)] public float guidedCorridorRadius;
+    [Tooltip("Velocidad de la demo fantasma (progreso 0-1 por segundo aprox.).")]
+    [Min(0.05f)] public float guidedDemoSpeed = 0.2f;
 }
 
 [Serializable]

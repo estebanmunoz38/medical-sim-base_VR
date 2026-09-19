@@ -77,16 +77,22 @@ public class ProcedureTutorialDirector : MonoBehaviour
     ScalpelVRTool _scalpel;
     BisturiCutControl _bisturi;
     RetractorVRTool _retractor;
+    Retractor _retractorLegacy;
     DiseccionSubcutaneaFontanelaVR _diseccion;
     DrillVRTool _drill;
+    Drill _drillLegacy;
+    Draw _draw;
     EndoscopeVRTool _endoVr;
     Endoscopio _endo;
     Kerrison _kerrison;
     CoagulacionOseaHemostasiaVR _coag;
+    Coagulador _coaguladorLegacy;
     FinSuturectomiaVR _suture;
     PlasticaCutaneaVR _plasty;
     Hemostasico _hemo;
     SurgicalProcedureManager _procedure;
+    GuidedMotionController _guidedMotion;
+    string _guidedMessage;
 
     public TutorialPlayMode Mode => _mode;
     public string CurrentStepId => HasStep ? CurrentStep.id : string.Empty;
@@ -130,6 +136,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
         _marker = TutorialWorldMarker.Create(transform);
         _audio = TutorialAudioPlayer.Create(transform);
         _audio.BindClips(attentionClip, selectClip, confirmClip, errorClip, transitionClip);
+        EnsureGuidedMotion();
 
         _startForward = Camera.main != null ? Camera.main.transform.forward : Vector3.forward;
 
@@ -159,6 +166,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
 
     void OnDestroy()
     {
+        StopGuidedMotion();
         ClearOutline();
     }
 
@@ -188,6 +196,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
         PulseOutline();
         WatchWrongTool(step);
         WatchHold(step);
+        TickGuidedHud(step);
 
         if (_wrongFlash && Time.time - _lastErrorTime > 1.2f)
             _wrongFlash = false;
@@ -215,6 +224,8 @@ public class ProcedureTutorialDirector : MonoBehaviour
         if (_mode != TutorialPlayMode.Tutorial) return;
         _mode = TutorialPlayMode.Paused;
         _marker.SetVisible(false);
+        if (_guidedMotion != null && _guidedMotion.IsActive)
+            _guidedMotion.Abort();
         RefreshHud(true, false, false);
     }
 
@@ -222,7 +233,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
     {
         if (_mode != TutorialPlayMode.Paused) return;
         _mode = TutorialPlayMode.Tutorial;
-        ApplyStep(false);
+        ApplyStep(true);
     }
 
     public void TogglePause()
@@ -252,24 +263,42 @@ public class ProcedureTutorialDirector : MonoBehaviour
         }
     }
 
+    /// <summary>Reinicia solo el paso actual del tutorial (sin recargar escena).</summary>
+    public void RestartCurrentStep()
+    {
+        if (!HasStep) return;
+        if (_mode == TutorialPlayMode.Free)
+        {
+            _mode = TutorialPlayMode.Tutorial;
+        }
+        ApplyStep(true);
+        _audio?.PlayAttention();
+    }
+
     public void EnterFreeMode(bool alreadyFinished)
     {
         _mode = TutorialPlayMode.Free;
         _stepStart = Time.time;
         ClearOutline();
         _marker.SetVisible(false);
+        StopGuidedMotion();
         if (alreadyFinished)
             TutorialProgressStore.Finished = true;
         OnEnteredFreeMode?.Invoke();
         if (_hud != null)
         {
             _hud.SetCard(
-                "MODO LIBRE",
-                alreadyFinished ? "Entrenamiento completado" : "Práctica sin guía",
-                "Practique sin asistencia",
-                "Las flechas se ocultan. Puede operar con libertad.",
-                "Reinicie la escena para repetir el tutorial. Menú del control no reabre la guía.",
+                alreadyFinished ? "PROCEDIMIENTO TERMINADO" : "MODO LIBRE",
+                alreadyFinished ? "Sesión completa" : "Práctica sin guía",
+                alreadyFinished ? "Procedimiento terminado" : "Practique sin asistencia",
+                alreadyFinished
+                    ? "Puede revisar el campo o reiniciar la escena para un nuevo entrenamiento."
+                    : "Las flechas se ocultan. Puede operar con libertad.",
+                alreadyFinished
+                    ? "F10 o REINICIAR ESCENA para repetir. F4 reinicia el módulo."
+                    : "Reinicie la escena para repetir el tutorial.",
                 1f, false, alreadyFinished, false);
+            _hud.ShowFinishBanner(alreadyFinished);
         }
     }
 
@@ -317,6 +346,8 @@ public class ProcedureTutorialDirector : MonoBehaviour
         if (moduleEnded)
         {
             TutorialProgressStore.MarkModuleComplete(CurrentModule.id);
+            if (CurrentModule.id == "interact" || CurrentModule.id == "intro")
+                TutorialProgressStore.OnboardingComplete = true;
             OnModuleCompleted?.Invoke(CurrentModule.id);
         }
 
@@ -388,10 +419,12 @@ public class ProcedureTutorialDirector : MonoBehaviour
         TutorialProgressStore.LastModuleId = CurrentModule.id;
 
         ClearOutline();
+        StopGuidedMotion();
         Transform focus = ResolveTarget(step.target);
         if (focus != null)
             EnableOutline(focus);
         UpdateFocus(step);
+        MaybeStartGuidedMotion(step);
         RefreshHud(false, false, false);
 
         if (playAudio)
@@ -419,11 +452,21 @@ public class ProcedureTutorialDirector : MonoBehaviour
         if (!success && !string.IsNullOrEmpty(step.detail) && Time.time - _stepStart < 4f)
             instruction = step.instruction;
 
+        if (!success && !paused && IsGuidedStep(step) && !string.IsNullOrEmpty(_guidedMessage))
+            instruction = _guidedMessage;
+
         string hint = paused ? string.Empty : CurrentHint(step);
         if (_holdingLogged && !success && IsToolStep(step))
             hint = "Bien: ya la tiene en la mano. Ahora úsela como indica la instrucción.";
 
+        if (!paused && !success)
+        {
+            string restartHint = "Reiniciar paso: F4 (módulo) · F7/F9 paso ant/sig · Menú = pausa";
+            hint = string.IsNullOrEmpty(hint) ? restartHint : hint + "\n" + restartHint;
+        }
+
         _hud.SetVisible(true);
+        _hud.ShowFinishBanner(false);
         _hud.SetCard(
             "ENTRENAMIENTO  ·  TRIGONOCEFALIA ENDOSCÓPICA",
             progress,
@@ -508,19 +551,19 @@ public class ProcedureTutorialDirector : MonoBehaviour
             case TutorialCompleteWhen.ShaveComplete:
                 return _shave != null && _shave.IsComplete;
             case TutorialCompleteWhen.MarkerPainted:
-                return _markerTool != null && _markerTool.HasPainted && (_shave == null || _shave.IsComplete);
+                return MarkerPainted();
             case TutorialCompleteWhen.IncisionComplete:
                 return IncisionComplete();
             case TutorialCompleteWhen.RetractorAttached:
-                return _retractor != null && _retractor.WasEverAttached;
+                return RetractorWasAttached();
             case TutorialCompleteWhen.RetractorOpened:
-                return _retractor != null && _retractor.currentOpenNormalized > 0.15f;
+                return RetractorOpened();
             case TutorialCompleteWhen.DissectionOnFontanelle:
                 return _diseccion != null && (_diseccion.IsOnFontanelle || _diseccion.IsComplete);
             case TutorialCompleteWhen.DissectionComplete:
                 return _diseccion != null && _diseccion.IsComplete;
             case TutorialCompleteWhen.DrillSucceeded:
-                return _drill != null && _drill.Succeeded;
+                return DrillSucceeded();
             case TutorialCompleteWhen.EndoscopeActivated:
                 return EndoscopeDepth() > 0.01f || (_endoVr != null && _endoVr.IsActive) || IsHolding(focus);
             case TutorialCompleteWhen.EndoscopeDepthLow:
@@ -532,9 +575,9 @@ public class ProcedureTutorialDirector : MonoBehaviour
             case TutorialCompleteWhen.KerrisonDeposited:
                 return _kerrison != null && !_kerrison.IsHoldingFragment && _kerrison.HasDeposited;
             case TutorialCompleteWhen.CoagulationDone:
-                return _coag != null && (_coag.CurrentPaso == CoagulacionOseaHemostasiaVR.Paso.Hemostasia || _coag.IsComplete);
+                return CoagulationDone();
             case TutorialCompleteWhen.HemostasisComplete:
-                return (_coag != null && _coag.IsComplete) || (_hemo != null && _hemo.IsActivated);
+                return HemostasisComplete();
             case TutorialCompleteWhen.SutureComplete:
                 return _suture != null && _suture.IsComplete;
             case TutorialCompleteWhen.PlastyComplete:
@@ -543,6 +586,10 @@ public class ProcedureTutorialDirector : MonoBehaviour
                 return _hemo != null && _hemo.IsActivated;
             case TutorialCompleteWhen.EnterFreeMode:
                 return false;
+            case TutorialCompleteWhen.BothHandsVisible:
+                return BothHandsVisible();
+            case TutorialCompleteWhen.GuidedMotionComplete:
+                return _guidedMotion != null && _guidedMotion.IsComplete;
             default:
                 return false;
         }
@@ -552,27 +599,30 @@ public class ProcedureTutorialDirector : MonoBehaviour
     {
         switch (step.completeWhen)
         {
-            case TutorialCompleteWhen.ShaveComplete: return _shave == null;
-            case TutorialCompleteWhen.MarkerPainted: return _markerTool == null;
-            case TutorialCompleteWhen.IncisionComplete: return _scalpel == null && _bisturi == null;
+            case TutorialCompleteWhen.ShaveComplete: return !Usable(_shave);
+            case TutorialCompleteWhen.MarkerPainted: return !Usable(_markerTool) && !Usable(_draw);
+            case TutorialCompleteWhen.IncisionComplete: return !Usable(_scalpel) && !Usable(_bisturi);
             case TutorialCompleteWhen.RetractorAttached:
-            case TutorialCompleteWhen.RetractorOpened: return _retractor == null;
+            case TutorialCompleteWhen.RetractorOpened: return !Usable(_retractor) && !Usable(_retractorLegacy);
             case TutorialCompleteWhen.DissectionOnFontanelle:
-            case TutorialCompleteWhen.DissectionComplete: return _diseccion == null;
-            case TutorialCompleteWhen.DrillSucceeded: return _drill == null;
+            case TutorialCompleteWhen.DissectionComplete: return !Usable(_diseccion);
+            case TutorialCompleteWhen.DrillSucceeded: return !Usable(_drill) && !Usable(_drillLegacy);
             case TutorialCompleteWhen.EndoscopeActivated:
             case TutorialCompleteWhen.EndoscopeDepthLow:
-            case TutorialCompleteWhen.EndoscopeDepthWork: return _endoVr == null && _endo == null && EndoscopeUnlock() == null;
+            case TutorialCompleteWhen.EndoscopeDepthWork:
+                return !Usable(_endoVr) && !Usable(_endo) && EndoscopeUnlock() == null;
             case TutorialCompleteWhen.KerrisonHolding:
-            case TutorialCompleteWhen.KerrisonDeposited: return _kerrison == null;
-            case TutorialCompleteWhen.CoagulationDone: return _coag == null;
-            case TutorialCompleteWhen.HemostasisComplete: return _coag == null && _hemo == null;
-            case TutorialCompleteWhen.SutureComplete: return _suture == null;
-            case TutorialCompleteWhen.PlastyComplete: return _plasty == null;
-            case TutorialCompleteWhen.HemostaticPlaced: return _hemo == null;
+            case TutorialCompleteWhen.KerrisonDeposited: return !Usable(_kerrison);
+            case TutorialCompleteWhen.CoagulationDone: return !Usable(_coag) && !Usable(_coaguladorLegacy);
+            case TutorialCompleteWhen.HemostasisComplete: return !Usable(_coag) && !Usable(_hemo);
+            case TutorialCompleteWhen.SutureComplete: return !Usable(_suture);
+            case TutorialCompleteWhen.PlastyComplete: return !Usable(_plasty);
+            case TutorialCompleteWhen.HemostaticPlaced: return !Usable(_hemo);
             default: return false;
         }
     }
+
+    static bool Usable(Component c) => c != null && c.gameObject.activeInHierarchy;
 
     bool NeedsTarget(TutorialStepConfig step)
     {
@@ -634,19 +684,21 @@ public class ProcedureTutorialDirector : MonoBehaviour
             case TutorialTargetKind.PatientField:
                 if (_shave != null && _shave.targetRenderer != null) return _shave.targetRenderer.transform;
                 if (_markerTool != null && _markerTool.targetRenderer != null) return _markerTool.targetRenderer.transform;
-                return FindNamed("Mesa de operaciones");
+                return FindNamed("Bebe_Operaciones", "Mesa de operaciones_sup_Cabezal", "Mesa de operaciones");
             case TutorialTargetKind.AnyGrabbable:
                 return FirstGrabbable();
             case TutorialTargetKind.Shave:
-                return _shave != null ? _shave.transform : FirstGrabbable();
+                return _shave != null ? _shave.transform : FirstPracticeTool();
             case TutorialTargetKind.Marker:
-                return _markerTool != null ? _markerTool.transform : null;
+                if (_markerTool != null) return _markerTool.transform;
+                return _draw != null ? _draw.transform : null;
             case TutorialTargetKind.Scalpel:
                 return _scalpel != null ? _scalpel.transform : (_bisturi != null ? _bisturi.transform : null);
             case TutorialTargetKind.ScalpelNextPoint:
                 return NextIncisionPoint();
             case TutorialTargetKind.Retractor:
-                return _retractor != null ? _retractor.transform : null;
+                if (_retractor != null) return _retractor.transform;
+                return _retractorLegacy != null ? _retractorLegacy.transform : null;
             case TutorialTargetKind.RetractorSnap:
                 return RetractorSnap();
             case TutorialTargetKind.Dissection:
@@ -655,10 +707,12 @@ public class ProcedureTutorialDirector : MonoBehaviour
                 if (_diseccion != null && _diseccion.precisionHalo != null) return _diseccion.precisionHalo;
                 return _diseccion != null ? _diseccion.transform : null;
             case TutorialTargetKind.Drill:
-                return _drill != null ? _drill.transform : null;
+                if (_drill != null) return _drill.transform;
+                return _drillLegacy != null ? _drillLegacy.transform : null;
             case TutorialTargetKind.DrillSnap:
                 if (_drill != null && _drill.snapPoint != null) return _drill.snapPoint;
-                return FindNamed("SnapCheckUp", "SnapCheckDown") ?? (_drill != null ? _drill.transform : null);
+                return FindNamed("SnapCheckUp", "SnapCheckDown", "ideal", "low")
+                       ?? (_drill != null ? _drill.transform : (_drillLegacy != null ? _drillLegacy.transform : null));
             case TutorialTargetKind.Endoscope:
                 if (_endo != null) return _endo.transform;
                 if (_endoVr != null) return _endoVr.transform;
@@ -671,7 +725,9 @@ public class ProcedureTutorialDirector : MonoBehaviour
             case TutorialTargetKind.Kerrison:
                 return _kerrison != null ? _kerrison.transform : null;
             case TutorialTargetKind.Coagulator:
-                return _coag != null ? _coag.transform : FindNamed("Coagulador");
+                if (_coag != null) return _coag.transform;
+                if (_coaguladorLegacy != null) return _coaguladorLegacy.transform;
+                return FindNamed("Coagulador");
             case TutorialTargetKind.CoagPath:
                 return CoagPathFocus();
             case TutorialTargetKind.Hemostatic:
@@ -717,6 +773,52 @@ public class ProcedureTutorialDirector : MonoBehaviour
         return false;
     }
 
+    bool MarkerPainted()
+    {
+        bool painted = (_markerTool != null && _markerTool.HasPainted)
+                       || (_draw != null && _draw.HasPainted);
+        if (!painted) return false;
+        return _shave == null || _shave.IsComplete;
+    }
+
+    bool RetractorWasAttached()
+    {
+        if (_retractor != null && _retractor.WasEverAttached) return true;
+        if (_retractorLegacy != null && _retractorLegacy.WasEverAttached) return true;
+        return false;
+    }
+
+    bool RetractorOpened()
+    {
+        if (_retractor != null && _retractor.currentOpenNormalized > 0.15f) return true;
+        // Legacy: al anclar se activa el LeverRetractor (estado abierto del campo).
+        if (_retractorLegacy != null && _retractorLegacy.IsAttached) return true;
+        return false;
+    }
+
+    bool DrillSucceeded()
+    {
+        if (_drill != null && _drill.Succeeded) return true;
+        if (_drillLegacy != null && _drillLegacy.Succeeded) return true;
+        return false;
+    }
+
+    bool CoagulationDone()
+    {
+        if (_coag != null && (_coag.CurrentPaso == CoagulacionOseaHemostasiaVR.Paso.Hemostasia || _coag.IsComplete))
+            return true;
+        if (_coaguladorLegacy != null && _coaguladorLegacy.IsComplete)
+            return true;
+        return false;
+    }
+
+    bool HemostasisComplete()
+    {
+        if (_coag != null && _coag.IsComplete) return true;
+        if (_hemo != null && _hemo.IsActivated) return true;
+        return false;
+    }
+
     Transform RetractorSnap()
     {
         if (_retractor != null)
@@ -725,6 +827,9 @@ public class ProcedureTutorialDirector : MonoBehaviour
             if (_retractor.snapTrasera != null) return _retractor.snapTrasera;
             return _retractor.transform;
         }
+
+        if (_retractorLegacy != null)
+            return _retractorLegacy.SnapPoint;
 
         return FindNamed("Retractor_1_CheckUP", "SnapCheckUp", "Retractor1_Check");
     }
@@ -740,10 +845,23 @@ public class ProcedureTutorialDirector : MonoBehaviour
             return _coag.transform;
         }
 
+        if (_coaguladorLegacy != null)
+            return _coaguladorLegacy.transform;
+
         if (_hemo != null)
             return _hemo.transform;
 
         return FindNamed("Coagulador Tip", "Coagulador", "Hemostasico");
+    }
+
+    Transform FirstPracticeTool()
+    {
+        if (_bisturi != null) return _bisturi.transform;
+        if (_scalpel != null) return _scalpel.transform;
+        if (_draw != null) return _draw.transform;
+        if (_retractorLegacy != null) return _retractorLegacy.transform;
+        if (_retractor != null) return _retractor.transform;
+        return FirstGrabbable();
     }
 
     float EndoscopeDepth()
@@ -850,6 +968,15 @@ public class ProcedureTutorialDirector : MonoBehaviour
 
     bool AnyControllerMoved()
     {
+        var hands = FindFirstObjectByType<HandPinchToolInput>();
+        if (hands != null && hands.AnyHandTracked)
+        {
+            // Si hay manos trackeadas, el movimiento de la cámara/manos cuenta
+            if (Camera.main != null && Vector3.Angle(_startForward, Camera.main.transform.forward) > 8f)
+                return true;
+            return true; // manos visibles = "movió las manos"
+        }
+
         var devices = new List<InputDevice>();
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, devices);
         foreach (var d in devices)
@@ -862,6 +989,15 @@ public class ProcedureTutorialDirector : MonoBehaviour
 
     bool PrimaryPressed()
     {
+        var composite = FindFirstObjectByType<CompositeToolInputSource>();
+        if (composite != null && composite.PrimaryHeld) return true;
+
+        var hands = FindFirstObjectByType<HandPinchToolInput>();
+        if (hands != null && hands.PrimaryHeld) return true;
+
+        var tool = FindFirstObjectByType<ToolInputSource>();
+        if (tool != null && tool.PrimaryHeld) return true;
+
         var devices = new List<InputDevice>();
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Controller, devices);
         foreach (var d in devices)
@@ -874,11 +1010,18 @@ public class ProcedureTutorialDirector : MonoBehaviour
 
     bool SecondaryPressed()
     {
+        var composite = FindFirstObjectByType<CompositeToolInputSource>();
+        if (composite != null && (composite.SecondaryHeld || composite.SecondaryDown)) return true;
+
+        var hands = FindFirstObjectByType<HandPinchToolInput>();
+        if (hands != null && hands.SecondaryHeld) return true;
+
         var devices = new List<InputDevice>();
         InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.Controller, devices);
         foreach (var d in devices)
         {
             if (d.TryGetFeatureValue(CommonUsages.secondaryButton, out bool b) && b) return true;
+            if (d.TryGetFeatureValue(CommonUsages.gripButton, out bool g) && g) return true;
         }
         return false;
     }
@@ -916,8 +1059,8 @@ public class ProcedureTutorialDirector : MonoBehaviour
 
         outline.enabled = true;
         outline.OutlineMode = Outline.Mode.OutlineAll;
-        outline.OutlineColor = new Color(0.55f, 0.82f, 0.84f, 1f);
-        outline.OutlineWidth = 6f;
+        outline.OutlineColor = new Color(0.35f, 0.95f, 0.55f, 1f);
+        outline.OutlineWidth = 8f;
         _activeOutline = outline;
     }
 
@@ -950,12 +1093,16 @@ public class ProcedureTutorialDirector : MonoBehaviour
         _scalpel = FindFirstObjectByType<ScalpelVRTool>(FindObjectsInactive.Include);
         _bisturi = FindFirstObjectByType<BisturiCutControl>(FindObjectsInactive.Include);
         _retractor = FindFirstObjectByType<RetractorVRTool>(FindObjectsInactive.Include);
+        _retractorLegacy = FindFirstObjectByType<Retractor>(FindObjectsInactive.Include);
         _diseccion = FindFirstObjectByType<DiseccionSubcutaneaFontanelaVR>(FindObjectsInactive.Include);
         _drill = FindFirstObjectByType<DrillVRTool>(FindObjectsInactive.Include);
+        _drillLegacy = FindFirstObjectByType<Drill>(FindObjectsInactive.Include);
+        _draw = FindFirstObjectByType<Draw>(FindObjectsInactive.Include);
         _endoVr = FindFirstObjectByType<EndoscopeVRTool>(FindObjectsInactive.Include);
         _endo = FindFirstObjectByType<Endoscopio>(FindObjectsInactive.Include);
         _kerrison = FindFirstObjectByType<Kerrison>(FindObjectsInactive.Include);
         _coag = FindFirstObjectByType<CoagulacionOseaHemostasiaVR>(FindObjectsInactive.Include);
+        _coaguladorLegacy = FindFirstObjectByType<Coagulador>(FindObjectsInactive.Include);
         _suture = FindFirstObjectByType<FinSuturectomiaVR>(FindObjectsInactive.Include);
         _plasty = FindFirstObjectByType<PlasticaCutaneaVR>(FindObjectsInactive.Include);
         _hemo = FindFirstObjectByType<Hemostasico>(FindObjectsInactive.Include);
@@ -969,6 +1116,98 @@ public class ProcedureTutorialDirector : MonoBehaviour
             if (beacon == null) continue;
             beacon.SetVisible(false);
         }
+    }
+
+    void EnsureGuidedMotion()
+    {
+        if (_guidedMotion != null) return;
+        _guidedMotion = GetComponent<GuidedMotionController>();
+        if (_guidedMotion == null)
+            _guidedMotion = gameObject.AddComponent<GuidedMotionController>();
+        _guidedMotion.OnPhaseMessage.AddListener(msg => _guidedMessage = msg);
+        _guidedMotion.OnOffTrack.AddListener(() =>
+        {
+            _wrongFlash = true;
+            _lastErrorTime = Time.time;
+            _audio?.PlayError();
+        });
+    }
+
+    static bool IsGuidedStep(TutorialStepConfig step)
+    {
+        return step != null && (step.completeWhen == TutorialCompleteWhen.GuidedMotionComplete || step.useGuidedMotion);
+    }
+
+    void MaybeStartGuidedMotion(TutorialStepConfig step)
+    {
+        _guidedMessage = string.Empty;
+        if (!IsGuidedStep(step))
+            return;
+
+        EnsureGuidedMotion();
+        Transform tool = ResolveTarget(step.target);
+        if (tool == null)
+            tool = _scalpel != null ? _scalpel.transform : FirstGrabbable();
+
+        Transform tip = null;
+        Transform[] points = null;
+        if (_scalpel != null && tool != null && (tool == _scalpel.transform || tool.IsChildOf(_scalpel.transform)))
+        {
+            tip = _scalpel.scalpelTip != null ? _scalpel.scalpelTip : _scalpel.transform;
+            // Para práctica de movimiento NO usamos la incisión real (demasiado exigente).
+            // pathPoints null → trayectoria trivial frente al usuario.
+            points = null;
+        }
+
+        var tol = MotionTolerancePreset.Beginner;
+        if (step.guidedCorridorRadius > 0.001f)
+            tol.corridorRadius = step.guidedCorridorRadius;
+
+        _guidedMotion.Configure(tool, tip, points, transform, tol, MotionAssistLevel.Guided, step.guidedDemoSpeed);
+        _guidedMotion.Begin();
+        _guidedMessage = _guidedMotion.Message;
+    }
+
+    void StopGuidedMotion()
+    {
+        if (_guidedMotion != null && _guidedMotion.IsActive)
+            _guidedMotion.Abort();
+        _guidedMessage = string.Empty;
+    }
+
+    void TickGuidedHud(TutorialStepConfig step)
+    {
+        if (!IsGuidedStep(step) || _guidedMotion == null) return;
+        if (!string.IsNullOrEmpty(_guidedMotion.Message))
+            _guidedMessage = _guidedMotion.Message;
+    }
+
+    bool BothHandsVisible()
+    {
+        var hands = FindFirstObjectByType<HandPinchToolInput>();
+        if (hands != null && hands.BothHandsTracked)
+        {
+            InferDominantHand(hands);
+            return true;
+        }
+
+        // Controllers: ambos dispositivos held
+        var devices = new List<InputDevice>();
+        InputDevices.GetDevicesWithCharacteristics(
+            InputDeviceCharacteristics.Controller | InputDeviceCharacteristics.HeldInHand, devices);
+        int count = 0;
+        foreach (var d in devices)
+        {
+            if (d.isValid) count++;
+        }
+        return count >= 2 || (hands != null && hands.AnyHandTracked && count >= 1);
+    }
+
+    void InferDominantHand(HandPinchToolInput hands)
+    {
+        if (TutorialProgressStore.DominantHand != 0) return;
+        if (hands.PrimaryHeld || hands.SecondaryHeld)
+            TutorialProgressStore.DominantHand = 1;
     }
 
     TutorialModuleConfig[] BuildModules()
@@ -1074,6 +1313,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F6)) EnterFreeMode(false);
         if (Input.GetKeyDown(KeyCode.F5)) TogglePause();
         if (Input.GetKeyDown(KeyCode.F4)) RestartModule();
+        if (Input.GetKeyDown(KeyCode.F3)) RestartCurrentStep();
     }
 
     void OnGUI()
@@ -1085,7 +1325,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
         GUI.Label(new Rect(24, 56, w - 24, 22), "Módulo: " + CurrentModule.id + "  ·  " + CurrentStep.title);
         GUI.Label(new Rect(24, 76, w - 24, 22), "Objetivo: " + CurrentTargetName);
         GUI.Label(new Rect(24, 96, w - 24, 22), "Condición: " + CurrentCompletion + "  ·  " + _mode + (_procedure != null ? "  ·  proc" : ""));
-        GUI.Label(new Rect(24, 116, w - 24, 22), "F8 completar  F9 siguiente  F7 atrás  F5 pausa  F6 libre  F10 reiniciar");
+        GUI.Label(new Rect(24, 116, w - 24, 22), "F3 reiniciar paso  F4 módulo  F8 completar  F9 sig  F7 atrás  F10 escena");
     }
 
     [ContextMenu("Debug/Completar paso")]

@@ -147,7 +147,15 @@ public static class TutorialCurriculum
             steps = new[]
             {
                 Id("tools.marker", "Marcador", "Marcador. Dibujá la línea de incisión.", TutorialTargetKind.Marker, "MARCADOR"),
-                Id("tools.scalpel", "Bisturí", "Bisturí. Corta la piel punto por punto.", TutorialTargetKind.Scalpel, "BISTURÍ"),
+                S("tools.scalpel", "Tomá el bisturí",
+                    Hands
+                        ? "Localizá el BISTURÍ resaltado sobre la mesa y tomalo: pellizco en el mango (pulgar + índice)."
+                        : "Localizá el BISTURÍ resaltado y tomalo con el Grip del mango.",
+                    TutorialTargetKind.Scalpel, TutorialCompleteWhen.GrabbedTarget,
+                    "TOMÁ EL BISTURÍ",
+                    Hands
+                        ? new[] { "La flecha señala el bisturí, no el campo.", "Pellizcá el mango hasta que quede en la mano.", "Si tomás otra herramienta, el paso no avanza." }
+                        : new[] { "La flecha señala el bisturí.", "Grip en el mango.", "Tiene que quedar sujeto en la mano." }),
                 Id("tools.retractor", "Retractor", "Retractor. Abre la herida para ver adentro.", TutorialTargetKind.Retractor, "RETRACTOR"),
                 Id("tools.drill", "Taladro", "Taladro craneal. Perfora el hueso con control.", TutorialTargetKind.Drill, "TALADRO"),
                 Id("tools.endo", "Endoscopio", "Endoscopio. La imagen sale en el monitor.", TutorialTargetKind.Endoscope, "ENDOSCOPIO"),
@@ -214,11 +222,19 @@ public static class TutorialCurriculum
             description = "Secuencia clínica guiada, con validación real.",
             steps = new[]
             {
+                S("proc.mark.take", "Marcador",
+                    Hands
+                        ? "Localizá el MARCADOR resaltado y tomalo con el pellizco."
+                        : "Localizá el MARCADOR resaltado y tomalo con el Grip.",
+                    TutorialTargetKind.Marker, TutorialCompleteWhen.GrabbedTarget,
+                    "TOMÁ EL MARCADOR",
+                    new[] { "Es el fibrón de la mesa, no el bisturí.", "Tiene que quedar en la mano.", "Después vas a dibujar sobre la frente." }),
+
                 S("proc.mark", "Demarcación",
-                    "Tome el marcador. Trace la línea de incisión sobre la piel.",
-                    TutorialTargetKind.Marker, TutorialCompleteWhen.MarkerPainted,
-                    "DIBUJE AQUÍ",
-                    new[] { Hands ? "Mantené el pellizco para dibujar." : "Active el dibujo (Trigger o el evento de la herramienta).", "Una línea nítida basta.", "Si no pinta, acerque la punta a la piel." }),
+                    "Con el marcador en la mano, dibujá la línea de incisión sobre la frente resaltada.",
+                    TutorialTargetKind.PatientField, TutorialCompleteWhen.MarkerPainted,
+                    "DIBUJÁ ACÁ",
+                    new[] { Hands ? "Mantené el pellizco y apoyá la punta en la piel." : "Mantené el gatillo y apoyá la punta en la piel.", "Una línea corta sobre la frente alcanza.", "La flecha marca dónde dibujar." }),
 
                 S("proc.cut", "Incisión",
                     "Tome el bisturí. Lleve la hoja al punto resaltado.",
@@ -230,7 +246,7 @@ public static class TutorialCurriculum
                     "Tome el retractor. Llévelo al punto de sujeción hasta que se ancle.",
                     TutorialTargetKind.RetractorSnap, TutorialCompleteWhen.RetractorAttached,
                     "ANCLE AQUÍ",
-                    new[] { "La valva entra en el punto, no en el aire.", "Cuando se ancla, queda fijo.", Hands ? "Pellizco con la otra mano suelta si te equivocás." : "B/Y o el selector suelta si se equivoca." }),
+                    new[] { "La valva entra en el punto, no en el aire.", "Cuando se ancla, queda fijo.", "Para retirarla, tomala de nuevo: la piel vuelve a su lugar." }),
 
                 S("proc.open", "Abrir la herida",
                     "Con el retractor anclado, confirme la apertura del campo.",

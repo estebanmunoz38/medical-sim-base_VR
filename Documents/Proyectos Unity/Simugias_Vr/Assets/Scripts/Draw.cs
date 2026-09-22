@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Draw : MonoBehaviour
 {
@@ -16,23 +17,58 @@ public class Draw : MonoBehaviour
     private int index;
     private int currentColorIndex;
 
+    /// <summary>True si el usuario dibujó al menos un trazo usable.</summary>
+    public bool HasPainted { get; private set; }
+
+    XRGrabInteractable _grab;
+
     void Start()
     { Init(); }
 
     private void Init()
     {
         currentColorIndex = 0;
-        tipMaterial.color = penColors;
+        _grab = GetComponent<XRGrabInteractable>();
+        if (tipMaterial != null)
+            tipMaterial.color = penColors;
+        if (drawingMaterial == null || drawingMaterial.shader == null
+            || drawingMaterial.shader.name.IndexOf("Error", System.StringComparison.OrdinalIgnoreCase) >= 0
+            || drawingMaterial.shader.name == "Standard")
+        {
+            Shader urp = Shader.Find("Universal Render Pipeline/Unlit");
+            if (urp != null)
+            {
+                drawingMaterial = new Material(urp);
+                drawingMaterial.color = penColors;
+            }
+        }
     }
 
     void Update()
     {
+        if (_grab != null && _grab.isSelected && PrimaryHeld())
+            isDrawing = true;
+        else if (_grab != null && _grab.isSelected && !PrimaryHeld())
+            StopDrawing();
+
         if (isDrawing)
         { RenderDrawing(); }
     }
 
+    static bool PrimaryHeld()
+    {
+        var composite = Object.FindFirstObjectByType<CompositeToolInputSource>();
+        if (composite != null && composite.PrimaryHeld)
+            return true;
+        var hands = Object.FindFirstObjectByType<HandPinchToolInput>();
+        return hands != null && hands.PrimaryHeld;
+    }
+
     public void RenderDrawing()
     {
+        if (tip == null)
+            return;
+
         if (currentDrawing == null)
         {
             index = 0;
@@ -51,6 +87,8 @@ public class Draw : MonoBehaviour
                 index++;
                 currentDrawing.positionCount = index + 1;
                 currentDrawing.SetPosition(index, tip.position);
+                if (index >= 2)
+                    HasPainted = true;
             }
         }
     }

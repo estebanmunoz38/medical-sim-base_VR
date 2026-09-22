@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class EndoscopeVRTool : MonoBehaviour
 {
@@ -151,6 +152,9 @@ public class EndoscopeVRTool : MonoBehaviour
     // =========================================================================
     void HandleMovement()
     {
+        if (TryProjectHeldHand())
+            return;
+
         float axis = 0f;
         if (input.PrimaryHeld) axis += 1f;
         if (input.SecondaryHeld) axis -= 1f;
@@ -161,6 +165,49 @@ public class EndoscopeVRTool : MonoBehaviour
 
         t = Mathf.Clamp01(t + axis * holdAdvanceSpeed * Time.deltaTime);
         MoveCamera();
+    }
+
+    bool TryProjectHeldHand()
+    {
+        var grab = GetComponent<XRGrabInteractable>();
+        if (grab == null)
+            grab = GetComponentInParent<XRGrabInteractable>();
+        if (grab == null || !grab.isSelected || fusedPath.Count < 2)
+            return false;
+
+        Transform hand = grab.interactorsSelecting.Count > 0
+            ? grab.interactorsSelecting[0].transform
+            : grab.transform;
+
+        float best = t;
+        float bestDist = float.MaxValue;
+        int samples = fusedPath.Count;
+        for (int i = 0; i < samples; i++)
+        {
+            float d = (fusedPath[i] - hand.position).sqrMagnitude;
+            if (d < bestDist)
+            {
+                bestDist = d;
+                best = samples <= 1 ? 0f : i / (float)(samples - 1);
+            }
+        }
+
+        t = Mathf.MoveTowards(t, best, 1.8f * Time.deltaTime);
+        MoveCamera();
+
+        Vector3 pos = GetPathPosition(t);
+        Vector3 dir = GetPathDirection(t);
+        Vector3 up = hand.up;
+        if (dir.sqrMagnitude < 0.0001f)
+            dir = grab.transform.forward;
+        if (Mathf.Abs(Vector3.Dot(dir.normalized, up.normalized)) > 0.96f)
+            up = hand.right;
+        grab.transform.position = pos;
+        grab.transform.rotation = Quaternion.Slerp(
+            grab.transform.rotation,
+            Quaternion.LookRotation(dir, up),
+            1f - Mathf.Exp(-18f * Time.deltaTime));
+        return true;
     }
 
     void UpdateTutorial()

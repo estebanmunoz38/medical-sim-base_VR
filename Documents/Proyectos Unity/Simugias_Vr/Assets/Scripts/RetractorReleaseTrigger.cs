@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -8,6 +7,12 @@ public class RetractorReleaseTrigger : MonoBehaviour
 {
     [Header("Retractor a liberar")]
     [SerializeField] private Retractor targetRetractor;
+
+    public Retractor TargetRetractor
+    {
+        get => targetRetractor;
+        set => targetRetractor = value;
+    }
 
     [Header("XR Interactable")]
     [SerializeField] private XRBaseInteractable interactable;
@@ -31,49 +36,43 @@ public class RetractorReleaseTrigger : MonoBehaviour
 
         if (triggerCollider == null)
             triggerCollider = GetComponent<Collider>();
+
+        RetireManualButton();
+    }
+
+    /// <summary>
+    /// El botón externo ya no libera la valva. La restauración de mallas
+    /// se dispara cuando el usuario vuelve a tomar el retractor.
+    /// </summary>
+    public void InvokeReleaseConsequences()
+    {
+        OnRetractorReleased?.Invoke();
+    }
+
+    void RetireManualButton()
+    {
+        if (interactable != null)
+            interactable.enabled = false;
+        if (triggerCollider != null)
+            triggerCollider.enabled = false;
+
+        var renderers = GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] != null)
+                renderers[i].enabled = false;
+        }
+
+        var canvases = GetComponentsInChildren<Canvas>(true);
+        for (int i = 0; i < canvases.Length; i++)
+        {
+            if (canvases[i] != null)
+                canvases[i].gameObject.SetActive(false);
+        }
     }
 
     private void OnEnable()
     {
-        StartCoroutine(RefreshInteractableNextFrame());
-    }
-
-    private IEnumerator RefreshInteractableNextFrame()
-    {
-        yield return null;
-
-        if (triggerCollider != null)
-        {
-            triggerCollider.enabled = false;
-            triggerCollider.enabled = true;
-        }
-
-        if (interactable != null)
-        {
-            interactable.enabled = false;
-            interactable.enabled = true;
-
-            interactable.selectEntered.RemoveListener(OnSelected);
-            interactable.selectEntered.AddListener(OnSelected);
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (interactable != null)
-            interactable.selectEntered.RemoveListener(OnSelected);
-    }
-
-    private void OnSelected(SelectEnterEventArgs args)
-    {
-        Debug.Log("TRIGGER DE LIBERACION ACTIVADO");
-
-        if (targetRetractor != null)
-        {
-            targetRetractor.UnfreezeRetractor();
-        }
-
-        // Dispara el evento configurable desde inspector
-        OnRetractorReleased?.Invoke();
+        RetireManualButton();
     }
 }

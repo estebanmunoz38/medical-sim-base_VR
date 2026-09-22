@@ -246,6 +246,8 @@ public class ProcedureTutorialDirector : MonoBehaviour
             return;
 
         var step = CurrentStep;
+        if (step.target == TutorialTargetKind.Marker || step.completeWhen == TutorialCompleteWhen.MarkerPainted)
+            EnsureMarkerPresent();
         RefreshHud(false, false, _wrongFlash);
         UpdateFocus(step);
         PulseOutline();
@@ -1093,7 +1095,46 @@ public class ProcedureTutorialDirector : MonoBehaviour
     bool IsHolding(Transform target)
     {
         var grab = GrabOf(target);
-        return grab != null && grab.isSelected;
+        if (grab != null && grab.isSelected)
+            return true;
+
+        if (target == null)
+            return false;
+
+        bool scalpel = target.GetComponentInParent<BisturiCutControl>() != null
+                       || target.GetComponentInChildren<BisturiCutControl>(true) != null
+                       || target.GetComponentInParent<ScalpelVRTool>() != null
+                       || target.GetComponentInChildren<ScalpelVRTool>(true) != null;
+        if (!scalpel)
+            return false;
+
+        var grabs = FindObjectsByType<XRGrabInteractable>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        for (int i = 0; i < grabs.Length; i++)
+        {
+            var g = grabs[i];
+            if (g == null || !g.isSelected)
+                continue;
+            if (g.GetComponentInChildren<BisturiCutControl>(true) != null
+                || g.GetComponentInParent<BisturiCutControl>() != null
+                || g.GetComponentInChildren<ScalpelVRTool>(true) != null
+                || g.GetComponentInParent<ScalpelVRTool>() != null)
+                return true;
+        }
+
+        return false;
+    }
+
+    void EnsureMarkerPresent()
+    {
+        if (_draw == null)
+            _draw = FindFirstObjectByType<Draw>(FindObjectsInactive.Include);
+        if (_markerTool == null)
+            _markerTool = FindFirstObjectByType<MarkerVRTool>(FindObjectsInactive.Include);
+
+        if (_draw != null && !_draw.gameObject.activeSelf)
+            _draw.gameObject.SetActive(true);
+        if (_markerTool != null && !_markerTool.gameObject.activeInHierarchy)
+            _markerTool.gameObject.SetActive(true);
     }
 
     static XRGrabInteractable GrabOf(Transform target)
@@ -1193,6 +1234,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
         _plasty = FindFirstObjectByType<PlasticaCutaneaVR>(FindObjectsInactive.Include);
         _hemo = FindFirstObjectByType<Hemostasico>(FindObjectsInactive.Include);
         _procedure = FindFirstObjectByType<SurgicalProcedureManager>(FindObjectsInactive.Include);
+        EnsureMarkerPresent();
     }
 
     void SilenceLocalBeacons()

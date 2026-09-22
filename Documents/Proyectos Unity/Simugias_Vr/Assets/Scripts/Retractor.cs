@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class Retractor : MonoBehaviour
@@ -31,6 +32,19 @@ public class Retractor : MonoBehaviour
 
     private Vector3 levelInitialPos;
     private Quaternion levelInitialRot;
+    SurgicalGuideBeacon _gripGuide;
+    XRGrabInteractable _leverGrab;
+    bool _leverHooked;
+    bool _transferring;
+
+    /// <summary>Valva anclada en el punto de sujeción.</summary>
+    public bool IsAttached => isFreeze;
+    /// <summary>Se ancló al menos una vez en esta sesión.</summary>
+    public bool WasEverAttached { get; private set; }
+    public Transform SnapPoint =>
+        snapCheckDownChild != null ? snapCheckDownChild.transform
+        : attachPointChild != null ? attachPointChild.transform
+        : transform;
 
     private void Awake()
     {
@@ -39,6 +53,15 @@ public class Retractor : MonoBehaviour
             levelInitialPos = levelTransform.localPosition;
             levelInitialRot = levelTransform.localRotation;
         }
+
+        Transform grip = attachPointChild != null ? attachPointChild.transform
+            : GhostRetractor != null ? GhostRetractor.transform
+            : transform;
+        _gripGuide = SurgicalGuideBeacon.Attach(
+            grip,
+            "Retractor — sujeción",
+            "Ancle la valva en este punto. Al abrir, debe verse la piel del campo.",
+            new Vector3(0f, 0.03f, 0f));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -62,6 +85,7 @@ public class Retractor : MonoBehaviour
 
             if (isFreeze)
             {
+                WasEverAttached = true;
                 FreezeRetractor();
             }
         }
@@ -80,8 +104,10 @@ public class Retractor : MonoBehaviour
         if (xrInteractable != null)
             xrInteractable.enabled = false;
 
-        if (visualParent != null)
+        if (visualParent != null && visualParent != gameObject)
             visualParent.SetActive(false);
+        else
+            SetOwnRenderers(false);
 
         if (attachPointChild != null)
             attachPointChild.SetActive(false);
@@ -94,6 +120,12 @@ public class Retractor : MonoBehaviour
 
         if (LeverRetractor != null)
             LeverRetractor.SetActive(true);
+
+        if (_gripGuide != null)
+            _gripGuide.SetVisible(false);
+
+        ClearStuckOutlines();
+        HookLeverGrab();
     }
 
     public void UnfreezeRetractor()
@@ -102,6 +134,7 @@ public class Retractor : MonoBehaviour
 
         isFreeze = false;
         checkUpActive = false;
+        ClearStuckOutlines();
 
         if (rb != null)
         {
@@ -112,8 +145,10 @@ public class Retractor : MonoBehaviour
         if (xrInteractable != null)
             xrInteractable.enabled = true;
 
-        if (visualParent != null)
+        if (visualParent != null && visualParent != gameObject)
             visualParent.SetActive(true);
+        else
+            SetOwnRenderers(true);
 
         // Desactivar snap temporalmente
         if (attachPointChild != null)
@@ -136,7 +171,104 @@ public class Retractor : MonoBehaviour
             levelTransform.localPosition = levelInitialPos;
             levelTransform.localRotation = levelInitialRot;
         }
+
+        if (_gripGuide != null)
+            _gripGuide.SetVisible(true);
     }
+
+    void HookLeverGrab()
+    {
+        if (LeverRetractor == null || _leverHooked)
+            return;
+
+        _leverGrab = LeverRetractor.GetComponent<XRGrabInteractable>();
+        if (_leverGrab == null)
+            _leverGrab = LeverRetractor.AddComponent<XRGrabInteractable>();
+
+        var body = LeverRetractor.GetComponent<Rigidbody>();
+        if (body == null)
+            body = LeverRetractor.AddComponent<Rigidbody>();
+        body.isKinematic = true;
+        body.useGravity = false;
+
+        if (LeverRetractor.GetComponentInChildren<Collider>(true) == null)
+        {
+            var box = LeverRetractor.AddComponent<BoxCollider>();
+            box.size = new Vector3(0.06f, 0.04f, 0.12f);
+        }
+
+        _leverGrab.throwOnDetach = false;
+        _leverGrab.movementType = XRBaseInteractable.MovementType.Instantaneous;
+        _leverGrab.trackPosition = true;
+        _leverGrab.trackRotation = true;
+        _leverGrab.smoothPosition = false;
+        _leverGrab.smoothRotation = false;
+        _leverGrab.selectEntered.AddListener(OnLeverSelected);
+        _leverHooked = true;
+    }
+
+    void OnLeverSelected(SelectEnterEventArgs args)
+    {
+        if (!isFreeze || args == null || _transferring)
+            return;
+
+        _transferring = true;
+        StartCoroutine(TransferGrabFromLever(args.interactorObject, args.manager));
+    }
+
+    IEnumerator TransferGrabFromLever(UnityEngine.XR.Interaction.Toolkit.Interactors.IXRSelectInteractor interactor, UnityEngine.XR.Interaction.Toolkit.XRInteractionManager manager)
+    {
+        Vector3 posePos = LeverRetractor != null ? LeverRetractor.transform.position : transform.position;
+        Quaternion poseRot = LeverRetractor != null ? LeverRetractor.transform.rotation : transform.rotation;
+        yield return null;
+
+        InvokeLinkedReleaseEvents();
+        UnfreezeRetractor();
+        transform.SetPositionAndRotation(posePos, poseRot);
+        yield return null;
+
+        if (manager != null && xrInteractable != null && interactor != null)
+            manager.SelectEnter(interactor, xrInteractable);
+
+        _transferring = false;
+    }
+
+    void InvokeLinkedReleaseEvents()
+    {
+        var triggers = FindObjectsByType<RetractorReleaseTrigger>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < triggers.Length; i++)
+        {
+            if (triggers[i] != null && triggers[i].TargetRetractor == this)
+                triggers[i].InvokeReleaseConsequences();
+        }
+    }
+
+    void SetOwnRenderers(bool enabledRenderer)
+    {
+        var renderers = GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] == null)
+                continue;
+            if (LeverRetractor != null && renderers[i].transform.IsChildOf(LeverRetractor.transform))
+                continue;
+            renderers[i].enabled = enabledRenderer;
+        }
+    }
+
+    void ClearStuckOutlines()
+    {
+        if (LeverRetractor == null)
+            return;
+
+        var outlines = LeverRetractor.GetComponentsInChildren<Outline>(true);
+        for (int i = 0; i < outlines.Length; i++)
+        {
+            if (outlines[i] != null)
+                outlines[i].enabled = false;
+        }
+    }
+
         private IEnumerator ReenableSnapAfterDelay()
     {
     yield return new WaitForSeconds(snapReactivateDelay);

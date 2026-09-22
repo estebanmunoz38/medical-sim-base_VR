@@ -97,7 +97,8 @@ public class SimugiasHandsIntegrator : MonoBehaviour
     void AlignTrackingOrigin()
     {
         if (_origin == null) return;
-        _origin.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Floor;
+        if (_origin.RequestedTrackingOriginMode != XROrigin.TrackingOriginMode.Floor)
+            _origin.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Floor;
         Transform root = _origin.Origin != null ? _origin.Origin.transform : _origin.transform;
         if (root.localScale != Vector3.one)
             root.localScale = Vector3.one;

@@ -129,7 +129,41 @@ public class HandInteractionPolish : MonoBehaviour
             }
 
             grab.useDynamicAttach = !HandXriGrabAdapter.HasDesignedAttach(grab);
+            if (KeepConstrainedMotion(grab))
+                continue;
+
+            grab.trackPosition = true;
+            grab.trackRotation = true;
+            grab.smoothPosition = false;
+            grab.smoothRotation = false;
+            grab.throwOnDetach = false;
+            grab.movementType = XRBaseInteractable.MovementType.Instantaneous;
         }
+    }
+
+    static bool KeepConstrainedMotion(XRGrabInteractable grab)
+    {
+        if (grab == null)
+            return true;
+        if (grab.GetComponent<XRIArmIKFollow>() != null)
+            return true;
+        if (grab.GetComponentInParent<MechanicalCeilingArm>() != null)
+            return true;
+        if (grab.GetComponentInParent<CeilingArm2DOF_HandleDriven>() != null)
+            return true;
+
+        var behaviours = grab.GetComponents<MonoBehaviour>();
+        for (int i = 0; i < behaviours.Length; i++)
+        {
+            if (behaviours[i] == null)
+                continue;
+            string n = behaviours[i].GetType().Name;
+            if (n.IndexOf("XRLever", System.StringComparison.Ordinal) >= 0
+                || n.IndexOf("XRKnob", System.StringComparison.Ordinal) >= 0)
+                return true;
+        }
+
+        return false;
     }
 
     static void RemoveConflictingGrabVolumes()

@@ -21,14 +21,30 @@ public class EndoscopeVRTool : MonoBehaviour
     private float t = 0f;
     private bool active = false;
 
+    public float Depth01 => t;
+    public bool IsActive => active;
+
+    [Header("Control (predecible)")]
+    [Tooltip("Gatillo primario avanza; secundario retrocede. Scroll queda como respaldo.")]
+    public float holdAdvanceSpeed = 0.18f;
+    public bool keepViewOnScreen = true;
+
+    [Header("Tutorial")]
+    public bool showTutorial = true;
+    [TextArea] public string tutorialText =
+        "Introduzca el endoscopio por el acceso. Mantenga el gatillo para avanzar a lo largo del canal. Gatillo secundario para retirar. La imagen permanece en el monitor. Oriente la óptica; no extraiga hueso con esta herramienta.";
+
     [Header("Detección de objetos")]
     public float detectionRadius = 0.25f;
     public LayerMask detectionLayers = -1;
     public Material highlightMaterial;
     public GameObject gripperObj;
+    [Tooltip("Desactivado: la extracción de hueso la hace el Kerrison, no el endoscopio.")]
+    public bool allowGrabFromView = false;
 
     private List<Renderer> detected = new List<Renderer>();
     private Dictionary<Renderer, Material[]> originalMats = new Dictionary<Renderer, Material[]>();
+    SurgicalGuideBeacon _guide;
 
 
     // =========================================================================
@@ -37,13 +53,8 @@ public class EndoscopeVRTool : MonoBehaviour
     void Start()
     {
         input = inputSourceBehaviour as IToolInputSource;
-
         if (input == null)
-        {
-            Debug.LogError("❌ EndoscopeVRTool → inputSourceBehaviour NO implementa IToolInputSource.");
-            enabled = false;
-            return;
-        }
+            input = FindFirstObjectByType<CompositeToolInputSource>();
 
         if (endoscopeCamera == null)
         {
@@ -63,6 +74,20 @@ public class EndoscopeVRTool : MonoBehaviour
 
         endoscopeCamera.gameObject.SetActive(false);
         if (endoscopeScreen != null) endoscopeScreen.SetActive(false);
+
+        if (showTutorial)
+        {
+            if (HandsOnlySession.Active)
+                tutorialText = "Introducí el endoscopio por el acceso. Pellizco = avanzar. Pellizco con la otra mano = retirar. La imagen queda en el monitor.";
+            Transform guideAnchor = endoscopeScreen != null ? endoscopeScreen.transform : transform;
+            _guide = SurgicalGuideBeacon.Attach(
+                guideAnchor,
+                "Endoscopio",
+                tutorialText,
+                new Vector3(0f, 0.12f, 0f));
+            if (_guide != null)
+                _guide.SetVisible(false);
+        }
     }
 
 
@@ -75,7 +100,11 @@ public class EndoscopeVRTool : MonoBehaviour
         t = 0f;
 
         endoscopeCamera.gameObject.SetActive(true);
-        if (endoscopeScreen != null) endoscopeScreen.SetActive(true);
+        if (endoscopeScreen != null)
+            endoscopeScreen.SetActive(true);
+
+        if (_guide != null)
+            _guide.SetVisible(true);
 
         MoveCameraImmediate();
     }
@@ -84,8 +113,12 @@ public class EndoscopeVRTool : MonoBehaviour
     {
         active = false;
 
-        endoscopeCamera.gameObject.SetActive(false);
-        if (endoscopeScreen != null) endoscopeScreen.SetActive(false);
+        endoscopeCamera.gameObject.SetActive(keepViewOnScreen);
+        if (endoscopeScreen != null)
+            endoscopeScreen.SetActive(keepViewOnScreen);
+
+        if (_guide != null)
+            _guide.SetVisible(false);
 
         ClearHighlights();
     }
@@ -99,10 +132,16 @@ public class EndoscopeVRTool : MonoBehaviour
         if (!active)
             return;
 
+        if (input == null)
+            input = FindFirstObjectByType<CompositeToolInputSource>();
+        if (input == null)
+            return;
+
         HandleMovement();
         DetectObjects();
+        UpdateTutorial();
 
-        if (input.PrimaryDown)
+        if (allowGrabFromView && input.PrimaryDown)
             GrabNearest();
     }
 
@@ -112,13 +151,33 @@ public class EndoscopeVRTool : MonoBehaviour
     // =========================================================================
     void HandleMovement()
     {
-        float scroll = input.ScrollDelta;
+        float axis = 0f;
+        if (input.PrimaryHeld) axis += 1f;
+        if (input.SecondaryHeld) axis -= 1f;
+        axis += input.ScrollDelta;
 
-        if (Mathf.Abs(scroll) > 0.001f)
-        {
-            t = Mathf.Clamp01(t + scroll * pathSpeed * Time.deltaTime);
-            MoveCamera();
-        }
+        if (Mathf.Abs(axis) < 0.001f)
+            return;
+
+        t = Mathf.Clamp01(t + axis * holdAdvanceSpeed * Time.deltaTime);
+        MoveCamera();
+    }
+
+    void UpdateTutorial()
+    {
+        if (_guide == null)
+            return;
+
+        int depthPct = Mathf.RoundToInt(t * 100f);
+        string depth = depthPct <= 2
+            ? (HandsOnlySession.Active ? "En el acceso. Mantené el pellizco para introducir la óptica." : "En el acceso. Mantenga gatillo para introducir la óptica.")
+            : depthPct >= 98
+                ? (HandsOnlySession.Active ? "Profundidad máxima. Pellizco con la otra mano para retirar." : "Profundidad máxima. Gatillo secundario para retirar.")
+                : (HandsOnlySession.Active
+                    ? $"Profundidad {depthPct} %. Pellizco: avanzar. Otra mano: retirar. Imagen fija en el monitor."
+                    : $"Profundidad {depthPct} %. Gatillo: avanzar. Secundario: retirar. Imagen fija en el monitor.");
+
+        _guide.SetText("Endoscopio", depth + "\n" + tutorialText);
     }
 
     void MoveCameraImmediate()
@@ -235,14 +294,17 @@ public class EndoscopeVRTool : MonoBehaviour
 
     void Highlight(Renderer r)
     {
+        if (highlightMaterial == null || r == null)
+            return;
+
         if (!originalMats.ContainsKey(r))
-            originalMats[r] = r.materials;
+            originalMats[r] = r.sharedMaterials;
 
         Material[] m = new Material[r.materials.Length];
         for (int i = 0; i < m.Length; i++)
             m[i] = highlightMaterial;
 
-        r.materials = m;
+        r.sharedMaterials = m;
     }
 
     void ClearHighlights()
@@ -250,7 +312,7 @@ public class EndoscopeVRTool : MonoBehaviour
         foreach (var kv in originalMats)
         {
             if (kv.Key != null)
-                kv.Key.materials = kv.Value;
+                kv.Key.sharedMaterials = kv.Value;
         }
 
         originalMats.Clear();

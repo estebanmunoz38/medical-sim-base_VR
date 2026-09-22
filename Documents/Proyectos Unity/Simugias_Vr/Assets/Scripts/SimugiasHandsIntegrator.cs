@@ -23,6 +23,7 @@ public class SimugiasHandsIntegrator : MonoBehaviour
     [SerializeField] InputActionAsset xriDefaultActions;
 
     readonly List<XRHandSubsystem> _subsystems = new List<XRHandSubsystem>();
+    [SerializeField] bool showDiagnosticsHud;
     TextMesh _hud;
     XROrigin _origin;
     Transform _leftHand;
@@ -77,7 +78,8 @@ public class SimugiasHandsIntegrator : MonoBehaviour
         adapter.Adapt();
         HandInteractionPolish.RunNow();
         HandsVisibilityGuard.Ensure(transform);
-        BuildHud();
+        if (showDiagnosticsHud)
+            BuildHud();
         _ready = true;
         Debug.Log("[SimugiasHands] Manos integradas en el XR Origin existente. Quirófano intacto.");
     }
@@ -88,7 +90,8 @@ public class SimugiasHandsIntegrator : MonoBehaviour
         AlignTrackingOrigin();
         ForceBothHandsLive();
         KeepVisualizerAtIdentity();
-        UpdateHud();
+        if (showDiagnosticsHud)
+            UpdateHud();
     }
 
     void AlignTrackingOrigin()

@@ -8,7 +8,6 @@ public static class TutorialCurriculum
     {
         return new[]
         {
-            Intro(),
             Interaction(),
             Instruments(),
             Anatomy(),
@@ -17,13 +16,15 @@ public static class TutorialCurriculum
         };
     }
 
+    static bool Hands => HandsOnlySession.Active;
+
     static TutorialModuleConfig Intro()
     {
         return new TutorialModuleConfig
         {
             id = "intro",
             title = "Introducción",
-            description = "Mirar, manos y botones básicos.",
+            description = "Mirar, manos y gestos básicos.",
             steps = new[]
             {
                 S("intro.look", "Bienvenida",
@@ -32,29 +33,39 @@ public static class TutorialCurriculum
                     "",
                     new[] { "Mueva la cabeza despacio.", "El panel se acomoda solo.", "Cuando haya mirado a ambos lados, seguimos." },
                     true, 14f, 0.6f,
-                    "Este es un simulador médico de cirugía endoscópica por trigonocefalia. Todavía no pulse botones."),
+                    "Este es un simulador médico de cirugía endoscópica por trigonocefalia."),
 
                 S("intro.hands", "Mostrame tus manos",
                     "Levantá ambas manos frente a vos. Tenés que verlas.",
                     TutorialTargetKind.None, TutorialCompleteWhen.BothHandsVisible,
                     "",
-                    new[] { "Manos a la vista de las cámaras.", "Si no aparecen, acercá las palmas.", "Con controladores: levantá los dos." },
+                    Hands
+                        ? new[] { "Palmas hacia el visor.", "Si desaparecen, acercá las manos al frente.", "No las ocultes una detrás de la otra." }
+                        : new[] { "Manos a la vista de las cámaras.", "Si no aparecen, acercá las palmas.", "Con controladores: levantá los dos." },
                     true, 20f, 0.6f,
                     "Sin manos visibles el simulador no puede enseñarte. Mantenelas delante del visor."),
 
                 S("intro.grab", "Agarrá y soltá",
-                    "Acercá la mano al instrumento resaltado y hacé pellizco (índice + pulgar). Mantené.",
+                    Hands
+                        ? "Acercá la mano al instrumento resaltado y pellizcá (pulgar + índice). Mantené."
+                        : "Acercá la mano al instrumento resaltado y hacé pellizco (índice + pulgar). Mantené.",
                     TutorialTargetKind.AnyGrabbable, TutorialCompleteWhen.GrabbedAny,
                     "AGARRÁ ACÁ",
-                    new[] { "Pinch = agarrar (manos).", "Con controladores: Grip lateral.", "Si abrís los dedos, suelta." },
+                    Hands
+                        ? new[] { "Cerrá pulgar e índice.", "Si abrís los dedos, suelta.", "No hace falta un pellizco milimétrico." }
+                        : new[] { "Pinch = agarrar (manos).", "Con controladores: Grip lateral.", "Si abrís los dedos, suelta." },
                     false, 0f, 0.8f,
                     "La herramienta del paso se resalta con un contorno brillante. Solo usá esa."),
 
                 S("intro.trigger", "Cómo usar",
-                    "Con la herramienta en la mano, mantenga el pellizco (o Trigger) para activarla.",
+                    Hands
+                        ? "Con la herramienta en la mano, mantené el pellizco para activarla."
+                        : "Con la herramienta en la mano, mantenga el pellizco (o Trigger) para activarla.",
                     TutorialTargetKind.AnyGrabbable, TutorialCompleteWhen.TriggerWhileHoldingTarget,
                     "USE / PINCH",
-                    new[] { "Pinch sostenido = usar.", "Con controladores: Trigger.", "Un toque basta en este paso." }),
+                    Hands
+                        ? new[] { "Pellizco sostenido = usar.", "Un toque claro basta en este paso.", "Si se suelta, volvé a cerrar los dedos." }
+                        : new[] { "Pinch sostenido = usar.", "Con controladores: Trigger.", "Un toque basta en este paso." }),
 
                 S("intro.colors", "Colores de ayuda",
                     "Verde = acción correcta o alineado. Amarillo = mal alineado, corrija la rotación.",
@@ -65,10 +76,15 @@ public static class TutorialCurriculum
                     "Recuerde: verde bien · amarillo corregir."),
 
                 S("intro.secondary", "Soltar / retirar",
-                    "Abra el pellizco para soltar. Con controladores también B/Y.",
-                    TutorialTargetKind.None, TutorialCompleteWhen.PressedSecondary,
+                    Hands
+                        ? "Abrí el pellizco para soltar la herramienta."
+                        : "Abra el pellizco para soltar. Con controladores también B/Y.",
+                    TutorialTargetKind.None,
+                    Hands ? TutorialCompleteWhen.PinchReleased : TutorialCompleteWhen.PressedSecondary,
                     "",
-                    new[] { "Abrir dedos = soltar.", "B/Y en controladores suelta o retira.", "No camine con el stick." },
+                    Hands
+                        ? new[] { "Abrir dedos = soltar.", "Si se cae, tomala de nuevo.", "La herramienta vuelve si queda fuera de alcance." }
+                        : new[] { "Abrir dedos = soltar.", "B/Y en controladores suelta o retira.", "No camine con el stick." },
                     true, 16f, 0.7f)
             }
         };
@@ -83,11 +99,15 @@ public static class TutorialCurriculum
             description = "Tomar, mover, soltar y mirar una zona.",
             steps = new[]
             {
-                S("interact.take", "Tomar un instrumento",
-                    "Tome el instrumento resaltado. Grip y mantenga.",
+                S("interact.take", "Agarrá el BISTURÍ",
+                    Hands
+                        ? "Estás en el quirófano. El bebé está en la mesa. Levantá las manos y agarrá el BISTURÍ: pellizcá el mango (pulgar + índice)."
+                        : "Tome el BISTURÍ resaltado en verde. Grip en el mango y mantenga.",
                     TutorialTargetKind.Scalpel, TutorialCompleteWhen.GrabbedTarget,
-                    "TÓMELO",
-                    new[] { "Siga la flecha hasta la mesa.", "La herramienta parpadea.", "Grip lateral, no el índice." }),
+                    "BISTURÍ",
+                    Hands
+                        ? new[] { "El cartel sobre la mesa dice BISTURÍ.", "Si no ves tus manos, ponelas frente al visor.", "Pellizco = agarrar. Abrir los dedos = soltar." }
+                        : new[] { "Siga la flecha hasta la mesa.", "La herramienta parpadea.", "Grip lateral, no el índice." }),
 
                 S("interact.move", "Movelo hasta acá",
                     "Observá la demo y después llevá la herramienta por la línea.",
@@ -98,10 +118,14 @@ public static class TutorialCurriculum
                     "La demo enseña el movimiento. No corta sola: lo hacés vos."),
 
                 S("interact.release", "Soltarlo",
-                    "Suelte el Grip y deje el instrumento.",
+                    Hands
+                        ? "Abrí los dedos y dejá el instrumento."
+                        : "Suelte el Grip y deje el instrumento.",
                     TutorialTargetKind.Scalpel, TutorialCompleteWhen.ReleasedTarget,
                     "SUÉLTELO",
-                    new[] { "Abra la mano (suelte Grip).", "Puede dejarlo en la mesa.", "Si se cae, tómelo de nuevo." }),
+                    Hands
+                        ? new[] { "Abrí la mano para soltar.", "Podés dejarlo en la mesa.", "Si se cae, tomalo de nuevo." }
+                        : new[] { "Abra la mano (suelte Grip).", "Puede dejarlo en la mesa.", "Si se cae, tómelo de nuevo." }),
 
                 S("interact.zone", "Mirar el campo",
                     "Mire la cabeza del paciente. Ahí se opera.",
@@ -122,7 +146,7 @@ public static class TutorialCurriculum
             description = "Reconocer cada herramienta de la mesa.",
             steps = new[]
             {
-                Id("tools.marker", "Marcador", "Marcador / fibron. Sirve para dibujar la línea de incisión.", TutorialTargetKind.Marker, "MARCADOR"),
+                Id("tools.marker", "Marcador", "Marcador. Dibujá la línea de incisión.", TutorialTargetKind.Marker, "MARCADOR"),
                 Id("tools.scalpel", "Bisturí", "Bisturí. Corta la piel punto por punto.", TutorialTargetKind.Scalpel, "BISTURÍ"),
                 Id("tools.retractor", "Retractor", "Retractor. Abre la herida para ver adentro.", TutorialTargetKind.Retractor, "RETRACTOR"),
                 Id("tools.drill", "Taladro", "Taladro craneal. Perfora el hueso con control.", TutorialTargetKind.Drill, "TALADRO"),
@@ -167,8 +191,8 @@ public static class TutorialCurriculum
                 S("anatomy.drill", "Punto de taladro",
                     "Mire el punto de anclaje del taladro.",
                     TutorialTargetKind.DrillSnap, TutorialCompleteWhen.LookedAtTarget,
-                    "DRILL",
-                    new[] { "La punta debe coincidir con ese punto.", "Luego se perfora con el Trigger." },
+                    "TALADRO",
+                    new[] { "La punta debe coincidir con ese punto.", Hands ? "Luego se perfora con pellizco sostenido." : "Luego se perfora con el Trigger." },
                     true, 10f),
 
                 S("anatomy.access", "Acceso del endoscopio",
@@ -194,7 +218,7 @@ public static class TutorialCurriculum
                     "Tome el marcador. Trace la línea de incisión sobre la piel.",
                     TutorialTargetKind.Marker, TutorialCompleteWhen.MarkerPainted,
                     "DIBUJE AQUÍ",
-                    new[] { "Active el dibujo (Trigger o el evento de la herramienta).", "Una línea nítida basta.", "Si no pinta, acerque la punta a la piel." }),
+                    new[] { Hands ? "Mantené el pellizco para dibujar." : "Active el dibujo (Trigger o el evento de la herramienta).", "Una línea nítida basta.", "Si no pinta, acerque la punta a la piel." }),
 
                 S("proc.cut", "Incisión",
                     "Tome el bisturí. Lleve la hoja al punto resaltado.",
@@ -206,7 +230,7 @@ public static class TutorialCurriculum
                     "Tome el retractor. Llévelo al punto de sujeción hasta que se ancle.",
                     TutorialTargetKind.RetractorSnap, TutorialCompleteWhen.RetractorAttached,
                     "ANCLE AQUÍ",
-                    new[] { "La valva entra en el punto, no en el aire.", "Cuando se ancla, queda fijo.", "B/Y o el selector suelta si se equivoca." }),
+                    new[] { "La valva entra en el punto, no en el aire.", "Cuando se ancla, queda fijo.", Hands ? "Pellizco con la otra mano suelta si te equivocás." : "B/Y o el selector suelta si se equivoca." }),
 
                 S("proc.open", "Abrir la herida",
                     "Con el retractor anclado, confirme la apertura del campo.",
@@ -215,13 +239,13 @@ public static class TutorialCurriculum
                     new[] { "Debe verse el acceso interno.", "Si no abrió, reanclé el retractor.", "No retire la valva todavía." }),
 
                 S("proc.subcut", "Disección subcutánea",
-                    "Siga el recorrido bajo la piel con Trigger mantenido.",
+                    "Siga el recorrido bajo la piel con pellizco mantenido.",
                     TutorialTargetKind.DissectionHalo, TutorialCompleteWhen.DissectionOnFontanelle,
                     "SIGA EL RECORRIDO",
                     new[] { "Halo rojo = se salió. Vuelva al camino.", "Movimientos cortos.", "No perfore." }),
 
                 S("proc.fontanelle", "Fontanela",
-                    "Continúe más lento sobre la fontanela. Trigger mantenido.",
+                    "Continúe más lento sobre la fontanela. Pellizco mantenido.",
                     TutorialTargetKind.DissectionHalo, TutorialCompleteWhen.DissectionComplete,
                     "FONTANELA",
                     new[] { "Más lento que el subcutáneo.", "Trabaje en superficie.", "Cuando termine, deje la herramienta." }),
@@ -233,10 +257,14 @@ public static class TutorialCurriculum
                     new[] { "Busque la zona ideal (indicador verde).", "Active el taladro mientras está en contacto.", "Si sale, vuelva a la zona." }),
 
                 S("proc.endo.in", "Introducir endoscopio",
-                    "Active el endoscopio en el acceso. Trigger para avanzar.",
+                    Hands
+                        ? "Active el endoscopio en el acceso. Pellizco para avanzar."
+                        : "Active el endoscopio en el acceso. Trigger para avanzar.",
                     TutorialTargetKind.EndoscopeUnlock, TutorialCompleteWhen.EndoscopeDepthLow,
                     "ENTRE POR AQUÍ",
-                    new[] { "Mire el monitor.", "Trigger = entra. B/Y = sale.", "Entre despacio." }),
+                    Hands
+                        ? new[] { "Mire el monitor.", "Pellizco = entra. Pellizco con la otra mano = sale.", "Entre despacio." }
+                        : new[] { "Mire el monitor.", "Trigger = entra. B/Y = sale.", "Entre despacio." }),
 
                 S("proc.endo.view", "Orientar la óptica",
                     "Avance hasta ver el campo interno con claridad.",
@@ -245,16 +273,20 @@ public static class TutorialCurriculum
                     new[] { "Llegue al menos a un tercio de profundidad.", "Si se pierde, retire un poco y vuelva.", "La imagen queda en el monitor." }),
 
                 S("proc.kerrison", "Bocado Kerrison",
-                    "Rote las mandíbulas hacia el hueso y mantenga Trigger.",
+                    Hands
+                        ? "Rote las mandíbulas hacia el hueso y mantené el pellizco."
+                        : "Rote las mandíbulas hacia el hueso y mantenga Trigger.",
                     TutorialTargetKind.Kerrison, TutorialCompleteWhen.KerrisonHolding,
                     "KERRISON",
-                    new[] { "Rote primero, Trigger después.", "Si no muerde, la rotación está mal.", "Grip firme." }),
+                    Hands
+                        ? new[] { "Rote primero, pellizco después.", "Si no muerde, la rotación está mal.", "Mantené el pellizco." }
+                        : new[] { "Rote primero, Trigger después.", "Si no muerde, la rotación está mal.", "Grip firme." }),
 
                 S("proc.deposit", "Depositar el hueso",
                     "Lleve el fragmento a la zona de depósito. El hueso no desaparece.",
                     TutorialTargetKind.ClearCol, TutorialCompleteWhen.KerrisonDeposited,
                     "DEPOSITE AQUÍ",
-                    new[] { "El fragmento se suelta en esa zona.", "Si se cae, recójaco.", "Debe quedar a la vista." }),
+                    new[] { "El fragmento se suelta en esa zona.", "Si se cae, tomalo de nuevo.", "Debe quedar a la vista." }),
 
                 S("proc.coag", "Coagulación ósea",
                     "Mantenga el coagulador sobre la zona marcada hasta completar.",
@@ -275,10 +307,14 @@ public static class TutorialCurriculum
                     new[] { "En orden. No salte el del medio.", "El hilo une los puntos.", "Toque el hito con la punta." }),
 
                 S("proc.plasty", "Cierre cutáneo",
-                    "Aproxime los bordes de piel. Trigger mantenido sobre el recorrido.",
+                    Hands
+                        ? "Aproxime los bordes de piel. Pellizco mantenido sobre el recorrido."
+                        : "Aproxime los bordes de piel. Trigger mantenido sobre el recorrido.",
                     TutorialTargetKind.PlastyPath, TutorialCompleteWhen.PlastyComplete,
                     "CIERRE",
-                    new[] { "Mire los dos bordes acercarse.", "Mantenga Trigger.", "Si no hay herramienta de plástica, este paso se omite." })
+                    Hands
+                        ? new[] { "Mire los dos bordes acercarse.", "Mantené el pellizco.", "Si no hay herramienta de plástica, este paso se omite." }
+                        : new[] { "Mire los dos bordes acercarse.", "Mantenga Trigger.", "Si no hay herramienta de plástica, este paso se omite." })
             }
         };
     }
@@ -296,12 +332,16 @@ public static class TutorialCurriculum
                     "Procedimiento guiado completo. Puede revisar el campo o reiniciar.",
                     TutorialTargetKind.PatientField, TutorialCompleteWhen.TimeoutOnly,
                     "CAMPO",
-                    new[] { "Mire el resultado con calma.", "Para repetir: REINICIAR ESCENA o F10.", "F3 reinicia el paso actual durante el tutorial." },
+                    Hands
+                        ? new[] { "Mirá el resultado con calma.", "Para repetir, recargá la escena.", "Si te trabás, la ayuda vuelve sola." }
+                        : new[] { "Mire el resultado con calma.", "Para repetir, recargue la escena.", "La ayuda vuelve si se detiene." },
                     true, 8f, 0.7f,
                     "Se muestra el cartel de procedimiento terminado."),
 
                 S("finish.free", "Modo libre",
-                    "A partir de ahora practica sin guía constante. Menú del control pausa o reanuda.",
+                    Hands
+                        ? "A partir de ahora practica sin guía constante. Tocá PAUSA con el dedo si necesitás parar."
+                        : "A partir de ahora practica sin guía constante. Menú del control pausa o reanuda.",
                     TutorialTargetKind.None, TutorialCompleteWhen.EnterFreeMode,
                     "",
                     new[] { "Puede repetir gestos por su cuenta.", "Reinicie la escena para un entrenamiento nuevo." },

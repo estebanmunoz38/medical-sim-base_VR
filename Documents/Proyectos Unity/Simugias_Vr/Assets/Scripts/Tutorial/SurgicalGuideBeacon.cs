@@ -17,6 +17,11 @@ public class SurgicalGuideBeacon : MonoBehaviour
     Image _panel;
     bool _visible = true;
 
+    /// <summary>
+    /// El tutorial unificado reemplaza los carteles locales de cada herramienta.
+    /// </summary>
+    public static bool SuppressAll { get; set; }
+
     public static SurgicalGuideBeacon Attach(Transform anchor, string title, string body, Vector3 localOffset)
     {
         if (anchor == null) return null;
@@ -48,6 +53,14 @@ public class SurgicalGuideBeacon : MonoBehaviour
 
     void LateUpdate()
     {
+        if (SuppressAll)
+        {
+            _visible = false;
+            if (_canvas != null)
+                _canvas.enabled = false;
+            return;
+        }
+
         if (!_visible) return;
 
         Camera cam = Camera.main;
@@ -65,9 +78,9 @@ public class SurgicalGuideBeacon : MonoBehaviour
 
     public void SetVisible(bool visible)
     {
-        _visible = visible;
+        _visible = visible && !SuppressAll;
         if (_canvas != null)
-            _canvas.enabled = visible;
+            _canvas.enabled = _visible;
     }
 
     void BuildUi()

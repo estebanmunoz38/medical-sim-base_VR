@@ -50,7 +50,7 @@ public class TutorialWorldMarker : MonoBehaviour
         if (_arrow != null)
             _arrow.gameObject.SetActive(_visible);
         if (_line != null)
-            _line.enabled = _visible;
+            _line.enabled = false;
         if (_lookCue != null && !_visible)
             _lookCue.gameObject.SetActive(false);
     }
@@ -81,13 +81,6 @@ public class TutorialWorldMarker : MonoBehaviour
             _arrow.rotation = Quaternion.LookRotation(Vector3.down, _cam != null ? _cam.transform.right : Vector3.right);
         }
 
-        if (_line != null && _cam != null)
-        {
-            Vector3 from = _cam.transform.position + _cam.transform.forward * 0.28f + _cam.transform.right * 0.04f + _cam.transform.up * -0.12f;
-            _line.SetPosition(0, from);
-            _line.SetPosition(1, pos);
-        }
-
         UpdateLookCue(pos);
     }
 
@@ -109,8 +102,9 @@ public class TutorialWorldMarker : MonoBehaviour
         planar.Normalize();
 
         _lookCue.position = _cam.transform.position
-                            + _cam.transform.forward * 0.62f
-                            + planar * 0.16f;
+                            + _cam.transform.forward * 0.95f
+                            + planar * 0.34f
+                            + _cam.transform.up * -0.12f;
         _lookCue.rotation = Quaternion.LookRotation(_cam.transform.forward, _cam.transform.up);
 
         if (_lookLabel != null)
@@ -129,9 +123,9 @@ public class TutorialWorldMarker : MonoBehaviour
         var canvas = canvasGo.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.WorldSpace;
         var crt = (RectTransform)canvasGo.transform;
-        crt.sizeDelta = new Vector2(380f, 72f);
-        canvasGo.transform.localScale = Vector3.one * 0.00115f;
-        canvasGo.transform.localPosition = new Vector3(0f, 0.09f, 0f);
+        crt.sizeDelta = new Vector2(520f, 96f);
+        canvasGo.transform.localScale = Vector3.one * 0.00145f;
+        canvasGo.transform.localPosition = new Vector3(0f, 0.12f, 0f);
 
         var bg = canvasGo.AddComponent<Image>();
         bg.color = new Color(0.07f, 0.12f, 0.14f, 0.92f);
@@ -143,7 +137,7 @@ public class TutorialWorldMarker : MonoBehaviour
         _label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         if (_label.font == null)
             _label.font = Font.CreateDynamicFontFromOSFont("Segoe UI", 24);
-        _label.fontSize = 24;
+        _label.fontSize = 32;
         _label.fontStyle = FontStyle.Bold;
         _label.color = Color.white;
         _label.alignment = TextAnchor.MiddleCenter;

@@ -13,6 +13,7 @@ public class TutorialAudioPlayer : MonoBehaviour
     [SerializeField] AudioClip transitionClip;
 
     AudioSource _source;
+    float _nextPlayTime;
     AudioClip _genAttention;
     AudioClip _genSelect;
     AudioClip _genConfirm;
@@ -68,8 +69,10 @@ public class TutorialAudioPlayer : MonoBehaviour
     void Play(AudioClip preferred, AudioClip generated, float volume)
     {
         if (_source == null) return;
+        if (Time.unscaledTime < _nextPlayTime) return;
         AudioClip clip = preferred != null ? preferred : generated;
         if (clip == null) return;
+        _nextPlayTime = Time.unscaledTime + 0.12f;
         _source.PlayOneShot(clip, volume);
     }
 

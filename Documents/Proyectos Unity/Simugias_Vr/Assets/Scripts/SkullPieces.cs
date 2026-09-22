@@ -19,23 +19,30 @@ public class SkullPieces : MonoBehaviour
 
     void EnableOutline(bool _b)
     {
-        outlineEffct.enabled = _b;
+        if (outlineEffct != null)
+            outlineEffct.enabled = _b;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == keyTag)
-        { EnableOutline(true); }
+        if (other.CompareTag(keyTag))
+            EnableOutline(true);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == keyTag)
-        { EnableOutline(false); }
+        if (other.CompareTag(keyTag))
+            EnableOutline(false);
+    }
+
+    void OnDisable()
+    {
+        EnableOutline(false);
     }
 
     public void SetOutlineColor(Color _col)
     {
-        outlineEffct.OutlineColor = _col;
+        if (outlineEffct != null)
+            outlineEffct.OutlineColor = _col;
     }
 }

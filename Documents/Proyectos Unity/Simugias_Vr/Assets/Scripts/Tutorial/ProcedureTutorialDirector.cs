@@ -39,7 +39,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
     [SerializeField] float hintDelay3 = 22f;
 
     [Header("Debug")]
-    [SerializeField] bool enableDebugTools = true;
+    [SerializeField] bool enableDebugTools;
 
     [Header("Eventos")]
     public UnityEvent OnTutorialStarted;
@@ -67,10 +67,20 @@ public class ProcedureTutorialDirector : MonoBehaviour
     Vector3 _startForward;
     Vector3 _holdOrigin;
     Outline _activeOutline;
+    bool _outlineWasEnabled;
+    float _outlineWasWidth;
+    Color _outlineWasColor;
+    bool _hasOutlineLease;
     readonly List<Outline> _ownedOutlines = new List<Outline>();
+    bool _booted;
     TutorialPlayMode _mode = TutorialPlayMode.Tutorial;
     float _lastErrorTime;
     bool _menuWasPressed;
+    bool _waitingOnboarding;
+    bool _pinchHeldThisStep;
+    string _coachHint;
+    float _coachHintUntil;
+    int _coachLevel;
 
     ShaveVRTool _shave;
     MarkerVRTool _markerTool;
@@ -109,47 +119,80 @@ public class ProcedureTutorialDirector : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Bootstrap()
     {
+        if (!SimugiasRuntimeGate.AllowMedicalRuntime())
+            return;
         if (FindFirstObjectByType<ProcedureTutorialDirector>() != null)
             return;
-
-        bool hasSim = FindFirstObjectByType<ScalpelVRTool>() != null
-                      || FindFirstObjectByType<Kerrison>() != null
-                      || FindFirstObjectByType<Endoscopio>() != null
-                      || FindFirstObjectByType<RetractorVRTool>() != null
-                      || FindFirstObjectByType<SurgicalProcedureManager>() != null;
-        if (!hasSim)
+        if (FindFirstObjectByType<Kerrison>() == null
+            && FindFirstObjectByType<Endoscopio>() == null
+            && FindFirstObjectByType<BisturiCutControl>() == null
+            && FindFirstObjectByType<ScalpelVRTool>() == null)
             return;
 
-        GameObject root = GameObject.Find("Tutorial_Root");
-        if (root == null)
-            root = new GameObject("Tutorial_Root");
-        root.AddComponent<ProcedureTutorialDirector>();
+        var go = new GameObject("ProcedureTutorialDirector");
+        go.AddComponent<ProcedureTutorialDirector>();
     }
 
     void Start()
     {
-        CacheTools();
+        BootTutorial();
+    }
+
+    void BootTutorial()
+    {
+        if (_booted)
+            return;
+        _booted = true;
+
         _modules = BuildModules();
         Flatten();
+        if (_index.Count == 0)
+        {
+            Debug.LogWarning("[Tutorial] No hay pasos configurados.");
+            enabled = false;
+            return;
+        }
 
-        _hud = TutorialFollowHud.Create(transform);
-        _marker = TutorialWorldMarker.Create(transform);
-        _audio = TutorialAudioPlayer.Create(transform);
+        CacheTools();
+        _hud = TutorialFollowHud.Create(null);
+        _marker = TutorialWorldMarker.Create(null);
+        _audio = GetComponent<TutorialAudioPlayer>();
+        if (_audio == null)
+            _audio = TutorialAudioPlayer.Create(transform);
         _audio.BindClips(attentionClip, selectClip, confirmClip, errorClip, transitionClip);
-        EnsureGuidedMotion();
-
-        _startForward = Camera.main != null ? Camera.main.transform.forward : Vector3.forward;
 
         if (hideLocalToolBeacons)
-            SilenceLocalBeacons();
+            SurgicalGuideBeacon.SuppressAll = true;
 
+        BeginSession();
+    }
+
+    public void BeginAfterOnboarding()
+    {
+        _waitingOnboarding = false;
+        if (_hud != null)
+            _hud.SetVisible(true);
+        BeginSession();
+    }
+
+    public void PushCoachHint(string text, int level)
+    {
+        _coachHint = text ?? string.Empty;
+        _coachLevel = level;
+        _coachHintUntil = Time.time + 2.5f;
+        if (level >= 2)
+            _nudgeLevel = Mathf.Max(_nudgeLevel, level);
+    }
+
+    void BeginSession()
+    {
         if (!startAutomatically)
         {
             EnterFreeMode(false);
             return;
         }
 
-        if (resumeSavedProgress && TutorialProgressStore.Finished)
+        if (resumeSavedProgress && TutorialProgressStore.Finished && !HandsOnlySession.Active)
         {
             EnterFreeMode(true);
             return;
@@ -157,6 +200,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
 
         if (resumeSavedProgress)
             RestoreProgress();
+        SkipIntroCoveredByOnboarding();
 
         TutorialProgressStore.Started = true;
         _mode = TutorialPlayMode.Tutorial;
@@ -164,14 +208,25 @@ public class ProcedureTutorialDirector : MonoBehaviour
         ApplyStep(true);
     }
 
+    void SkipIntroCoveredByOnboarding()
+    {
+        if (_index.Count == 0 || !HasStep) return;
+        if (CurrentModule.id == "intro" || CurrentStep.id.StartsWith("intro."))
+            JumpToModule("interact");
+    }
+
     void OnDestroy()
     {
         StopGuidedMotion();
         ClearOutline();
+        SurgicalGuideBeacon.SuppressAll = false;
     }
 
     void Update()
     {
+        if (_waitingOnboarding || !_booted || _marker == null || _audio == null || _hud == null)
+            return;
+
         HandlePauseInput();
         HandleDebugInput();
 
@@ -295,7 +350,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
                     ? "Puede revisar el campo o reiniciar la escena para un nuevo entrenamiento."
                     : "Las flechas se ocultan. Puede operar con libertad.",
                 alreadyFinished
-                    ? "F10 o REINICIAR ESCENA para repetir. F4 reinicia el módulo."
+                    ? "Recargue la escena para repetir el entrenamiento."
                     : "Reinicie la escena para repetir el tutorial.",
                 1f, false, alreadyFinished, false);
             _hud.ShowFinishBanner(alreadyFinished);
@@ -410,6 +465,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
         _holdingLogged = false;
         _awaitingRelease = false;
         _wrongFlash = false;
+        _pinchHeldThisStep = false;
         _holdOrigin = CurrentFocus() != null ? CurrentFocus().position : Vector3.zero;
 
         if (_activeModule != moduleIndex)
@@ -459,9 +515,12 @@ public class ProcedureTutorialDirector : MonoBehaviour
         if (_holdingLogged && !success && IsToolStep(step))
             hint = "Bien: ya la tiene en la mano. Ahora úsela como indica la instrucción.";
 
-        if (!paused && !success)
+        if (!paused && !success && Time.time < _coachHintUntil && !string.IsNullOrEmpty(_coachHint))
+            hint = _coachHint;
+
+        if (DebugOn && !paused && !success && !HandsOnlySession.Active)
         {
-            string restartHint = "Reiniciar paso: F4 (módulo) · F7/F9 paso ant/sig · Menú = pausa";
+            string restartHint = "Depuración: F3 paso · F4 módulo · Menú = pausa";
             hint = string.IsNullOrEmpty(hint) ? restartHint : hint + "\n" + restartHint;
         }
 
@@ -546,6 +605,8 @@ public class ProcedureTutorialDirector : MonoBehaviour
                 return (focus == null ? AnyGrabSelected() : IsHolding(focus)) && PrimaryPressed();
             case TutorialCompleteWhen.PressedSecondary:
                 return SecondaryPressed();
+            case TutorialCompleteWhen.PinchReleased:
+                return _pinchHeldThisStep && !PrimaryPressed() && !AnyGrabSelected();
             case TutorialCompleteWhen.LookedAtTarget:
                 return IsLookingLongEnough(focus, 1.0f);
             case TutorialCompleteWhen.ShaveComplete:
@@ -896,6 +957,9 @@ public class ProcedureTutorialDirector : MonoBehaviour
             _audio.PlaySelect();
         }
 
+        if (PrimaryPressed())
+            _pinchHeldThisStep = true;
+
         if (step.completeWhen == TutorialCompleteWhen.ReleasedTarget)
         {
             if (holding)
@@ -1005,7 +1069,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
             if (d.TryGetFeatureValue(CommonUsages.triggerButton, out bool t) && t) return true;
             if (d.TryGetFeatureValue(CommonUsages.trigger, out float tf) && tf > 0.6f) return true;
         }
-        return Input.GetMouseButton(0);
+        return LegacyMouseHeld(0);
     }
 
     bool SecondaryPressed()
@@ -1049,12 +1113,27 @@ public class ProcedureTutorialDirector : MonoBehaviour
         if (t == null) return;
         var outline = t.GetComponent<Outline>();
         if (outline == null) outline = t.GetComponentInChildren<Outline>();
+        bool owned = false;
         if (outline == null)
         {
             var rend = t.GetComponentInChildren<Renderer>();
             if (rend == null) return;
             outline = rend.gameObject.AddComponent<Outline>();
             _ownedOutlines.Add(outline);
+            owned = true;
+        }
+
+        if (_activeOutline != null && _activeOutline != outline)
+            ClearOutline();
+
+        if (!_hasOutlineLease || _activeOutline != outline)
+        {
+            _outlineWasEnabled = outline.enabled;
+            _outlineWasWidth = outline.OutlineWidth;
+            _outlineWasColor = outline.OutlineColor;
+            _hasOutlineLease = true;
+            if (owned)
+                _outlineWasEnabled = false;
         }
 
         outline.enabled = true;
@@ -1066,13 +1145,20 @@ public class ProcedureTutorialDirector : MonoBehaviour
 
     void ClearOutline()
     {
-        if (_activeOutline != null)
+        if (_activeOutline != null && _hasOutlineLease)
         {
-            _activeOutline.OutlineWidth = 2f;
-            if (_ownedOutlines.Contains(_activeOutline))
+            bool owned = _ownedOutlines.Contains(_activeOutline);
+            if (owned || !_outlineWasEnabled)
                 _activeOutline.enabled = false;
+            else
+            {
+                _activeOutline.OutlineWidth = _outlineWasWidth;
+                _activeOutline.OutlineColor = _outlineWasColor;
+                _activeOutline.enabled = true;
+            }
         }
         _activeOutline = null;
+        _hasOutlineLease = false;
     }
 
     void PulseOutline()
@@ -1163,7 +1249,8 @@ public class ProcedureTutorialDirector : MonoBehaviour
         if (step.guidedCorridorRadius > 0.001f)
             tol.corridorRadius = step.guidedCorridorRadius;
 
-        _guidedMotion.Configure(tool, tip, points, transform, tol, MotionAssistLevel.Guided, step.guidedDemoSpeed);
+        float demoSpd = step.guidedDemoSpeed > 0.05f ? step.guidedDemoSpeed : 0.2f;
+        _guidedMotion.Configure(tool, tip, points, transform, tol, MotionAssistLevel.Guided, demoSpd);
         _guidedMotion.Begin();
         _guidedMessage = _guidedMotion.Message;
     }
@@ -1188,8 +1275,14 @@ public class ProcedureTutorialDirector : MonoBehaviour
         if (hands != null && hands.BothHandsTracked)
         {
             InferDominantHand(hands);
-            return true;
+            _lookTimer += Time.deltaTime;
+            return _lookTimer >= 0.8f;
         }
+
+        _lookTimer = 0f;
+
+        if (HandsOnlySession.Active)
+            return false;
 
         // Controllers: ambos dispositivos held
         var devices = new List<InputDevice>();
@@ -1287,6 +1380,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
     void HandlePauseInput()
     {
         if (!pauseWithMenuButton || _mode == TutorialPlayMode.Free) return;
+        if (HandsOnlySession.Active) return;
 
         bool menuHeld = false;
         var devices = new List<InputDevice>();
@@ -1297,7 +1391,7 @@ public class ProcedureTutorialDirector : MonoBehaviour
                 menuHeld = true;
         }
 
-        if ((menuHeld && !_menuWasPressed) || Input.GetKeyDown(KeyCode.P))
+        if ((menuHeld && !_menuWasPressed) || LegacyKeyDown(KeyCode.P))
             TogglePause();
 
         _menuWasPressed = menuHeld;
@@ -1306,14 +1400,32 @@ public class ProcedureTutorialDirector : MonoBehaviour
     void HandleDebugInput()
     {
         if (!DebugOn) return;
-        if (Input.GetKeyDown(KeyCode.F8)) ForceCompleteStep();
-        if (Input.GetKeyDown(KeyCode.F9)) SkipToNextStep();
-        if (Input.GetKeyDown(KeyCode.F7)) GoToPreviousStep();
-        if (Input.GetKeyDown(KeyCode.F10)) RestartTutorial();
-        if (Input.GetKeyDown(KeyCode.F6)) EnterFreeMode(false);
-        if (Input.GetKeyDown(KeyCode.F5)) TogglePause();
-        if (Input.GetKeyDown(KeyCode.F4)) RestartModule();
-        if (Input.GetKeyDown(KeyCode.F3)) RestartCurrentStep();
+        if (LegacyKeyDown(KeyCode.F8)) ForceCompleteStep();
+        if (LegacyKeyDown(KeyCode.F9)) SkipToNextStep();
+        if (LegacyKeyDown(KeyCode.F7)) GoToPreviousStep();
+        if (LegacyKeyDown(KeyCode.F10)) RestartTutorial();
+        if (LegacyKeyDown(KeyCode.F6)) EnterFreeMode(false);
+        if (LegacyKeyDown(KeyCode.F5)) TogglePause();
+        if (LegacyKeyDown(KeyCode.F4)) RestartModule();
+        if (LegacyKeyDown(KeyCode.F3)) RestartCurrentStep();
+    }
+
+    static bool LegacyKeyDown(KeyCode key)
+    {
+#if ENABLE_LEGACY_INPUT_MANAGER
+        return Input.GetKeyDown(key);
+#else
+        return false;
+#endif
+    }
+
+    static bool LegacyMouseHeld(int button)
+    {
+#if ENABLE_LEGACY_INPUT_MANAGER
+        return Input.GetMouseButton(button);
+#else
+        return false;
+#endif
     }
 
     void OnGUI()

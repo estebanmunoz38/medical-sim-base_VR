@@ -100,15 +100,21 @@ public class Outline : MonoBehaviour {
   }
 
   void OnEnable() {
+    if (renderers == null || outlineMaskMaterial == null || outlineFillMaterial == null)
+      return;
+
     foreach (var renderer in renderers) {
+      if (renderer == null)
+        continue;
 
-      // Append outline shaders
+      // sharedMaterials: .materials clona los shaders y OnDisable no puede quitarlos,
+      // así el contorno queda pegado después de soltar la herramienta.
       var materials = renderer.sharedMaterials.ToList();
-
-      materials.Add(outlineMaskMaterial);
-      materials.Add(outlineFillMaterial);
-
-      renderer.materials = materials.ToArray();
+      if (!materials.Contains(outlineMaskMaterial))
+        materials.Add(outlineMaskMaterial);
+      if (!materials.Contains(outlineFillMaterial))
+        materials.Add(outlineFillMaterial);
+      renderer.sharedMaterials = materials.ToArray();
     }
   }
 
@@ -138,16 +144,25 @@ public class Outline : MonoBehaviour {
   }
 
   void OnDisable() {
+    if (renderers == null)
+      return;
+
     foreach (var renderer in renderers) {
+      if (renderer == null)
+        continue;
 
-      // Remove outline shaders
       var materials = renderer.sharedMaterials.ToList();
-
       materials.Remove(outlineMaskMaterial);
       materials.Remove(outlineFillMaterial);
-
-      renderer.materials = materials.ToArray();
+      materials.RemoveAll(m => m != null && IsLeftoverOutlineCopy(m));
+      renderer.sharedMaterials = materials.ToArray();
     }
+  }
+
+  static bool IsLeftoverOutlineCopy(Material material) {
+    string n = material.name;
+    return n.Contains("OutlineMask (Instance) (Instance)")
+           || n.Contains("OutlineFill (Instance) (Instance)");
   }
 
   void OnDestroy() {

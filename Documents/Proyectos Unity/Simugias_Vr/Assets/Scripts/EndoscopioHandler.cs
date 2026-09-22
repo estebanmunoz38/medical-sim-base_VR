@@ -18,9 +18,17 @@ public class EndoscopioHandler : MonoBehaviour
 
     public void ResetPosition()
     {
+        if (HandsOnlySession.Active)
+            return;
+        if (ghostHelper == null || handlerManipulator == null)
+            return;
         Vector3 _resetPosition = ghostHelper.transform.position;
         Quaternion _resetRotation = ghostHelper.transform.rotation;
         handlerManipulator.transform.position = _resetPosition;
         handlerManipulator.transform.rotation = _resetRotation;
+    }
+
+    public void Test()
+    {
     }
 }

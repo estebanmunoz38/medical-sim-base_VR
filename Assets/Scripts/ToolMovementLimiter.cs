@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class ToolMovementLimiter : MonoBehaviour
 {
@@ -50,6 +51,10 @@ public class ToolMovementLimiter : MonoBehaviour
 
     private void ApplyLimits()
     {
+        var grab = GetComponent<XRGrabInteractable>();
+        if (grab != null && grab.isSelected)
+            return;
+
         LimitPosition();
 
         if (limitRotation)

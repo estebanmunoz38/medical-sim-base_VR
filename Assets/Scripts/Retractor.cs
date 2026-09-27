@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.Events;
 
@@ -86,7 +87,7 @@ public class Retractor : MonoBehaviour
         }
 
         if (xrInteractable != null)
-            xrInteractable.enabled = false;
+            xrInteractable.enabled = LeverRetractor == null;
 
         if (visualParent != null)
             visualParent.SetActive(false);
@@ -101,7 +102,13 @@ public class Retractor : MonoBehaviour
             GhostRetractor.SetActive(false);
 
         if (LeverRetractor != null)
+        {
             LeverRetractor.SetActive(true);
+            EnsureLeverGrabbable();
+        }
+
+        SetHomePlaced(true);
+        SetOutlines(false);
 
             onRetractorPlaced?.Invoke();
 
@@ -122,8 +129,10 @@ if (completeProcedureStepOnFreeze && ProcedureManager.Instance != null && !strin
 
         if (rb != null)
         {
-            rb.useGravity = true;
-            rb.isKinematic = false;
+            rb.useGravity = false;
+            rb.isKinematic = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
 
         if (xrInteractable != null)
@@ -153,6 +162,73 @@ if (completeProcedureStepOnFreeze && ProcedureManager.Instance != null && !strin
             levelTransform.localPosition = levelInitialPos;
             levelTransform.localRotation = levelInitialRot;
         }
+
+        SetHomePlaced(false);
+        SetOutlines(false);
+    }
+
+    void EnsureLeverGrabbable()
+    {
+        if (LeverRetractor == null)
+            return;
+
+        Collider col = LeverRetractor.GetComponent<Collider>();
+        if (col == null)
+        {
+            BoxCollider box = LeverRetractor.AddComponent<BoxCollider>();
+            box.size = new Vector3(0.08f, 0.08f, 0.14f);
+            col = box;
+        }
+
+        col.enabled = true;
+
+        XRGrabInteractable leverGrab = LeverRetractor.GetComponent<XRGrabInteractable>();
+        if (leverGrab == null)
+            leverGrab = LeverRetractor.AddComponent<XRGrabInteractable>();
+
+        Rigidbody leverBody = LeverRetractor.GetComponent<Rigidbody>();
+        if (leverBody == null)
+            leverBody = LeverRetractor.AddComponent<Rigidbody>();
+        leverBody.isKinematic = true;
+        leverBody.useGravity = false;
+
+        leverGrab.enabled = true;
+        leverGrab.throwOnDetach = false;
+        leverGrab.forceGravityOnDetach = false;
+        leverGrab.movementType = XRBaseInteractable.MovementType.Instantaneous;
+        leverGrab.selectExited.RemoveListener(OnLeverReleased);
+        leverGrab.selectExited.AddListener(OnLeverReleased);
+
+        var home = LeverRetractor.GetComponent<ToolHome>();
+        if (home == null)
+            home = LeverRetractor.AddComponent<ToolHome>();
+        home.MarkPlaced();
+    }
+
+    void OnLeverReleased(SelectExitEventArgs args)
+    {
+        if (LeverRetractor != null && xrInteractable != null)
+        {
+            xrInteractable.transform.SetPositionAndRotation(
+                LeverRetractor.transform.position,
+                LeverRetractor.transform.rotation);
+        }
+
+        UnfreezeRetractor();
+    }
+
+    void SetOutlines(bool enabled)
+    {
+        Outline[] outlines = GetComponentsInChildren<Outline>(true);
+        for (int i = 0; i < outlines.Length; i++)
+            outlines[i].enabled = enabled;
+    }
+
+    void SetHomePlaced(bool placed)
+    {
+        ToolHome home = GetComponent<ToolHome>();
+        if (home != null)
+            home.SetPlaced(placed);
     }
         private IEnumerator ReenableSnapAfterDelay()
     {

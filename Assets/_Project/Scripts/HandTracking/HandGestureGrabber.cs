@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
@@ -5,39 +6,52 @@ using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
+[DefaultExecutionOrder(20000)]
 public class HandGestureGrabber : MonoBehaviour
 {
-    public enum GrabGesture
-    {
-        Pinch,
-        Fist
-    }
+    public static bool EitherPinching { get; private set; }
+    public static bool EitherHandTracked { get; private set; }
+    public static event Action<XRGrabInteractable> Grabbed;
+    public static event Action<XRGrabInteractable> Released;
+
+    static int pinchingHands;
+    static int trackedHands;
 
     [SerializeField] HandTrackingBootstrap settings;
     [SerializeField] bool isLeftHand;
     [SerializeField] XRDirectInteractor interactor;
-    [SerializeField] Transform trackingOrigin;
 
+    HandTrackingSpace trackingSpace;
+    Transform space;
     XRHandSubsystem subsystem;
-    GrabGesture heldGesture;
     XRGrabInteractable held;
+    Vector3 heldLocalOffset;
+    Quaternion heldLocalRotation = Quaternion.identity;
     bool pinchHeld;
-    bool fistHeld;
     bool warnedMissingSubsystem;
-    bool warnedShaverPinch;
+    bool savedKinematic;
+    bool savedGravity;
+    bool savedTrackPosition;
+    bool savedTrackRotation;
+    bool driving;
 
-    static readonly Collider[] OverlapBuffer = new Collider[32];
+    static readonly Collider[] OverlapBuffer = new Collider[48];
 
-    public void Configure(HandTrackingBootstrap bootstrap, bool left, XRDirectInteractor directInteractor, Transform origin)
+    public bool IsLeftHand => isLeftHand;
+    public bool IsPinching => pinchHeld;
+
+    public void Configure(HandTrackingBootstrap bootstrap, bool left, XRDirectInteractor directInteractor, HandTrackingSpace handSpace)
     {
         settings = bootstrap;
         isLeftHand = left;
         interactor = directInteractor;
-        trackingOrigin = origin;
+        trackingSpace = handSpace;
     }
 
     void OnDisable()
     {
+        SetTracked(false);
+        SetPinching(false);
         Release("componente deshabilitado");
     }
 
@@ -48,6 +62,7 @@ public class HandGestureGrabber : MonoBehaviour
 
         if (!TryGetSubsystem(out subsystem) || !subsystem.running)
         {
+            SetTracked(false);
             Release("subsistema de manos detenido");
             return;
         }
@@ -55,82 +70,152 @@ public class HandGestureGrabber : MonoBehaviour
         XRHand hand = isLeftHand ? subsystem.leftHand : subsystem.rightHand;
         if (!hand.isTracked)
         {
+            SetTracked(false);
             Release("mano sin tracking");
             return;
         }
 
-        if (!TryGetPose(hand, XRHandJointID.Wrist, out Pose wrist) ||
-            !TryGetPose(hand, XRHandJointID.Palm, out Pose palm) ||
+        SetTracked(true);
+
+        if (!TryGetPose(hand, XRHandJointID.Palm, out Pose palm) ||
             !TryGetPose(hand, XRHandJointID.ThumbTip, out Pose thumb) ||
             !TryGetPose(hand, XRHandJointID.IndexTip, out Pose index))
         {
             return;
         }
 
+        float pinchDistance = Vector3.Distance(thumb.position, index.position);
+        UpdateHysteresis(pinchDistance);
+
+        if (!TryResolveSpace(palm.position))
+            return;
+
         Vector3 thumbWorld = ToWorld(thumb.position);
         Vector3 indexWorld = ToWorld(index.position);
-        Vector3 palmWorld = ToWorld(palm.position);
+        Quaternion palmRotation = space.rotation * palm.rotation;
         Vector3 pinchPoint = (thumbWorld + indexWorld) * 0.5f;
-        transform.SetPositionAndRotation(pinchPoint, trackingOrigin.rotation * wrist.rotation);
-
-        float pinchDistance = Vector3.Distance(thumbWorld, indexWorld);
-        float fistDistance = FistDistance(hand, wrist.position);
-        UpdateHysteresis(pinchDistance, fistDistance);
+        transform.SetPositionAndRotation(pinchPoint, palmRotation);
 
         if (held != null)
         {
-            if (heldGesture == GrabGesture.Fist)
-                transform.position = palmWorld;
-            if (!GestureActive(heldGesture))
+            if (!held.isActiveAndEnabled)
+            {
+                XRGrabInteractable previous = held;
+                Release("objeto desactivado");
+                if (pinchHeld)
+                    TryGrab(pinchPoint, palmRotation, previous);
+                return;
+            }
+
+            if (!pinchHeld)
                 Release("gesto abierto");
             return;
         }
 
-        XRGrabInteractable candidate = FindCandidate(pinchPoint, palmWorld, out GrabGesture gesture);
+        if (!pinchHeld)
+            return;
+
+        TryGrab(pinchPoint, palmRotation, null);
+    }
+
+    void LateUpdate()
+    {
+        if (!driving || held == null)
+            return;
+
+        if (!TryResolveSpace(Vector3.zero) && space == null)
+            return;
+
+        XRHand hand = isLeftHand ? subsystem.leftHand : subsystem.rightHand;
+        if (!hand.isTracked || !TryGetPose(hand, XRHandJointID.Palm, out Pose palm) ||
+            !TryGetPose(hand, XRHandJointID.ThumbTip, out Pose thumb) ||
+            !TryGetPose(hand, XRHandJointID.IndexTip, out Pose index))
+        {
+            return;
+        }
+
+        Quaternion palmRotation = space.rotation * palm.rotation;
+        Vector3 pinchPoint = (ToWorld(thumb.position) + ToWorld(index.position)) * 0.5f;
+        Vector3 position = pinchPoint + palmRotation * heldLocalOffset;
+        Quaternion rotation = palmRotation * heldLocalRotation;
+        held.transform.SetPositionAndRotation(position, rotation);
+
+        Rigidbody body = held.GetComponent<Rigidbody>();
+        if (body != null)
+        {
+            body.position = position;
+            body.rotation = rotation;
+            body.linearVelocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
+        }
+    }
+
+    void TryGrab(Vector3 pinchPoint, Quaternion palmRotation, XRGrabInteractable prefer)
+    {
+        XRGrabInteractable candidate = prefer != null && prefer.isActiveAndEnabled && !prefer.isSelected
+            ? prefer
+            : FindCandidate(pinchPoint);
         if (candidate == null)
             return;
 
-        if (gesture == GrabGesture.Fist)
-            transform.position = palmWorld;
+        Transform grip = GripPoint(candidate);
+        if (Vector3.Distance(pinchPoint, grip.position) > settings.pinchGrabRadius)
+            return;
 
-        string previous = "libre";
         interactor.StartManualInteraction((IXRSelectInteractable)candidate);
-        if (!interactor.isPerformingManualInteraction)
+        if (!interactor.isPerformingManualInteraction && !candidate.isSelected)
             return;
 
         held = candidate;
-        heldGesture = gesture;
+        savedTrackPosition = candidate.trackPosition;
+        savedTrackRotation = candidate.trackRotation;
+        candidate.trackPosition = false;
+        candidate.trackRotation = false;
+        candidate.throwOnDetach = false;
+        candidate.forceGravityOnDetach = false;
+
+        Rigidbody body = candidate.GetComponent<Rigidbody>();
+        if (body != null)
+        {
+            savedKinematic = body.isKinematic;
+            savedGravity = body.useGravity;
+            body.linearVelocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
+            body.isKinematic = true;
+            body.useGravity = false;
+        }
+
+        heldLocalRotation = Quaternion.Inverse(palmRotation) * candidate.transform.rotation;
+        heldLocalOffset = Quaternion.Inverse(palmRotation) * (candidate.transform.position - pinchPoint);
+        driving = true;
+        Grabbed?.Invoke(candidate);
         HandTrackingLog.Write("Grab",
-            $"{HandName()} agarró {candidate.name}. Previo={previous}. Resultado=agarrada. Gesto={gesture}. Evento=XRGrabInteractable.select.");
+            $"{HandName()} agarró {candidate.name} por el mango. Gesto=pellizco.");
     }
 
-    void UpdateHysteresis(float pinchDistance, float fistDistance)
+    void UpdateHysteresis(float pinchDistance)
     {
+        bool was = pinchHeld;
         if (!pinchHeld && pinchDistance <= settings.pinchOnMeters)
             pinchHeld = true;
         else if (pinchHeld && pinchDistance >= settings.pinchOffMeters)
             pinchHeld = false;
 
-        if (!fistHeld && fistDistance <= settings.fistOnMeters)
-            fistHeld = true;
-        else if (fistHeld && fistDistance >= settings.fistOffMeters)
-            fistHeld = false;
+        if (was != pinchHeld)
+            SetPinching(pinchHeld);
     }
 
-    XRGrabInteractable FindCandidate(Vector3 pinchPoint, Vector3 palmPoint, out GrabGesture gesture)
+    XRGrabInteractable FindCandidate(Vector3 pinchPoint)
     {
-        gesture = GrabGesture.Pinch;
+        int count = Physics.OverlapSphereNonAlloc(
+            pinchPoint,
+            settings.pinchGrabRadius,
+            OverlapBuffer,
+            settings.grabLayers,
+            QueryTriggerInteraction.Collide);
+
         XRGrabInteractable best = null;
         float bestDistance = float.MaxValue;
-
-        Collect(pinchPoint, settings.pinchGrabRadius, GrabGesture.Pinch, pinchPoint, ref best, ref bestDistance, ref gesture);
-        Collect(palmPoint, settings.fistGrabRadius, GrabGesture.Fist, palmPoint, ref best, ref bestDistance, ref gesture);
-        return best;
-    }
-
-    void Collect(Vector3 center, float radius, GrabGesture required, Vector3 measureFrom, ref XRGrabInteractable best, ref float bestDistance, ref GrabGesture bestGesture)
-    {
-        int count = Physics.OverlapSphereNonAlloc(center, radius, OverlapBuffer, settings.grabLayers, QueryTriggerInteraction.Collide);
         var seen = new HashSet<XRGrabInteractable>();
         for (int i = 0; i < count; i++)
         {
@@ -139,58 +224,41 @@ public class HandGestureGrabber : MonoBehaviour
                 continue;
 
             XRGrabInteractable grab = col.GetComponentInParent<XRGrabInteractable>();
-            if (grab == null || grab.isSelected || !seen.Add(grab))
+            if (grab == null || !grab.isActiveAndEnabled || grab.isSelected || !seen.Add(grab))
                 continue;
 
-            if (GestureFor(grab) != required || !GestureActive(required))
-            {
-                if (required == GrabGesture.Pinch && grab.name.Contains("Cortadora") && pinchHeld && !warnedShaverPinch)
-                {
-                    warnedShaverPinch = true;
-                    HandTrackingLog.Write("Shaver",
-                        "Cortadora de pelo cerca con pinch. Previo=libre. Resultado=no agarrada. Gesto requerido=cierre de mano.");
-                }
+            Transform grip = GripPoint(grab);
+            float distance = Vector3.Distance(pinchPoint, grip.position);
+            if (distance > settings.pinchGrabRadius || distance >= bestDistance)
                 continue;
-            }
 
-            float distance = Vector3.Distance(measureFrom, col.bounds.center);
-            if (distance < bestDistance)
-            {
-                best = grab;
-                bestDistance = distance;
-                bestGesture = required;
-            }
+            best = grab;
+            bestDistance = distance;
         }
+
+        return best;
     }
 
-    GrabGesture GestureFor(XRGrabInteractable grab)
+    static Transform GripPoint(XRGrabInteractable grab)
     {
-        if (grab.name.Contains("Cortadora"))
-            return GrabGesture.Fist;
-        return GrabGesture.Pinch;
+        if (grab.attachTransform != null)
+            return grab.attachTransform;
+
+        Transform named = FindNamedGrip(grab.transform);
+        return named != null ? named : grab.transform;
     }
 
-    bool GestureActive(GrabGesture gesture)
+    static Transform FindNamedGrip(Transform root)
     {
-        return gesture == GrabGesture.Fist ? fistHeld : pinchHeld;
-    }
+        Transform[] children = root.GetComponentsInChildren<Transform>(true);
+        for (int i = 0; i < children.Length; i++)
+        {
+            string name = children[i].name;
+            if (name == "AttachPoint" || name == "HandAttach" || name == "Mango" || name == "Handle")
+                return children[i];
+        }
 
-    static float FistDistance(XRHand hand, Vector3 wrist)
-    {
-        float sum = 0f;
-        int count = 0;
-        Accumulate(hand, XRHandJointID.MiddleTip, wrist, ref sum, ref count);
-        Accumulate(hand, XRHandJointID.RingTip, wrist, ref sum, ref count);
-        Accumulate(hand, XRHandJointID.LittleTip, wrist, ref sum, ref count);
-        return count == 0 ? 1f : sum / count;
-    }
-
-    static void Accumulate(XRHand hand, XRHandJointID jointId, Vector3 wrist, ref float sum, ref int count)
-    {
-        if (!TryGetPose(hand, jointId, out Pose pose))
-            return;
-        sum += Vector3.Distance(pose.position, wrist);
-        count++;
+        return null;
     }
 
     static bool TryGetPose(XRHand hand, XRHandJointID jointId, out Pose pose)
@@ -215,8 +283,9 @@ public class HandGestureGrabber : MonoBehaviour
             {
                 warnedMissingSubsystem = true;
                 HandTrackingLog.Write("HandTracking",
-                    "XRHandSubsystem no está en ejecución. Previo=sin manos. Resultado=sin agarre. Revisar Hand Tracking en el visor.");
+                    "XRHandSubsystem no está en ejecución. Sin visor no hay agarre.");
             }
+
             handSubsystem = null;
             return false;
         }
@@ -228,21 +297,74 @@ public class HandGestureGrabber : MonoBehaviour
 
     void Release(string reason)
     {
-        if (held == null && !interactor.isPerformingManualInteraction)
+        if (held == null && (interactor == null || !interactor.isPerformingManualInteraction))
             return;
 
-        string objectName = held != null ? held.name : "desconocido";
-        if (interactor.isPerformingManualInteraction)
+        XRGrabInteractable released = held;
+        string objectName = released != null ? released.name : "desconocido";
+        driving = false;
+
+        if (released != null)
+        {
+            released.trackPosition = savedTrackPosition;
+            released.trackRotation = savedTrackRotation;
+            released.throwOnDetach = false;
+            released.forceGravityOnDetach = false;
+        }
+
+        if (interactor != null && interactor.isPerformingManualInteraction)
             interactor.EndManualInteraction();
 
-        HandTrackingLog.Write("Grab",
-            $"{HandName()} soltó {objectName}. Previo=agarrada. Resultado=libre. Motivo={reason}.");
+        if (released != null)
+        {
+            Rigidbody body = released.GetComponent<Rigidbody>();
+            if (body != null)
+            {
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
+                body.isKinematic = savedKinematic;
+                body.useGravity = savedGravity;
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
+            }
+        }
+
         held = null;
+        HandTrackingLog.Write("Grab", $"{HandName()} soltó {objectName}. Motivo={reason}.");
+        if (released != null)
+            Released?.Invoke(released);
+    }
+
+    bool TryResolveSpace(Vector3 palmLocal)
+    {
+        if (trackingSpace == null || !trackingSpace.TryGet(palmLocal, out Transform resolved))
+            return false;
+
+        space = resolved;
+        return true;
     }
 
     Vector3 ToWorld(Vector3 originLocalPoint)
     {
-        return trackingOrigin != null ? trackingOrigin.TransformPoint(originLocalPoint) : originLocalPoint;
+        return space != null ? space.TransformPoint(originLocalPoint) : originLocalPoint;
+    }
+
+    void SetTracked(bool tracked)
+    {
+        if (tracked)
+            trackedHands |= isLeftHand ? 1 : 2;
+        else
+            trackedHands &= ~(isLeftHand ? 1 : 2);
+        EitherHandTracked = trackedHands != 0;
+    }
+
+    void SetPinching(bool pinching)
+    {
+        if (pinching)
+            pinchingHands |= isLeftHand ? 1 : 2;
+        else
+            pinchingHands &= ~(isLeftHand ? 1 : 2);
+        EitherPinching = pinchingHands != 0;
     }
 
     string HandName()

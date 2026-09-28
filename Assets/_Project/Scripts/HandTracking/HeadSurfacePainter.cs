@@ -28,11 +28,11 @@ public static class HeadPaintHands
         Vector3 beside = bounds.center + side * (bounds.extents.x + gap) + Vector3.up * Mathf.Max(0.02f, bounds.extents.y * 0.2f);
 
         GameObject shaver = FindOrSpawn("Cortadora", "ShowableHands/Cortadora", beside);
-        GameObject marker = FindOrSpawn("Fibron", "ShowableHands/Fibron", beside + side * Mathf.Max(0.08f, gap * 0.6f));
+        GameObject marker = FindExistingMarker();
 
         if (shaver != null)
             Prepare(shaver, shave: true);
-        if (marker != null)
+        if (marker != null && marker.GetComponent<Draw>() == null)
             Prepare(marker, shave: false);
 
         HandTrackingLog.Write("Paint",
@@ -45,6 +45,40 @@ public static class HeadPaintHands
         if (painter == null)
             painter = tool.AddComponent<HeadSurfacePainter>();
         painter.Configure(shave);
+    }
+
+    static GameObject FindExistingMarker()
+    {
+        XRGrabInteractable[] grabs = Object.FindObjectsByType<XRGrabInteractable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        GameObject fallback = null;
+        for (int i = 0; i < grabs.Length; i++)
+        {
+            if (grabs[i].name.IndexOf("Marker Blue", System.StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                grabs[i].gameObject.SetActive(true);
+                return grabs[i].gameObject;
+            }
+
+            if (fallback == null && IsMarkerName(grabs[i].name))
+                fallback = grabs[i].gameObject;
+        }
+
+        if (fallback != null)
+        {
+            fallback.SetActive(true);
+            return fallback;
+        }
+
+        HandTrackingLog.Write("Paint", "No está el marcador original de la escena.");
+        return null;
+    }
+
+    static bool IsMarkerName(string objectName)
+    {
+        return objectName.IndexOf("Fibron", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+               objectName.IndexOf("Fibrón", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+               objectName.IndexOf("Marcador", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
+               objectName.IndexOf("Marker", System.StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
     static GameObject FindOrSpawn(string nameToken, string resourcePath, Vector3 position)

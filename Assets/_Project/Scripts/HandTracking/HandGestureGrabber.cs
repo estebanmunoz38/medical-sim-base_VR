@@ -152,14 +152,11 @@ public class HandGestureGrabber : MonoBehaviour
 
     void TryGrab(Vector3 pinchPoint, Quaternion palmRotation, XRGrabInteractable prefer)
     {
-        XRGrabInteractable candidate = prefer != null && prefer.isActiveAndEnabled && !prefer.isSelected
-            ? prefer
-            : FindCandidate(pinchPoint);
+        XRGrabInteractable candidate = FindCandidate(pinchPoint);
+        if (prefer != null && prefer.isActiveAndEnabled && !prefer.isSelected &&
+            DistanceToTool(prefer, pinchPoint) <= settings.pinchGrabRadius)
+            candidate = prefer;
         if (candidate == null)
-            return;
-
-        Transform grip = GripPoint(candidate);
-        if (Vector3.Distance(pinchPoint, grip.position) > settings.pinchGrabRadius)
             return;
 
         interactor.StartManualInteraction((IXRSelectInteractable)candidate);
@@ -215,21 +212,19 @@ public class HandGestureGrabber : MonoBehaviour
             QueryTriggerInteraction.Collide);
 
         XRGrabInteractable best = null;
-        float bestDistance = float.MaxValue;
-        var seen = new HashSet<XRGrabInteractable>();
+        float bestDistance = settings.pinchGrabRadius;
         for (int i = 0; i < count; i++)
         {
             Collider col = OverlapBuffer[i];
-            if (col == null)
+            if (col == null || !col.enabled || col.name == "GrabZone")
                 continue;
 
             XRGrabInteractable grab = col.GetComponentInParent<XRGrabInteractable>();
-            if (grab == null || !grab.isActiveAndEnabled || grab.isSelected || !seen.Add(grab))
+            if (grab == null || !grab.isActiveAndEnabled || grab.isSelected)
                 continue;
 
-            Transform grip = GripPoint(grab);
-            float distance = Vector3.Distance(pinchPoint, grip.position);
-            if (distance > settings.pinchGrabRadius || distance >= bestDistance)
+            float distance = DistanceToCollider(col, pinchPoint);
+            if (distance > bestDistance)
                 continue;
 
             best = grab;
@@ -237,6 +232,49 @@ public class HandGestureGrabber : MonoBehaviour
         }
 
         return best;
+    }
+
+    static float DistanceToTool(XRGrabInteractable grab, Vector3 pinchPoint)
+    {
+        Collider[] colliders = grab.GetComponentsInChildren<Collider>(false);
+        float best = float.MaxValue;
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Collider col = colliders[i];
+            if (col == null || !col.enabled || col.name == "GrabZone")
+                continue;
+            float distance = DistanceToCollider(col, pinchPoint);
+            if (distance < best)
+                best = distance;
+        }
+
+        return best;
+    }
+
+    static float DistanceToCollider(Collider col, Vector3 pinchPoint)
+    {
+        Vector3 closest = col.ClosestPoint(pinchPoint);
+        float distance = Vector3.Distance(pinchPoint, closest);
+        Vector3 extents = col.bounds.extents;
+        float largestExtent = Mathf.Max(extents.x, Mathf.Max(extents.y, extents.z));
+        if (largestExtent <= 0.2f && distance > 0.0005f)
+            return distance;
+
+        Renderer renderer = col.GetComponent<Renderer>();
+        if (renderer == null)
+            renderer = col.GetComponentInChildren<Renderer>();
+        if (renderer == null)
+            renderer = col.GetComponentInParent<Renderer>();
+        if (renderer != null)
+            return Mathf.Max(distance, DistanceToBounds(renderer.bounds, pinchPoint));
+
+        return Mathf.Max(distance, DistanceToBounds(col.bounds, pinchPoint));
+    }
+
+    static float DistanceToBounds(Bounds bounds, Vector3 point)
+    {
+        Vector3 closest = bounds.ClosestPoint(point);
+        return Vector3.Distance(point, closest);
     }
 
     static Transform GripPoint(XRGrabInteractable grab)
@@ -269,15 +307,14 @@ public class HandGestureGrabber : MonoBehaviour
 
     bool TryGetSubsystem(out XRHandSubsystem handSubsystem)
     {
-        if (subsystem != null)
+        if (subsystem != null && subsystem.running)
         {
             handSubsystem = subsystem;
             return true;
         }
 
-        var list = new List<XRHandSubsystem>();
-        SubsystemManager.GetSubsystems(list);
-        if (list.Count == 0)
+        subsystem = HandTrackingBootstrap.RunningHands();
+        if (subsystem == null)
         {
             if (!warnedMissingSubsystem)
             {
@@ -290,9 +327,17 @@ public class HandGestureGrabber : MonoBehaviour
             return false;
         }
 
-        subsystem = list[0];
+        warnedMissingSubsystem = false;
         handSubsystem = subsystem;
         return true;
+    }
+
+    public static void ResetSignals()
+    {
+        pinchingHands = 0;
+        trackedHands = 0;
+        EitherPinching = false;
+        EitherHandTracked = false;
     }
 
     void Release(string reason)

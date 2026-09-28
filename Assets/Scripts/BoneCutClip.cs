@@ -6,6 +6,29 @@ public class BoneCutClip : MonoBehaviour
     [Tooltip("Animator con eventos de trigger para llamar diferentes clips")]
     [SerializeField] Animator cutAnimator;
 
+    void Awake()
+    {
+        HoldClosedPose();
+    }
+
+    void Start()
+    {
+        HoldClosedPose();
+    }
+
+    public void HoldClosedPose()
+    {
+        if (cutAnimator == null || cutAnimator.runtimeAnimatorController == null)
+            return;
+
+        cutAnimator.ResetTrigger("incision_1");
+        cutAnimator.ResetTrigger("incision_2");
+        cutAnimator.ResetTrigger("incision_3");
+        cutAnimator.ResetTrigger("Cerrado");
+        cutAnimator.Play("CerradoLLOP", 0, 0f);
+        cutAnimator.Update(0f);
+    }
+
     public void ChangeClip(string _keycode)
     {
         if (cutAnimator == null)

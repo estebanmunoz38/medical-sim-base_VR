@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR.Hands;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
@@ -13,7 +14,7 @@ public class HandTrackingBootstrap : MonoBehaviour
     [Header("Pinch")]
     public float pinchOnMeters = 0.02f;
     public float pinchOffMeters = 0.04f;
-    public float pinchGrabRadius = 0.09f;
+    public float pinchGrabRadius = 0.04f;
 
     public LayerMask grabLayers = ~0;
 
@@ -38,19 +39,68 @@ public class HandTrackingBootstrap : MonoBehaviour
 
     static void TryBoot()
     {
-        if (FindFirstObjectByType<XROrigin>() == null)
+        XROrigin origin = ActiveOrigin();
+        if (origin == null)
             return;
         if (FindFirstObjectByType<HandTrackingBootstrap>() != null)
             return;
 
+        HandGestureGrabber.ResetSignals();
+        DestroyOrphanHands();
         var root = new GameObject("HandTracking");
         root.AddComponent<HandTrackingBootstrap>();
+    }
+
+    public static XRHandSubsystem RunningHands()
+    {
+        var list = new System.Collections.Generic.List<XRHandSubsystem>();
+        SubsystemManager.GetSubsystems(list);
+        for (int i = 0; i < list.Count; i++)
+        {
+            if (list[i] != null && list[i].running)
+                return list[i];
+        }
+
+        return null;
+    }
+
+    static XROrigin ActiveOrigin()
+    {
+        XROrigin[] origins = FindObjectsByType<XROrigin>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        XROrigin fallback = null;
+        for (int i = 0; i < origins.Length; i++)
+        {
+            if (origins[i] == null || !origins[i].isActiveAndEnabled)
+                continue;
+            if (fallback == null)
+                fallback = origins[i];
+            if (origins[i].Camera != null && origins[i].Camera.enabled)
+                return origins[i];
+        }
+
+        return fallback;
+    }
+
+    static void DestroyOrphanHands()
+    {
+        Transform[] all = FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = all.Length - 1; i >= 0; i--)
+        {
+            if (all[i] == null)
+                continue;
+            string name = all[i].name;
+            if (name != "Hand Interactor Left" && name != "Hand Interactor Right" &&
+                name != "Hand Mesh Left" && name != "Hand Mesh Right" &&
+                name != "Ghost Hand Left" && name != "Ghost Hand Right")
+                continue;
+            DestroyImmediate(all[i].gameObject);
+        }
     }
 
     void Awake()
     {
         HandTrackingLog.Enabled = debugLogs;
-        origin = FindFirstObjectByType<XROrigin>();
+        origin = ActiveOrigin();
         if (origin == null)
         {
             HandTrackingLog.Write("HandTracking", "No hay XR Origin en la escena.");
@@ -155,7 +205,11 @@ public class HandMeshWatch : MonoBehaviour
             return;
 
         var skin = GetComponentInChildren<SkinnedMeshRenderer>(true);
-        visual.meshIsShowing = skin != null && skin.sharedMesh != null && skin.enabled && skin.gameObject.activeInHierarchy;
+        bool showing = skin != null && skin.sharedMesh != null && skin.enabled && skin.gameObject.activeInHierarchy;
+        Camera camera = Camera.main;
+        if (showing && camera != null && Vector3.Distance(skin.bounds.center, camera.transform.position) > 1.25f)
+            showing = false;
+        visual.meshIsShowing = showing;
     }
 }
 
@@ -175,11 +229,9 @@ public class IndexPokeDriver : MonoBehaviour
     {
         if (subsystem == null || !subsystem.running)
         {
-            var list = new System.Collections.Generic.List<UnityEngine.XR.Hands.XRHandSubsystem>();
-            SubsystemManager.GetSubsystems(list);
-            if (list.Count == 0)
+            subsystem = HandTrackingBootstrap.RunningHands();
+            if (subsystem == null)
                 return;
-            subsystem = list[0];
         }
 
         var hand = isLeftHand ? subsystem.leftHand : subsystem.rightHand;

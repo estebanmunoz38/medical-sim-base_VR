@@ -22,11 +22,13 @@ public class HandTrackingSpace : MonoBehaviour
 
     public bool TryGet(Vector3 palmLocal, out Transform space)
     {
-        if (resolved != null)
+        if (resolved != null && xrOrigin != null && resolved.gameObject.scene == xrOrigin.gameObject.scene)
         {
             space = resolved;
             return true;
         }
+
+        resolved = null;
 
         space = null;
         if (xrOrigin == null)

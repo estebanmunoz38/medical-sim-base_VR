@@ -147,6 +147,12 @@ public class HandJointVisual : MonoBehaviour
 
     void Update()
     {
+        if (subscribed && (subsystem == null || !subsystem.running))
+        {
+            Unsubscribe();
+            subsystem = null;
+        }
+
         if (!subscribed)
             TrySubscribe();
         if (subsystem != null && subsystem.running)
@@ -158,17 +164,14 @@ public class HandJointVisual : MonoBehaviour
         if (subscribed)
             return;
 
-        if (subsystem == null)
+        if (subsystem == null || !subsystem.running)
         {
-            var list = new List<XRHandSubsystem>();
-            SubsystemManager.GetSubsystems(list);
-            if (list.Count == 0)
+            if (subscribed && subsystem != null)
+                Unsubscribe();
+            subsystem = HandTrackingBootstrap.RunningHands();
+            if (subsystem == null)
                 return;
-            subsystem = list[0];
         }
-
-        if (!subsystem.running)
-            return;
 
         subsystem.updatedHands += OnHandsUpdated;
         subscribed = true;

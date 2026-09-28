@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.VRTemplate;
 
 public class ProcedureManager : MonoBehaviour
 {
@@ -118,7 +119,7 @@ public class ProcedureManager : MonoBehaviour
     public void CompleteStep(string stepID)
     {
         if (currentStep == null) return;
-        if (currentStep.stepID != stepID) return;
+        if (currentStep.stepID.Trim() != stepID.Trim()) return;
 
         CompleteCurrentStep();
     }
@@ -141,9 +142,6 @@ public class ProcedureManager : MonoBehaviour
         waitingForStepCompletion = true;
         inactivityTimer = 0f;
 
-        if (tutorialScreenRoot != null)
-            tutorialScreenRoot.SetActive(true);
-
         if (titleText != null)
             titleText.text = currentStep.title;
 
@@ -157,9 +155,27 @@ public class ProcedureManager : MonoBehaviour
             progressSlider.value = (float)(index + 1) / timeline.steps.Length;
 
         ApplyStepVisuals(currentStep);
+        RefreshBoard(currentStep.title, currentStep.instruction);
 
         if (continueButton != null)
             continueButton.gameObject.SetActive(!currentStep.waitForExternalComplete || currentStep.isCreditsStep);
+    }
+
+    public bool BoardCanContinue()
+    {
+        if (currentStep == null || !waitingForStepCompletion)
+            return false;
+        return !currentStep.waitForExternalComplete || currentStep.isCreditsStep;
+    }
+
+    public void RequestContinueFromBoard()
+    {
+        if (currentStep == null || !waitingForStepCompletion)
+            return;
+        if (currentStep.waitForExternalComplete && !currentStep.isCreditsStep)
+            return;
+
+        CompleteCurrentStep();
     }
 
     private void ApplyStepVisuals(ProcedureStepSO step)
@@ -203,6 +219,9 @@ public class ProcedureManager : MonoBehaviour
         if (instructionText != null && !string.IsNullOrEmpty(currentStep.inactivityReminder))
             instructionText.text = currentStep.inactivityReminder;
 
+        if (!string.IsNullOrEmpty(currentStep.inactivityReminder))
+            RefreshBoard(currentStep.title, currentStep.inactivityReminder);
+
         if (reminderAudio != null)
             reminderAudio.Play();
     }
@@ -235,5 +254,26 @@ public class ProcedureManager : MonoBehaviour
 
         if (continueButton != null)
             continueButton.gameObject.SetActive(false);
+
+        RefreshBoard("Procedimiento finalizado", "El procedimiento fue completado correctamente.");
+    }
+
+    void RefreshBoard(string title, string instruction)
+    {
+        StepManager board = FindCoachingBoard();
+        if (board != null)
+            board.ShowProcedure(title, instruction);
+    }
+
+    static StepManager FindCoachingBoard()
+    {
+        StepManager[] boards = FindObjectsByType<StepManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        for (int i = 0; i < boards.Length; i++)
+        {
+            if (boards[i].name.IndexOf("Coaching", System.StringComparison.OrdinalIgnoreCase) >= 0)
+                return boards[i];
+        }
+
+        return boards.Length > 0 ? boards[0] : null;
     }
 }

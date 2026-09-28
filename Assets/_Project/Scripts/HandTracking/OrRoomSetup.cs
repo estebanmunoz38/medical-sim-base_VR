@@ -35,7 +35,6 @@ public static class OrRoomSetup
         HeadPaintHands.Ensure();
         EnsureFibron();
         PrepareTools();
-        PlaceTutorial(origin);
         if (origin.GetComponent<HeadSettleAnchor>() == null)
             origin.gameObject.AddComponent<HeadSettleAnchor>();
     }
@@ -212,36 +211,40 @@ public static class OrRoomSetup
     static void EnsureFibron()
     {
         XRGrabInteractable[] grabs = UnityEngine.Object.FindObjectsByType<XRGrabInteractable>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        XRGrabInteractable original = null;
         for (int i = 0; i < grabs.Length; i++)
         {
-            if (grabs[i].name.IndexOf("Fibron", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                grabs[i].name.IndexOf("Fibrón", StringComparison.OrdinalIgnoreCase) >= 0)
-                return;
+            if (grabs[i].name.IndexOf("Marker Blue", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                original = grabs[i];
+                break;
+            }
+
+            if (original == null && IsMarkerName(grabs[i].name))
+                original = grabs[i];
         }
 
-        GameObject prefab = Resources.Load<GameObject>("ShowableHands/Fibron");
-        if (prefab == null)
+        if (original == null)
         {
-            HandTrackingLog.Write("Marker", "No hay fibrón en la escena ni en Resources.");
+            HandTrackingLog.Write("Marker", "No está el marcador original de la escena. No se crea una copia.");
             return;
         }
 
-        Transform hemostat = null;
+        original.gameObject.SetActive(true);
         for (int i = 0; i < grabs.Length; i++)
         {
-            if (grabs[i].name.IndexOf("Hemost", StringComparison.OrdinalIgnoreCase) >= 0)
-                hemostat = grabs[i].transform;
+            if (grabs[i] == original || !IsMarkerName(grabs[i].name))
+                continue;
+            grabs[i].gameObject.SetActive(false);
         }
+    }
 
-        GameObject fibron = UnityEngine.Object.Instantiate(prefab);
-        fibron.name = "Fibron";
-        if (hemostat != null)
-        {
-            fibron.transform.position = hemostat.position + hemostat.right * 0.12f;
-            fibron.transform.rotation = hemostat.rotation;
-        }
-
-        SeatOnSurface(fibron.transform);
+    static bool IsMarkerName(string objectName)
+    {
+        return objectName.IndexOf("Fibron", StringComparison.OrdinalIgnoreCase) >= 0 ||
+               objectName.IndexOf("Fibrón", StringComparison.OrdinalIgnoreCase) >= 0 ||
+               objectName.IndexOf("Marcador", StringComparison.OrdinalIgnoreCase) >= 0 ||
+               objectName.IndexOf("Marker", StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
     static void PrepareTools()
@@ -257,14 +260,11 @@ public static class OrRoomSetup
             if (grip != null)
                 grab.attachTransform = grip;
 
-            if (grab.transform.Find("GrabZone") == null)
+            Transform[] zones = grab.GetComponentsInChildren<Transform>(true);
+            for (int z = 0; z < zones.Length; z++)
             {
-                Transform zoneParent = grip != null ? grip : grab.transform;
-                var zone = new GameObject("GrabZone");
-                zone.transform.SetParent(zoneParent, false);
-                SphereCollider sphere = zone.AddComponent<SphereCollider>();
-                sphere.isTrigger = true;
-                sphere.radius = 0.05f;
+                if (zones[z].name == "GrabZone")
+                    zones[z].gameObject.SetActive(false);
             }
 
             if (grab.GetComponent<ToolHome>() == null)
@@ -281,8 +281,9 @@ public static class OrRoomSetup
             }
 
             string label = LabelFor(grab.name);
-            if (!string.IsNullOrEmpty(label) && grab.transform.Find("ToolLabel") == null)
-                CreateLabel(grab.transform, label);
+            Transform existingLabel = grab.transform.Find("ToolLabel");
+            if (existingLabel != null)
+                existingLabel.gameObject.SetActive(false);
 
             if (label == "BISTURÍ" && grab.GetComponent<ScalpelHighlight>() == null)
                 grab.gameObject.AddComponent<ScalpelHighlight>();

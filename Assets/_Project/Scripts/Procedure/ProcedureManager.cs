@@ -39,6 +39,8 @@ public class ProcedureManager : MonoBehaviour
     private ProcedureStepSO currentStep;
     private bool waitingForStepCompletion;
 
+    public string CurrentTitle => currentStep != null ? currentStep.title : string.Empty;
+
     private void Awake()
     {
         Instance = this;

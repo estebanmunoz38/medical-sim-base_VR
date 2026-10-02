@@ -35813,6 +35813,7 @@ GameObject:
   - component: {fileID: 1601772427}
   - component: {fileID: 1601772426}
   - component: {fileID: 1601772433}
+  - component: {fileID: 1601772434}
   m_Layer: 0
   m_Name: Marker Blue
   m_TagString: Untagged
@@ -36146,6 +36147,60 @@ MonoBehaviour:
   - {fileID: 890977282}
   - {fileID: 1569752468}
   contactDistance: 0.008
+--- !u!114 &1601772434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601772424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4e8a1d07b3f4a6e9d2c5f8a1b6e4d30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToolHandGrip
+  mode: 0
+  grabHalfExtents: {x: 0.026, y: 0.014, z: 0.014}
+  grabSlack: 0.008
+  gripPositionMeters: {x: -0.012, y: 0, z: 0}
+  tipAxis: {x: -1, y: 0, z: 0}
+  upAxis: {x: 0, y: 1, z: 0}
+  tipInHand: {x: 0, y: 0.45, z: -0.89}
+  upInHand: {x: 1, y: 0, z: 0}
+  palmOffset: {x: 0.006, y: 0.02, z: -0.018}
+  rotationEuler: {x: 0, y: 0, z: 0}
+  lockPoseWhileHeld: 1
+  pinchBlend: 0.42
+  indexAim: 0
+  maxPinchFromPalm: 0.08
+  separateLeftHand: 1
+  mirrorLeftHand: 0
+  leftPalmOffset: {x: 0.006, y: 0.02, z: -0.018}
+  leftRotationEuler: {x: 0, y: 0, z: 0}
+  snapSeconds: 0.08
+  positionMinCutoff: 3.1
+  positionBeta: 12
+  rotationMinCutoff: 1.7
+  rotationBeta: 0.06
+  positionDeadzone: 0
+  rotationDeadzone: 0.12
+  stabilizeContact: 1
+  contactNormalSeconds: 0.045
+  maxContactCorrection: 0.0012
+  contactRotationSeconds: 0.03
+  trackingGraceSeconds: 0.16
+  maxLinearSpeed: 6.5
+  maxAngularSpeed: 800
+  releaseSeconds: 0.07
+  releaseFrames: 4
+  grabConfirmSeconds: 0.045
+  showGuide: 1
+  guideRadius: 0.011
+  guideColor: {r: 0.35, g: 0.9, b: 1, a: 0.75}
+  guideFarMeters: 0.14
+  guideNearMeters: 0.055
+  previewLeftHand: 0
+  debugPose: 0
 --- !u!1 &1608162926
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
+[DefaultExecutionOrder(21000)]
 public class Draw : MonoBehaviour
 {
     [Header("Pen Properties")]
@@ -31,7 +32,9 @@ public class Draw : MonoBehaviour
         tipMaterial.color = penColors;
     }
 
-    void Update()
+    // La pose la escribe HandGestureGrabber en LateUpdate, orden 20000.
+    // El contacto tiene que leer la punta después de esa escritura.
+    void LateUpdate()
     {
         if (grab == null || !grab.isSelected || !TryGetSurfacePoint(out Vector3 point))
         {

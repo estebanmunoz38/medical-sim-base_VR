@@ -248,6 +248,7 @@ GameObject:
   - component: {fileID: 4876444225883694054}
   - component: {fileID: 4645964656738150095}
   - component: {fileID: 5480601988056783436}
+  - component: {fileID: 7344556677889900112}
   m_Layer: 0
   m_Name: Cortadora de pelo
   m_TagString: Untagged
@@ -792,3 +793,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 137173443295580687}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7344556677889900112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5011006995061604951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4e8a1d07b3f4a6e9d2c5f8a1b6e4d30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToolHandGrip
+  mode: 0
+  grabHalfExtents: {x: 0.02, y: 0.018, z: 0.024}
+  grabSlack: 0.008
+  gripPositionMeters: {x: 0, y: 0.006, z: -0.05}
+  tipAxis: {x: 0, y: 0, z: 1}
+  upAxis: {x: 0, y: 1, z: 0}
+  tipInHand: {x: 0, y: 0.82, z: -0.57}
+  upInHand: {x: 0, y: 0.57, z: 0.82}
+  palmOffset: {x: 0, y: 0.014, z: -0.026}
+  rotationEuler: {x: 0, y: 0, z: 0}
+  lockPoseWhileHeld: 1
+  pinchBlend: 0.3
+  indexAim: 0
+  maxPinchFromPalm: 0.08
+  separateLeftHand: 1
+  mirrorLeftHand: 0
+  leftPalmOffset: {x: 0, y: 0.014, z: -0.026}
+  leftRotationEuler: {x: 0, y: 0, z: 0}
+  snapSeconds: 0.1
+  positionMinCutoff: 2.4
+  positionBeta: 8
+  rotationMinCutoff: 1.5
+  rotationBeta: 0.04
+  positionDeadzone: 0.00015
+  rotationDeadzone: 0.2
+  stabilizeContact: 1
+  contactNormalSeconds: 0.06
+  maxContactCorrection: 0.0015
+  contactRotationSeconds: 0.05
+  trackingGraceSeconds: 0.2
+  maxLinearSpeed: 6.5
+  maxAngularSpeed: 800
+  releaseSeconds: 0.08
+  releaseFrames: 5
+  grabConfirmSeconds: 0.04
+  showGuide: 1
+  guideRadius: 0.016
+  guideColor: {r: 1, g: 0.72, b: 0.32, a: 0.78}
+  guideFarMeters: 0.16
+  guideNearMeters: 0.06
+  previewLeftHand: 0
+  debugPose: 0

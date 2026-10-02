@@ -187,6 +187,8 @@ public class HandTrackingBootstrap : MonoBehaviour
         if (visual != null)
             visual.meshIsShowing = healthy;
         instance.AddComponent<HandMeshWatch>().visual = visual;
+        if (instance.GetComponent<HandHoldPose>() == null)
+            instance.AddComponent<HandHoldPose>();
 
         HandTrackingLog.Write("HandTracking",
             healthy

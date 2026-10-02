@@ -260,6 +260,12 @@ public static class OrRoomSetup
             if (grip != null)
                 grab.attachTransform = grip;
 
+            if (IsMarkerName(grab.name))
+                ToolHandGrip.Ensure(grab, ToolGripPreset.Marker);
+            else if (grab.name.IndexOf("Cortadora", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                     grab.name.IndexOf("Rasur", StringComparison.OrdinalIgnoreCase) >= 0)
+                ToolHandGrip.Ensure(grab, ToolGripPreset.Shaver);
+
             Transform[] zones = grab.GetComponentsInChildren<Transform>(true);
             for (int z = 0; z < zones.Length; z++)
             {

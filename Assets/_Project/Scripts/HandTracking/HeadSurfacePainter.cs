@@ -153,6 +153,7 @@ public static class HeadPaintHands
     }
 }
 
+[DefaultExecutionOrder(21000)]
 public class HeadSurfacePainter : MonoBehaviour
 {
     XRGrabInteractable grab;
